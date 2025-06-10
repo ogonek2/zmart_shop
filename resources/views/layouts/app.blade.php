@@ -10,19 +10,16 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
-       :root{
+        :root {
             --bs-body-bg: #f8f9fa;
             --bs-body-color: #212529;
             --bs-primary: #0d6efd;
@@ -33,23 +30,60 @@
             --bs-danger: #dc3545;
             --bs-light: #f8f9fa;
             --bs-dark: #212529;
-       }
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        .swiper-button-next::after,
+        .swiper-button-prev::after {
+            font-size: 14px;
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            cursor: pointer;
+            color: var(--swiper-navigation-color, var(--swiper-theme-color));
+            background-color: orange;
+            width: 35px;
+            height: 35px;
+            padding: 15px;
+            border-radius: 25px;
+            color: white;
+        }
+    </style>
+
+    @yield('styles')
 </head>
 
-<body>
-    <div id="app">
+<body class="hold-transition sidebar-mini layout-fixed bg-white">
+    <div id="app" class="wrapper">
         @include('includes.main.nav')
-
-        <main class="py-4">
+        <div class="content-wrapper">
             @yield('content')
-        </main>
+        </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Подключение Bootstrap JS (включает Popper.js) -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
-        integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D" crossorigin="anonymous">
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Initialize Swiper -->
+    <script>
+        var swiper = new Swiper(".recomendedSwiper", {
+            slidesPerView: "auto",
+            spaceBetween: 0,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        });
     </script>
 </body>
 
