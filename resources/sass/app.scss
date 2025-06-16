@@ -1,8 +1,28 @@
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+*{
+    transition: all .2s ease-in;
+}
 
-// Variables
-@import 'variables';
+.hover-effect-1:hover{
+    /* background-color: hsla(39, 99%, 49%, 0.2) !important; */
+    color: rgba(231, 150, 0, 0.973);
+}
+.card-product-item:hover a{
+    color: rgba(231, 150, 0, 0.973);
+}
 
-// Bootstrap
-@import '~bootstrap/scss/bootstrap';
+.card-label-duration{
+    position: absolute;
+    padding: 5px 8px;
+    top: 5px;
+    left: 0;
+    background-color: #F84147;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 5px;
+}
+
+.old-price-dr{
+    text-decoration: line-through;
+    color: #F84147;
+}

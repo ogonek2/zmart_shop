@@ -25,6 +25,7 @@
 
             <!-- Контент -->
             <main class="col-12 col-md-9">
+                <your-component></your-component>
                 <div class="row m-0 mt-4">
                     <h4 class="mb-3 h4 font-weight-bolder p-0"><b>Рекомендовані товари</b></h4>
                     <div class="swiper recomendedSwiper">
@@ -104,71 +105,7 @@
                         <div class="swiper-button-prev"></div>
                     </div>
                 </div>
-                <div class="row m-0 mt-4 ">
-                    <h4 class="mb-3 h4 font-weight-bolder p-0"><b>Інші товари</b></h4>
-                    <div class="row p-0 m-0">
-                        <div
-                            class="card border-0 rounded-0 col-6 col-md-2 p-2 position-relative d-flex flex-column bg-white border-end border-bottom card-product-item">
-                            <a class="p-3" href=""
-                                title="Іграшка-сюрприз Pop Mart Плюшевый брелок Mart Big into Energy Art The Monsters (6931571071929)"
-                                rel="nofollow">
-                                <img alt="Іграшка-сюрприз Pop Mart Плюшевый брелок Mart Big into Energy Art The Monsters (6931571071929)"
-                                    loading="lazy" fetchpriority="auto" ng-img="true"
-                                    src="https://content1.rozetka.com.ua/goods/images/preview/556320385.jpg"
-                                    style="width: 100%; aspect-ratio: 1 / 1; inset: 0px; object-fit: contain;"><!----></a>
-                            <div class="card-body p-0 d-flex flex-column justify-content-between">
-                                <a href="#" class="nav-link truncated-text" style="font-size: 14px;">Іграшка-сюрприз
-                                    Pop Mart Плюшевый брелок Mart Big into
-                                    Energy Art The Monsters (6931571071929) </a>
-                            </div>
-                            <div
-                                class="card-footer p-0 mt-4 border-0 d-flex align-items-center justify-content-between bg-white">
-                                <b style="font-size: 14px" class="d-flex flex-column">
-                                    <small class="old-price-dr">1000 грн</small>
-                                    <span style="font-size: 14px">799 грн</span>
-                                </b>
-                                <button class="btn border border-secondary">
-                                    <i class="fa fa-shopping-basket" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                            <button class="btn fs-5" style="position: absolute; top: 0; right: 0;" type="button"
-                                aria-label="Перемістити в список бажань">
-                                <i class="fa-regular fa-heart"></i>
-                            </button>
-                            <div class="card-label-duration">
-                                -35%
-                            </div>
-                        </div>
-                        @foreach ($all_products as $product)
-                            <div class="card border-0 rounded-0 col-6 col-md-2 p-2 position-relative d-flex flex-column bg-white border-end border-bottom card-product-item">
-                                <a class="p-3" href=""
-                                    title="{{ $product->name }}"
-                                    rel="nofollow">
-                                    <img alt="{{ $product->image_path }}"
-                                        loading="lazy" fetchpriority="auto" ng-img="true"
-                                        src="{{ $product->image_path }}"
-                                        style="width: 100%; aspect-ratio: 1 / 1; inset: 0px; object-fit: contain;"><!----></a>
-                                <div class="card-body p-0 d-flex flex-column justify-content-between">
-                                    <a href="#" class="nav-link truncated-text"
-                                        style="font-size: 14px;">{{ $product->name }}</a>
-                                </div>
-                                <div
-                                    class="card-footer p-0 mt-4 border-0 d-flex align-items-center justify-content-between bg-white">
-                                    <b style="font-size: 14px" class="d-flex flex-column">
-                                        <span style="font-size: 14px">{{ $product->price }}₴</span>
-                                    </b>
-                                    <button class="btn border border-secondary">
-                                        <i class="fa fa-shopping-basket" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                                <button class="btn fs-5" style="position: absolute; top: 0; right: 0;" type="button"
-                                    aria-label="Перемістити в список бажань">
-                                    <i class="fa-regular fa-heart"></i>
-                                </button>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
+                <product-list></product-list>
             </main>
         </div>
     </div>
