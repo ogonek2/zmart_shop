@@ -25,7 +25,6 @@
 
             <!-- Контент -->
             <main class="col-12 col-md-9">
-                <your-component></your-component>
                 <div class="row m-0 mt-4">
                     <h4 class="mb-3 h4 font-weight-bolder p-0"><b>Рекомендовані товари</b></h4>
                     <div class="swiper recomendedSwiper">

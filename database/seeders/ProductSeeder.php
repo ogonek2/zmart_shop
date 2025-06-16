@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Support\Str;
 
 class ProductSeeder extends Seeder
@@ -31,14 +32,20 @@ class ProductSeeder extends Seeder
             'https://content2.rozetka.com.ua/goods/images/preview/539435233.jpg',
         ];
 
+        $categories = Category::all();
+        $categoryIds = $categories->pluck('id')->toArray();
+
         foreach (range(1, 100) as $index) {
-            Product::create([
-                'name' => $faker->word,
-                'articule' => strtoupper(Str::random(8)),
-                'description' => $faker->sentence(10),
+            $service = Product::create([
+                'name' => $faker->sentence(5),
+                'articule' => strtoupper($faker->unique()->bothify('???####')),
+                'description' => $faker->sentence(25),
                 'price' => $faker->randomFloat(2, 100, 3000),
                 'image_path' => $imageLinks[array_rand($imageLinks)],
             ]);
+
+            $randomCategoryIds = $faker->randomElements($categoryIds, rand(1, 3));
+            $service->categories()->attach($randomCategoryIds);
         }
     }
 }

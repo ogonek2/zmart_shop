@@ -18,8 +18,10 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->text('articule')->nullable();
             $table->text('description')->nullable();
-            $table->decimal('price', 8, 2)->default(0);
-            $table->string('image_path')->nullable();
+            $table->text('url')->nullable();
+            $table->integer('discount')->default(0);
+            $table->decimal('price', 8, 0)->default(0);
+            $table->longtext('image_path')->nullable();
             $table->timestamps();
         });
     }

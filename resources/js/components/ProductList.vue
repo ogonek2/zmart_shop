@@ -9,12 +9,13 @@
                         style="width: 100%; aspect-ratio: 1 / 1; inset: 0px; object-fit: contain;" />
                 </a>
                 <div class="card-body p-0 d-flex flex-column justify-content-between">
-                    <a href="#" class="nav-link truncated-text" style="font-size: 14px;">{{ product.name }}</a>
+                    <a :href="product.url" class="nav-link truncated-text" style="font-size: 14px;">{{ product.name }}</a>
                 </div>
-                <div class="card-footer p-0 mt-4 border-0 d-flex align-items-center justify-content-between bg-white">
+                <div class="card-footer p-0 mt-4 border-0 d-flex align-items-end justify-content-between bg-white">
                     <b style="font-size: 14px" class="d-flex flex-column">
-                        <small v-if="product.old_price" class="old-price-dr">{{ product.old_price }} грн</small>
-                        <span style="font-size: 14px">{{ product.price }} грн</span>
+                        <small v-if="product.discount > 0" class="old-price-dr">{{ product.price }} грн</small>
+                        <span style="font-size: 14px" v-if="product.discount > 0">{{ product.price - (product.price * product.discount / 100) }} грн</span>
+                        <span style="font-size: 14px" v-else>{{ product.price }} грн</span>
                     </b>
                     <button class="btn border border-secondary">
                         <i class="fa fa-shopping-basket" aria-hidden="true"></i>
@@ -24,8 +25,8 @@
                     aria-label="Перемістити в список бажань">
                     <i class="fa-regular fa-heart"></i>
                 </button>
-                <div v-if="product.discount" class="card-label-duration">
-                    {{ product.discount }}
+                <div v-if="product.discount > 0" class="card-label-duration">
+                    {{ product.discount }}%
                 </div>
             </div>
         </div>
@@ -84,16 +85,3 @@ export default {
   },
 };
 </script>
-
-
-<style scoped>
-.card-label-duration {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: red;
-    color: white;
-    padding: 2px 5px;
-    font-size: 12px;
-}
-</style>

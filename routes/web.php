@@ -17,15 +17,10 @@ use App\Http\Controllers\ProductImportController;
 use App\Http\Controllers\indexController;
 
 Route::get('/', [indexController::class, 'index'])->name('welcome');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/import-products', [ProductImportController::class, 'import'])->name('products.import');
+Route::get('/api/products', function () {
+    return \App\Models\Product::paginate(12)->items();
+});
 
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::post('/import-products', [ProductImportController::class, 'import'])->name('products.import');
-
-Route::get('/api/products', function () {
-    return \App\Models\Product::select('id', 'name', 'price', 'image_path')
-        ->paginate(12)
-        ->items();
-});
