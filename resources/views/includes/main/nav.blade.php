@@ -54,7 +54,7 @@
         </div>
     </nav>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
-        <div class="container">
+        <div class="container position-relative">
             <!-- Содержимое навбара -->
             <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
                 <ul class="navbar-nav">
@@ -163,11 +163,11 @@
                         </li>
                     @endguest
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fa fa-shopping-basket" aria-hidden="true"></i>
-                            Кошик</a>
+                        <open-cart-button></open-cart-button>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
+    <mini-cart></mini-cart>
 </header>

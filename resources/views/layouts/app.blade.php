@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    @yield('seo')
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -45,7 +45,7 @@
 <body class="hold-transition sidebar-mini layout-fixed bg-white">
     <div id="app" class="wrapper">
         @include('includes.main.nav')
-        <div class="content-wrapper">
+        <div class="content-wrapper mb-5">
             @yield('content')
         </div>
     </div>
@@ -74,6 +74,39 @@
             },
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarWrapper = document.getElementById('sticky-sidebar');
+            const sidebarCol = sidebarWrapper.closest('aside');
+            const startScrollFix = sidebarWrapper.offsetTop + sidebarWrapper.offsetHeight;
+
+            function updateSidebarWidth() {
+                const colRect = sidebarCol.getBoundingClientRect();
+                sidebarWrapper.style.width = colRect.width + 'px';
+            }
+
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY + window.innerHeight;
+                const pageHeight = document.documentElement.scrollHeight;
+
+                if (window.scrollY > startScrollFix && scrollY < pageHeight + 100) {
+                    sidebarWrapper.classList.add('sidebar-fixed-bottom');
+                    updateSidebarWidth();
+                } else {
+                    sidebarWrapper.classList.remove('sidebar-fixed-bottom');
+                    sidebarWrapper.style.width = '';
+                }
+            });
+
+            window.addEventListener('resize', () => {
+                if (sidebarWrapper.classList.contains('sidebar-fixed-bottom')) {
+                    updateSidebarWidth();
+                }
+            });
+        });
+    </script>
+    {{-- Scripts --}}
+    @yield('scripts')
 </body>
 
 </html>

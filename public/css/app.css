@@ -7,6 +7,11 @@
   color: rgba(231, 150, 0, 0.973);
 }
 
+.hover-effect-2:hover {
+  /* background-color: hsla(39, 99%, 49%, 0.2) !important; */
+  background-color: hsla(39, 81%, 59%, 0.2) !important; */
+}
+
 .card-product-item:hover a {
   color: rgba(231, 150, 0, 0.973);
 }
@@ -26,4 +31,17 @@
 .old-price-dr {
   text-decoration: line-through;
   color: #F84147;
+}
+
+/* Добавь в свой CSS файл или <style> */
+.sidebar-wrapper {
+  position: relative;
+  transition: all 0.2s ease-in;
+}
+
+.sidebar-fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  top: auto !important;
+  z-index: 1000;
 }

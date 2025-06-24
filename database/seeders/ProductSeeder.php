@@ -35,7 +35,7 @@ class ProductSeeder extends Seeder
         $categories = Category::all();
         $categoryIds = $categories->pluck('id')->toArray();
 
-        foreach (range(1, 100) as $index) {
+        foreach (range(1, 600) as $index) {
             $service = Product::create([
                 'name' => $faker->sentence(5),
                 'articule' => strtoupper($faker->unique()->bothify('???####')),

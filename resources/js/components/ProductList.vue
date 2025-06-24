@@ -1,45 +1,58 @@
 <template>
-    <div class="row m-0 mt-4">
-        <h4 class="mb-3 h4 font-weight-bolder p-0"><b>Інші товари</b></h4>
-        <div class="row p-0 m-0">
-            <div v-for="product in products" :key="product.id"
-                class="card border-0 rounded-0 col-6 col-md-2 p-2 position-relative d-flex flex-column bg-white border-end border-bottom card-product-item">
-                <a class="p-3" :href="product.url" :title="product.name" rel="nofollow">
-                    <img :alt="product.name" loading="lazy" fetchpriority="auto" :src="product.image_path"
-                        style="width: 100%; aspect-ratio: 1 / 1; inset: 0px; object-fit: contain;" />
-                </a>
-                <div class="card-body p-0 d-flex flex-column justify-content-between">
-                    <a :href="product.url" class="nav-link truncated-text" style="font-size: 14px;">{{ product.name }}</a>
-                </div>
-                <div class="card-footer p-0 mt-4 border-0 d-flex align-items-end justify-content-between bg-white">
-                    <b style="font-size: 14px" class="d-flex flex-column">
-                        <small v-if="product.discount > 0" class="old-price-dr">{{ product.price }} грн</small>
-                        <span style="font-size: 14px" v-if="product.discount > 0">{{ product.price - (product.price * product.discount / 100) }} грн</span>
-                        <span style="font-size: 14px" v-else>{{ product.price }} грн</span>
-                    </b>
-                    <button class="btn border border-secondary">
-                        <i class="fa fa-shopping-basket" aria-hidden="true"></i>
-                    </button>
-                </div>
-                <button class="btn fs-5" style="position: absolute; top: 0; right: 0;" type="button"
-                    aria-label="Перемістити в список бажань">
-                    <i class="fa-regular fa-heart"></i>
-                </button>
-                <div v-if="product.discount > 0" class="card-label-duration">
-                    {{ product.discount }}%
-                </div>
-            </div>
+  <div class="row m-0 mt-4">
+    <h4 class="mb-3 h4 font-weight-bolder p-0"><b>Інші товари</b></h4>
+    <div class="row p-0 m-0">
+      <div v-for="product in products" :key="product.id"
+        class="card border-0 rounded-0 col-6 col-md-2 p-2 position-relative d-flex flex-column bg-white border-end border-bottom card-product-item">
+        <a class="p-3" :href="'catalog/' + product.url" :title="product.name" rel="nofollow">
+          <img :alt="product.name" loading="lazy" fetchpriority="auto" :src="product.image_path"
+            style="width: 100%; aspect-ratio: 1 / 1; inset: 0px; object-fit: contain;" />
+        </a>
+        <div class="card-body p-0 d-flex flex-column justify-content-between">
+          <a :href="'catalog/' + product.url" class="nav-link truncated-text" style="font-size: 14px;">{{ product.name
+          }}</a>
         </div>
-        <div v-if="loading" class="w-100 text-center my-3">
-            Завантаження...
+        <div class="card-footer p-0 mt-4 border-0 d-flex align-items-end justify-content-between bg-white">
+          <b style="font-size: 14px" class="d-flex flex-column">
+            <small v-if="product.discount > 0" class="old-price-dr">{{ product.price }} ₴</small>
+            <span style="font-size: 14px" v-if="product.discount > 0">{{ product.price - (product.price *
+              product.discount / 100) }} ₴</span>
+            <span style="font-size: 14px" v-else>{{ product.price }} ₴</span>
+          </b>
+          <!-- <button class="btn border border-secondary">
+            <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+          </button> -->
+          <CartButton 
+            :id="product.id"
+            :name="product.name"
+            :price="product.discount > 0 
+            ? (product.price - (product.price * product.discount / 100)) 
+            : product.price"
+            :image="product.image_path" />
         </div>
+        <button class="btn fs-5" style="position: absolute; top: 0; right: 0;" type="button"
+          aria-label="Перемістити в список бажань">
+          <i class="fa-regular fa-heart"></i>
+        </button>
+        <div v-if="product.discount > 0" class="card-label-duration">
+          {{ product.discount }}%
+        </div>
+      </div>
     </div>
+    <div v-if="loading" class="w-100 text-center my-3">
+      Завантаження...
+    </div>
+  </div>
 </template>
 <script>
 import axios from 'axios';
+import CartButton from './CartButton.vue';
 
 export default {
   name: "ProductList",
+  components: {
+    CartButton
+  },
   data() {
     return {
       products: [],
