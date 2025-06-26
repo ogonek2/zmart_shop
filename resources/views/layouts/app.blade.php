@@ -39,6 +39,10 @@
         }
     </style>
 
+    <!-- Bootstrap Select CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css"
+        rel="stylesheet">
+
     @yield('styles')
 </head>
 
@@ -56,12 +60,17 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
     </script>
+    <!-- Bootstrap Select JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     {{-- Vue --}}
     <script src="{{ mix('js/app.js') }}"></script>
+
+    {{-- Mask --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
 
     <!-- Initialize Swiper -->
     <script>
@@ -103,6 +112,12 @@
                     updateSidebarWidth();
                 }
             });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#input_phone1').inputmask('+38 (099) 999 99 99'); // Украина
         });
     </script>
     {{-- Scripts --}}

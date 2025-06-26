@@ -4,12 +4,12 @@
 
 .hover-effect-1:hover {
   /* background-color: hsla(39, 99%, 49%, 0.2) !important; */
-  color: rgba(231, 150, 0, 0.973);
+  color: rgba(231, 150, 0, 0.973) !important;
 }
 
 .hover-effect-2:hover {
   /* background-color: hsla(39, 99%, 49%, 0.2) !important; */
-  background-color: hsla(39, 81%, 59%, 0.2) !important; */
+  background-color: hsla(39, 81%, 59%, 0.2) !important;
 }
 
 .card-product-item:hover a {
@@ -44,4 +44,18 @@
   bottom: 0;
   top: auto !important;
   z-index: 1000;
+}
+
+.truncated-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  /* Ограничение в 2 строки */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+}
+
+textarea {
+  resize: none !important;
+  height: 100px;
 }

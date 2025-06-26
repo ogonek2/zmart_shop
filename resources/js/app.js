@@ -5,6 +5,7 @@ import CartButton from './components/CartButton.vue';
 import OpenCartButton from './components/OpenCartButton.vue';
 import MiniCart from './components/MiniCart.vue';
 import CatalogProductList from './components/CatalogProductList.vue';
+import CartList from './components/CartList.vue';
 
 const app = createApp({});
 
@@ -15,6 +16,7 @@ app.component('cart-button', CartButton);
 app.component('open-cart-button', OpenCartButton);
 app.component('mini-cart', MiniCart);
 app.component('catalog-product-list', CatalogProductList);
+app.component('cart-list', CartList);
 
 
 app.mount('#app');

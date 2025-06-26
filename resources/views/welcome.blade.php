@@ -26,9 +26,13 @@
     <div class="container">
         <div class="row">
             @include('includes.main.sidebar')
-
             <!-- Контент -->
             <main class="col-12 col-md-9">
+                <form action="{{ route('products.upload') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="file" name="image" required>
+                    <button type="submit">Загрузить</button>
+                </form>
                 @include('includes.catalog.recomendet')
                 <product-list></product-list>
             </main>
