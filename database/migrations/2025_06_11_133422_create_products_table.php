@@ -20,7 +20,7 @@ class CreateProductsTable extends Migration
             $table->text('description')->nullable();
             $table->text('url')->nullable();
             $table->integer('discount')->default(0);
-            $table->decimal('price', 8, 0)->default(0);
+            $table->text('price')->nullable();
             $table->longtext('image_path')->nullable();
             $table->timestamps();
         });

@@ -111,7 +111,7 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="info">
-                        <b class="text-primary">Админ - </b><a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                        {{-- <b class="text-primary">Админ - </b><a href="#" class="d-block">{{ Auth::user()->name }}</a> --}}
                     </div>
                 </div>
 
@@ -155,13 +155,13 @@
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
-                                    Forms
+                                    Управление списками
                                     <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('admin.products') }}" class="nav-link">
+                                    <a href="{{ route('products.index') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Товары (Создать)</p>
                                     </a>
@@ -264,6 +264,8 @@
     <script src="{{ asset('dist/js/demo.js') }}"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="{{ asset('dist/js/pages/dashboard.js') }}"></script>
+
+    @yield('scripts')
 </body>
 
 </html>

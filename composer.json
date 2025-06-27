@@ -16,7 +16,8 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.0",
         "league/flysystem-aws-s3-v3": "1.0",
-        "maatwebsite/excel": "3.1.47"
+        "maatwebsite/excel": "3.1.47",
+        "stichoza/google-translate-php": "^5.3"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -34,7 +35,7 @@
         },
         "files": [
             "app/Helpers/helpers.php",
-            "app/Helpers/FileUploadHelper"
+            "app/Helpers/FileUploadHelper.php"
         ]
     },
     "autoload-dev": {
