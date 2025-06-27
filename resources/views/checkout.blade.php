@@ -131,6 +131,15 @@
                                 </span>
                             </label>
                         </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="delivery_service" id="radio-nodelivery"
+                                value="pickup">
+                            <label class="form-check-label d-flex align-items-center" for="radio-nodelivery">
+                                <span class="ms-1">
+                                    Самовивіз
+                                </span>
+                            </label>
+                        </div>
                     </div>
 
                     <!-- Ручне поле -->
@@ -146,8 +155,6 @@
                             Отримувач
                         </b>
                     </label>
-
-
                     <form class="row g-3">
                         <div class="col-md-6">
                             <label for="input_name1" class="form-label">Ім'я <b class="text-danger">*</b></label>
@@ -225,7 +232,10 @@
                         $citySelect.selectpicker('refresh');
                         $cityLoader.addClass('d-none');
                     });
-                } else {
+                } else if (service === "pickup") {
+                    $manualContainer.addClass('d-none');
+                }
+                 else {
                     $manualContainer.removeClass('d-none');
                 }
             });
