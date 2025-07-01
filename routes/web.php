@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\admin\AdminProductsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +20,10 @@ use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\AdminProductsUploadController;
 use App\Http\Controllers\admin\AdminMainController;
 
+use App\Http\Controllers\admin\AdminProductsController;
+use App\Http\Controllers\admin\AdminCategoryController;
+use App\Http\Controllers\admin\AdminCatalogController;
+
 Route::get('/', [indexController::class, 'index'])->name('welcome');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/api/products', function () {
@@ -38,11 +41,15 @@ Route::group(['prefix' => 'catalog'], function () {
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/', [AdminMainController::class, 'index'])->name('admin.index');
-    Route::get('/make/category-catalog', [AdminMainController::class, 'index'])->name('admin.categories');
     Route::get('/table/orders', [AdminMainController::class, 'index'])->name('admin.orders');
     Route::get('/table/carts', [AdminMainController::class, 'index'])->name('admin.carts');
 
     Route::resource('products', AdminProductsController::class);
+    Route::resource('category', AdminCategoryController::class);
+    Route::resource('catalog', AdminCatalogController::class);
+
+    Route::get('/edit/products', [AdminMainController::class, 'edit_products'])->name('admin.edit_products');
+
     Route::post('/import-products', [ProductImportController::class, 'import'])->name('excel.upload');
 });
 

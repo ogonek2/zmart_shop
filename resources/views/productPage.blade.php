@@ -25,64 +25,36 @@
 @endsection
 
 @section('content')
-    {{-- <section class="py-5">
-        <div class="container my-1">
-            <div class="row gx-4 gx-lg-5 align-items-center">
-                <div class="col-md-6">
-                    <img class="card-img-top mb-5 mb-md-0" style="width: 90%; aspect-ratio: 1 / 1; object-fit: contain;"
-                        src="{{ $product->image_path }}" alt="...">
-                    </div>
-                <div class="col-md-6">
-                    <div class="small mb-1">SKU: BST-498</div>
-                    <h1 class="display-5 fw-bolder">{{ $product->name }}</h1>
-                    <div class="fs-5 mb-5">
-                        <span class="text-decoration-line-through">$45.00</span>
-                        <span>$40.00</span>
-                    </div>
-                    <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium at dolorem quidem
-                        modi. Nam sequi consequatur obcaecati excepturi alias magni, accusamus eius blanditiis delectus
-                        ipsam minima ea iste laborum vero?</p>
-                    <div class="d-flex">
-                        <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1"
-                            style="max-width: 3rem">
-                        <button class="btn btn-outline-dark flex-shrink-0" type="button">
-                            <i class="bi-cart-fill me-1"></i>
-                            Add to cart
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> --}}
     <section class="py-5">
         <div class="container">
             <div class="row gx-5">
                 <aside class="col-lg-6">
-                    <div class="rounded-0 mb-3 d-flex justify-content-center">
-                        <img style="width: 80%; aspect-ratio: 1 / 1; object-fit: contain; margin: auto;"
-                            class="rounded-4 fit product-image" src="{{ $product->image_path }}" />
-                    </div>
-                    <div class="d-flex justify-content-start mb-3 product-image-thumbs">
-                        <div data-fslightbox="mygalley" class="border mx-1 rounded-2 product-image-thumb active">
-                            <img width="60" height="60" class="rounded-2" src="{{ $product->image_path }}" />
+                    @if (empty($product->image_path))
+                        <div class="d-flex bg-light align-items-center flex-column justify-content-center"
+                            style="width: 80%; aspect-ratio: 1 / 1; object-fit: contain; margin: auto;">
+                            <small class="text-secondary"><i class="fas fa-image"></i></small>
                         </div>
-                        <div data-fslightbox="mygalley" class="border mx-1 rounded-2 product-image-thumb">
-                            <img width="60" height="60" class="rounded-2"
-                                src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big1.webp" />
+                        <div class="d-flex justify-content-start mb-3 product-image-thumbs mt-2">
+                            <div data-fslightbox="mygalley"
+                                class="border mx-1 rounded-2 product-image-thumb active bg-light d-flex bg-light align-items-center flex-column justify-content-center"
+                                style="width: 60px; height: 60px;">
+                                <small class="text-secondary"><i class="fas fa-image"></i></small>
+                            </div>
                         </div>
-                        <div data-fslightbox="mygalley" class="border mx-1 rounded-2 product-image-thumb">
-                            <img width="60" height="60" class="rounded-2"
-                                src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big3.webp" />
+                    @else
+                        <div class="rounded-0 mb-1 d-flex justify-content-center">
+                            <img style="width: 80%; aspect-ratio: 1 / 1; object-fit: contain; margin: auto;"
+                                class="rounded-4 fit product-image" src="{{ $product->image_path }}" />
                         </div>
-                        <div data-fslightbox="mygalley" class="border mx-1 rounded-2 product-image-thumb">
-                            <img width="60" height="60" class="rounded-2"
-                                src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big4.webp" />
+                        <div class="d-flex justify-content-start mb-3 product-image-thumbs">
+                            @foreach ($images as $item)
+                                <div data-fslightbox="mygalley" class="border mx-1 rounded-2 product-image-thumb">
+                                    <img width="60" height="60" class="rounded-2"
+                                        src="{{ $item->src }}" />
+                                </div>
+                            @endforeach
                         </div>
-                        <div data-fslightbox="mygalley" class="border mx-1 rounded-2 product-image-thumb">
-                            <img width="60" height="60" class="rounded-2"
-                                src="https://mdbcdn.b-cdn.net/img/bootstrap-ecommerce/items/detail1/big.webp" />
-                        </div>
-                    </div>
+                    @endif
                     <!-- thumbs-wrap.// -->
                     <!-- gallery-wrap .end// -->
                 </aside>

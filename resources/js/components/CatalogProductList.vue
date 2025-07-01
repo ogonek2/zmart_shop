@@ -29,16 +29,21 @@
                 class="card border-0 rounded-0 col-6 col-md-2 p-2 position-relative bg-white border-end border-bottom card-product-item"
                 :class="viewClass">
                 <a :href="`/catalog/${product.url}`" class="product-link">
-                    <img :src="product.image_path" :alt="product.name" loading="lazy" class="product-image" />
+                    <img v-if="product.image_path" :src="product.image_path" :alt="product.name" loading="lazy" class="product-image" />
+
+                    <div v-else class="d-flex bg-light align-items-center flex-column justify-content-center"
+                        style="width: 100%; aspect-ratio: 1 / 1; inset: 0px;">
+                        <small class="text-secondary"><i class="fas fa-image"></i></small>
+                    </div>
                 </a>
 
-                <div class="card-body d-flex flex-column justify-content-between p-0">
+                <div class="card-body d-flex flex-column justify-content-between p-0 w-50">
                     <a :href="`/catalog/${product.url}`" class="nav-link truncated-text" style="font-size: 14px;">
                         {{ product.name }}
                     </a>
 
                     <!-- Добавляем описание -->
-                    <p v-if="view === 'list'" class="product-description">{{ product.description }}</p>
+                    <p v-if="view === 'list'" class="product-description truncated-text w-100" style="width: 100%;" v-html="product.description"></p>
                 </div>
 
                 <div class="card-footer p-0 mt-4 border-0 d-flex align-items-end justify-content-between bg-white"

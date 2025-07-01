@@ -44,7 +44,12 @@
                 <li class="list-group-item p-3 mb-2 d-flex align-items-center border-0 cursor-pointer"
                     v-for="item in cart" :key="item.id">
                     <div>
-                        <img style="width: 50px; height: 50px; object-fit: contain;" :src="item.image" alt="">
+                        <img v-if="item.image" style="width: 50px; height: 50px; object-fit: contain;" :src="item.image"
+                            alt="">
+                        <div v-else class="d-flex bg-light align-items-center flex-column justify-content-center"
+                            style="width: 50px; height: 50px;">
+                            <small class="text-secondary"><i class="fas fa-image"></i></small>
+                        </div>
                     </div>
                     <div class="ps-3">
                         <strong>{{ item.name }}</strong><br>
@@ -85,10 +90,12 @@ export default {
     },
     computed: {
         totalPrice() {
-            // Предполагаем, что в item есть поле price — если нет, нужно подгружать или передавать в корзину
-            return this.cart.reduce((sum, item) => {
+            const total = this.cart.reduce((sum, item) => {
                 return sum + (item.price * item.quantity);
             }, 0);
+
+            // Убираем лишние нули в дробной части:
+            return Number(total.toFixed(2)); // округление до 2 знаков без "нудей"
         }
     },
     mounted() {

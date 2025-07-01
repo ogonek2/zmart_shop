@@ -28,7 +28,7 @@ class FileUploadHelper
             'AccessKey' => env('BUNNY_STORAGE_PASSWORD'),
             'Content-Type' => 'application/octet-stream',
         ])->withBody($fileContents, 'application/octet-stream')
-          ->put($url);
+            ->put($url);
 
         if ($response->successful()) {
             return rtrim(env('BUNNY_CDN_URL'), '/') . '/' . $destinationPath;
@@ -36,4 +36,16 @@ class FileUploadHelper
 
         return null;
     }
+
+    public static function deleteFromBunnyCDN($url)
+    {
+        $parsed = parse_url($url);
+        $path = ltrim($parsed['path'], '/');
+
+        return Http::withHeaders([
+            'AccessKey' => env('BUNNY_STORAGE_PASSWORD'),
+            'Content-Type' => 'application/octet-stream',
+        ])->delete("https://storage.bunnycdn.com/" . env('BUNNY_STORAGE_NAME') . "/" . $path)->successful();
+    }
+
 }

@@ -23,6 +23,17 @@ class Product extends Model
     {
         return $this->belongsToMany(Category::class);
     }
+    public function catalog()
+    {
+        return $this->belongsToMany(Catalog::class);
+    }
+
+    protected static function booted()
+    {
+        static::deleting(function ($product) {
+            $product->catalogs()->detach(); // Удаляем связи many-to-many
+        });
+    }
 
     protected static function boot()
     {
@@ -30,25 +41,23 @@ class Product extends Model
 
         static::saving(function ($product) {
             // Генерируем базовый URL, если пустой
-            if (empty($product->url)) {
-                $baseUrl = self::generateHref($product->name);
+            $baseUrl = self::generateHref($product->name);
 
-                // Проверяем есть ли уже такой URL у других продуктов
-                $exists = self::where('url', $baseUrl)
-                    ->when($product->id, fn($query) => $query->where('id', '!=', $product->id)) // исключаем текущий продукт при обновлении
-                    ->exists();
+            // Проверяем есть ли уже такой URL у других продуктов
+            $exists = self::where('url', $baseUrl)
+                ->when($product->id, fn($query) => $query->where('id', '!=', $product->id)) // исключаем текущий продукт при обновлении
+                ->exists();
 
-                if (!$exists) {
-                    $product->url = $baseUrl;
+            if (!$exists) {
+                $product->url = $baseUrl;
+            } else {
+                // Если такой URL уже есть, добавляем ID к URL
+                // Для новых продуктов $product->id еще нет, поэтому можно сгенерировать уникальный вариант через временный суффикс
+                if ($product->id) {
+                    $product->url = $baseUrl . '-' . $product->id;
                 } else {
-                    // Если такой URL уже есть, добавляем ID к URL
-                    // Для новых продуктов $product->id еще нет, поэтому можно сгенерировать уникальный вариант через временный суффикс
-                    if ($product->id) {
-                        $product->url = $baseUrl . '-' . $product->id;
-                    } else {
-                        // Если id еще нет (новый продукт), то генерируем уникальный суффикс, например, временную метку или случайное число
-                        $product->url = $baseUrl . '-' . uniqid();
-                    }
+                    // Если id еще нет (новый продукт), то генерируем уникальный суффикс, например, временную метку или случайное число
+                    $product->url = $baseUrl . '-' . uniqid();
                 }
             }
         });

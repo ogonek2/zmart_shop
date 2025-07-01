@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\productImage;
 
 class CatalogController extends Controller
 {
@@ -14,7 +15,8 @@ class CatalogController extends Controller
         $getProduct = Product::where('url', $url)->firstOrFail();
         if ($getProduct) {
             return view('productPage', [
-                'product' => $getProduct
+                'product' => $getProduct,
+                'images' => productImage::where('product_id', $getProduct->id)->get(),
             ]);
         }
     }
@@ -23,7 +25,7 @@ class CatalogController extends Controller
         $getCategory = Category::where('url', $url)->firstOrFail();
 
         // Получаем продукты, связанные с категорией
-        $getProducts = $getCategory->products()->paginate(25); // укажи нужное количество
+        $getProducts = $getCategory->products()->paginate(45); // укажи нужное количество
 
         $paginationData = [
             'current_page' => $getProducts->currentPage(),
