@@ -41,4 +41,15 @@ class CatalogController extends Controller
             'paginationData' => $paginationData
         ]);
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('q');
+
+        $products = Product::where('name', 'like', '%' . $query . '%')
+            ->limit(10)
+            ->get(['id', 'name', 'price', 'image_path', 'discount', 'url']); // image — путь к изображению
+
+        return response()->json($products);
+    }
 }

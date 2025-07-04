@@ -110,7 +110,14 @@ class AdminProductsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $productImages = productImage::where('product_id', $id)->get();
+
+        return view('admin.editProductCard', [
+            'product' => $product,
+            'images' => $productImages,
+            'categories' => Category::all()
+        ]);
     }
 
     /**
@@ -125,7 +132,7 @@ class AdminProductsController extends Controller
 
         $product = Product::findOrFail($id);
 
-        if ($request->type_form === "demo_modal") {
+        if ($request->type_form == "demo_modal") {
             $request->validate([
                 'title' => 'required|string',
                 'price' => 'integer|required',
@@ -137,13 +144,97 @@ class AdminProductsController extends Controller
                 'articule' => $request->articule,
                 'price' => $request->price,
             ]);
-        } else if ($request->type_form === "demo_full") {
-            return "Форма в обработке";
+
+            return redirect()->back()->with('success', 'Товар успешно обновлен!');
+
+        } else if ($request->type_form == "demo_full") {
+            $request->validate([
+                'title' => 'required|string',
+                'price' => 'integer|required',
+                'articule' => 'required|string'
+            ]);
+            $product->update([
+                'articule' => $request->articule,
+                'name' => $request->title,
+                'discount' => $request->discount ?? 0,
+                'price' => $request->price,
+                'description' => $request->description ?? null
+            ]);
+
+            $product->categories()->sync($request->category);
+
+            return redirect()->back()->with('success', 'Товар успешно обновлен!');
+
+        } else if ($request->type_form == "demo_values") {
+            $product->update([
+                'seo_title' => $request->meta_title ?? null,
+                'seo_keywords' => $request->meta_keqwords ?? null,
+                'seo_description' => $request->meta_description ?? null
+            ]);
+
+            // Удалить старые характеристики (если нужно)
+            $product->package()->delete();
+
+            // Сохранить новые характеристики, игнорируя пустые
+            foreach ($request->specs as $spec) {
+                // Пропустить, если и имя, и значение пустые (или одно из них)
+                if (empty(trim($spec['name'])) || empty(trim($spec['value']))) {
+                    continue;
+                }
+
+                $product->package()->create([
+                    'name' => $spec['name'],
+                    'value' => $spec['value'],
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Товар успешно обновлен!');
         } else {
             return redirect()->back()->with('error', 'Возникла ошибка - Неизвестная форма!');
         }
+    }
 
-        return redirect()->back()->with('success', 'Товар успешно обновлен!');
+    public function addImage(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        $image = $request->file('image');
+        $publicUrl = FileUploadHelper::uploadToBunnyCDN($image, 'products');
+        if (!$publicUrl) {
+            return back()->withErrors(['upload' => 'Не удалось загрузить файл на CDN.']);
+        }
+        productImage::create([
+            'src' => $publicUrl,
+            'product_id' => $id,
+        ]);
+
+        return redirect()->back()->with('success', 'Изображение загружено!');
+    }
+
+    public function destroyImage(Request $request, $id, $image)
+    {
+        $product = Product::findOrFail($id);
+        $getImage = productImage::findOrFail($image);
+
+        // Удаление с BunnyCDN
+        FileUploadHelper::deleteFromBunnyCDN($getImage->src);
+
+        // Удаление записи из базы
+        $getImage->delete();
+
+        return redirect()->back()->with('success', 'Изображение удалено!');
+    }
+
+    public function firstImage(Request $request, $id, $image)
+    {
+        $product = Product::findOrFail($id);
+        $getImage = productImage::findOrFail($image);
+
+        $product->update([
+            'image_path' => $getImage->src
+        ]);
+
+        return redirect()->back()->with('success', 'Главное изображение изменено!');
     }
 
     /**

@@ -84,7 +84,7 @@ export default {
     },
     onScroll() {
       const scrollPosition = window.innerHeight + window.scrollY;
-      const bottomPosition = document.documentElement.offsetHeight - 700;
+      const bottomPosition = document.documentElement.offsetHeight - 500;
 
       if (scrollPosition >= bottomPosition) {
         this.loadProducts();

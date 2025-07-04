@@ -18,18 +18,9 @@
 
                 </ul>
 
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <div class="search-wrapper d-flex align-items-center rounded-pill bg-light"
-                            style="height: 40px; max-width: 300px;">
-                            <input type="text" class="form-control border-0 bg-transparent shadow-none"
-                                placeholder="Поиск" style="font-size: 16px;">
-                            <button
-                                class="btn btn-dark rounded-pill d-flex align-items-center justify-content-center ms-2"
-                                style="width: 80px; height: 40px;">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </button>
-                        </div>
+                <ul class="navbar-nav me-auto col-md-6">
+                    <li class="nav-item w-100">
+                        <search></search>
                     </li>
                 </ul>
 
@@ -67,44 +58,19 @@
                         <div class="dropdown-menu w-100 mt-0 border-0 rounded-0 bg-dark text-white">
                             <div class="container py-3">
                                 <div class="row row-cols-2 row-cols-md-5 g-3 text-start">
-                                    <div class="col">
-                                        <h6 class="text-warning">Блендери</h6>
-                                        <a class="dropdown-item text-white" href="#">Охотничі</a>
-                                    </div>
-                                    <div class="col">
-                                        <h6 class="text-warning">Кофемашина</h6>
-                                        <a class="dropdown-item text-white" href="#">АиР</a>
-                                    </div>
-                                    <div class="col">
-                                        <h6 class="text-warning">Пилесоси</h6>
-                                        <a class="dropdown-item text-white" href="#">95Х18</a>
-                                    </div>
-                                    <div class="col">
-                                        <h6 class="text-warning">Мясорубка</h6>
-                                        <a class="dropdown-item text-white" href="#">ГОІ</a>
-                                    </div>
-                                    <div class="col">
-                                        <h6 class="text-warning">Тостери</h6>
-                                        <a class="dropdown-item text-white" href="#">Клинки</a>
-                                    </div>
-                                    <div class="col">
-                                        <h6 class="text-warning">Чайники</h6>
-                                        <a class="dropdown-item text-white" href="#">Клинки</a>
-                                    </div>
-                                    <div class="col">
-                                        <h6 class="text-warning">Мультиварки</h6>
-                                        <a class="dropdown-item text-white" href="#">Клинки</a>
-                                    </div>
-                                    <div class="col">
-                                        <h6 class="text-warning">Посуд</h6>
-                                        <a class="dropdown-item text-white" href="#">Клинки</a>
-                                    </div>
+                                    @foreach (get_all_category() as $item)
+                                        <div class="col">
+                                            {{-- <h6 class="text-warning">Блендери</h6> --}}
+                                            <a class="dropdown-item text-white hover-effect-3 p-2"
+                                                href="{{ route('catalog_category_page', $item->url) }}"
+                                                target="_blank">{{ $item->name }}</a>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
                     </li>
-                    <!-- Кнопка Dropdown 2 (без содержимого) -->
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Знижки <i class="fa-solid fa-tag"></i>
@@ -135,12 +101,12 @@
                                 </div>
                             </div>
                         </div>
-                    </li>
+                    </li> --}}
                 </ul>
 
                 <ul class="navbar-nav ms-auto">
                     <!-- Authentication Links -->
-                    @guest
+                    {{-- @guest
                         @if (Route::has('login'))
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">
@@ -161,7 +127,7 @@
                                 </a>
                             </div>
                         </li>
-                    @endguest
+                    @endguest --}}
                     <li class="nav-item">
                         <open-cart-button></open-cart-button>
                     </li>

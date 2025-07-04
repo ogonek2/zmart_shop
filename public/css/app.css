@@ -1,3 +1,7 @@
+html, body{
+  overflow-x: hidden;
+}
+
 * {
   transition: all 0.2s ease-in;
 }
@@ -10,6 +14,10 @@
 .hover-effect-2:hover {
   /* background-color: hsla(39, 99%, 49%, 0.2) !important; */
   background-color: hsla(39, 81%, 59%, 0.2) !important;
+}
+
+.hover-effect-3:hover{
+  color: #212529 !important;
 }
 
 .card-product-item:hover a {
@@ -48,7 +56,7 @@
 
 .truncated-text {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   /* Ограничение в 2 строки */
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -59,3 +67,23 @@ textarea {
   resize: none !important;
   height: 100px;
 }
+
+@media (max-width: 580px) {
+            .dropdown-menu {
+                max-height: 70vh;
+                /* ограничиваем высоту */
+                overflow-y: auto;
+                /* включаем вертикальную прокрутку */
+                overflow-x: hidden;
+            }
+
+            .dropdown-menu .row {
+                flex-direction: column;
+                /* колонки идут вертикально */
+            }
+
+            .dropdown-menu .col {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }

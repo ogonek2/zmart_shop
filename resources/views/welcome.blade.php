@@ -28,7 +28,7 @@
             @include('includes.main.sidebar')
             <!-- Контент -->
             <main class="col-12 col-md-9">
-                @include('includes.catalog.recomendet')
+                {{-- @include('includes.catalog.recomendet') --}}
                 <product-list></product-list>
             </main>
         </div>

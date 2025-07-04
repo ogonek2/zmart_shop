@@ -27,7 +27,7 @@ use App\Http\Controllers\admin\AdminCatalogController;
 Route::get('/', [indexController::class, 'index'])->name('welcome');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/api/products', function () {
-    return \App\Models\Product::inRandomOrder()->paginate(12)->items();
+    return \App\Models\Product::inRandomOrder()->paginate(32)->items();
 });
 
 Route::get('/checkout', [indexController::class, 'checkout'])->name('checkout');
@@ -49,6 +49,11 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('catalog', AdminCatalogController::class);
 
     Route::get('/edit/products', [AdminMainController::class, 'edit_products'])->name('admin.edit_products');
+    Route::prefix('products')->name('products.')->group(function () {
+        Route::post('/add-image/{id}', [AdminProductsController::class, 'addImage'])->name('addImage');
+        Route::get('/destroy-image/product={id}/{image}', [AdminProductsController::class, 'destroyImage'])->name('destroyImage');
+        Route::get('/first-image/product={id}/{image}', [AdminProductsController::class, 'firstImage'])->name('firstImage');
+    });
 
     Route::post('/import-products', [ProductImportController::class, 'import'])->name('excel.upload');
 });

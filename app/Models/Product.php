@@ -17,6 +17,9 @@ class Product extends Model
         'discount',
         'price',
         'image_path',
+        'seo_title',
+        'seo_keywords',
+        'seo_description',
     ];
 
     public function categories()
@@ -26,6 +29,10 @@ class Product extends Model
     public function catalog()
     {
         return $this->belongsToMany(Catalog::class);
+    }
+    public function package()
+    {
+        return $this->belongsToMany(package::class);
     }
 
     protected static function booted()

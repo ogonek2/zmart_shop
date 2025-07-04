@@ -21,6 +21,9 @@ class CreateProductsTable extends Migration
             $table->text('url')->nullable();
             $table->integer('discount')->default(0);
             $table->text('price')->nullable();
+            $table->text('seo_title')->nullable();
+            $table->text('seo_keywords')->nullable();
+            $table->text('seo_description')->nullable();
             $table->longtext('image_path')->nullable();
             $table->timestamps();
         });

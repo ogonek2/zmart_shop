@@ -1,7 +1,5 @@
 @extends('admin.layouts.app')
 
-@section('header')
-
 
 @section('content')
     <section class="content">
@@ -106,7 +104,7 @@
                                                                         <small class="text-secondary"><b>ART: </b>
                                                                             {{ $product->articule }}</small>
                                                                     </span>
-                                                                    <a href="#" class="btn btn-info ml-auto">
+                                                                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-info ml-auto">
                                                                         <span>
                                                                             К управлению <i class="fa fa-share"
                                                                                 aria-hidden="true"></i>
@@ -301,7 +299,7 @@
                                                                         <small class="text-secondary"><b>ART: </b>
                                                                             {{ $product->articule }}</small>
                                                                     </span>
-                                                                    <a href="#" class="btn btn-info ml-auto">
+                                                                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-info ml-auto">
                                                                         <span>
                                                                             К управлению <i class="fa fa-share"
                                                                                 aria-hidden="true"></i>

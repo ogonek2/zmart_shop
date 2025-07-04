@@ -63,7 +63,7 @@
                         <h4 class="title text-dark">
                             {{ $product->name }}
                         </h4>
-                        <div class="d-flex flex-row my-3">
+                        {{-- <div class="d-flex flex-row my-3">
                             <div class="text-warning mb-1 me-2">
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star"></i>
@@ -76,7 +76,7 @@
                             </div>
                             <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>154 orders</span>
                             <span class="text-success ms-2">In stock</span>
-                        </div>
+                        </div> --}}
                         @php
                             $finalPrice =
                                 $product->discount > 0
@@ -84,7 +84,10 @@
                                     : $product->price;
                         @endphp
 
-                        <div class="mb-3">
+                        <p>
+                            {!! $product->description !!}
+                        </p>
+                        <div class="my-3">
                             @if ($product->discount > 0)
                                 <div class="mb-4">
                                     <b class="p-2 bg-danger text-white">
@@ -102,14 +105,10 @@
                             @endif
                         </div>
 
-                        <p>
-                            {!! $product->description !!}
-                        </p>
-
                         <cart-button id="{{ $product->id }}" name="{{ $product->name }}" price="{{ $finalPrice }}"
                             image="{{ $product->image_path }}"></cart-button>
 
-                        <a href="#" class="btn btn-outline-success shadow-0 ms-2"> Замовити зараз </a>
+                        {{-- <a href="#" class="btn btn-outline-success shadow-0 ms-2"> Замовити зараз </a> --}}
                     </div>
                     <div class="card mt-4 p-3 border-0 rounded-0 bg-light">
                         <h4 class="title text-dark">
