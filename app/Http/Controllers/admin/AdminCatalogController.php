@@ -114,7 +114,7 @@ class AdminCatalogController extends Controller
 
         // Удаление услуг
         foreach ($catalog->products as $product) {
-            $product->catalog()->detach($catalog->id);
+            $product->catalogs()->detach($catalog->id);
         }
         // Удаляем категорию
         $catalog->delete();

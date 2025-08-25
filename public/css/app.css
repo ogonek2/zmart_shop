@@ -56,7 +56,7 @@ html, body{
 
 .truncated-text {
   display: -webkit-box;
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: 3;
   /* Ограничение в 2 строки */
   -webkit-box-orient: vertical;
   overflow: hidden;

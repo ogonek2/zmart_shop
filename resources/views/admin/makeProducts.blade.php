@@ -56,6 +56,8 @@
                                 <li class="nav-item"><a class="nav-link active" href="#create" data-toggle="tab">Создать в
                                         ручную</a>
                                 </li>
+                                <li class="nav-item"><a class="nav-link" href="#upload_file_xml" data-toggle="tab">Генерация XML</a>
+                                </li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
@@ -231,6 +233,27 @@
 
                                         <div id="uploadStatus2" class="mt-2"></div>
                                     </form>
+                                </div>
+                                
+                                <div class="tab-pane" id="upload_file_xml">
+                                    <form id="uploadFormXml" action="{{ route('xml.generator') }}" class="form-horizontal" method="POST"
+                                        enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="form-group row">
+                                            <label for="inputFile">Загрузите <code style="color: green">Excel</code>
+                                                файл</label>
+                                            <input type="file" class="form-control" name="excel_file" id="inputFile"
+                                                required>
+                                        </div>
+                                        <button type="submit" class="btn btn-info">
+                                            Загрузить <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+
+                                    <div class="progress mt-3" style="height: 25px; display:none;">
+                                        <div class="progress-bar" role="progressbar" style="width: 0%;" id="uploadProgress">
+                                            0%</div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- /.tab-content -->

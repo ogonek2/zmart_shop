@@ -1,5 +1,5 @@
 <template>
-    <button class="btn text-white-50" @click="toggleCart">
+    <button class="btn text-white-50 position-relative" @click="toggleCart">
         <i class="fa fa-shopping-basket" aria-hidden="true"></i> Кошик
     </button>
 </template>

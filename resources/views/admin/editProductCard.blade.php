@@ -131,6 +131,28 @@
                                 <input type="text" name="articule" value="{{ $product->articule }}" class="form-control">
                                 <span class="input-group-text"><i class="fas fa-edit"></i></span>
                             </div>
+                            <div class="input-group mt-2">
+                                <span class="input-group-text">Бренд</span>
+                                <input type="text" name="brand" value="{{ $product->brand }}" class="form-control">
+                                <span class="input-group-text"><i class="fas fa-edit"></i></span>
+                            </div>
+                            <div class="input-group mt-2">
+                                <span class="input-group-text">Наличие</span>
+                                <select name="availability" class="form-control">
+                                    <option value="1" @if($product->availability === 1) selected @endif>В наличии</option>
+                                    <option value="2" @if($product->availability === 2) selected @endif>Нету в наличии</option>
+                                </select>
+                                <span class="input-group-text"><i class="fas fa-edit"></i></span>
+                            </div>
+                            <div class="input-group mt-2">
+                                <span class="input-group-text">Состояние</span>
+                                <select name="condition_item" class="form-control">
+                                    <option value="1" @if($product->condition_item === 1) selected @endif>Новое</option>
+                                    <option value="2" @if($product->condition_item === 2) selected @endif>Б/У</option>
+                                    <option value="3" @if($product->condition_item === 3) selected @endif>Отремонтировано</option>
+                                </select>
+                                <span class="input-group-text"><i class="fas fa-edit"></i></span>
+                            </div>
                             <div class="form-group row mt-2">
                                 <div class="col-md-6">
                                     <div class="input-group">
@@ -190,11 +212,11 @@
                 </div>
 
                 <div class="row mt-4">
-                    <div class="col-md-6">
-                        <form action="{{ route('products.update', $product->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
-                            <input type="hidden" name="type_form" value="demo_values">
+                    <form action="{{ route('products.update', $product->id) }}" method="POST" class="row mt-4">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="type_form" value="demo_values">
+                        <div class="card col-md-6">
                             <div class="form-body">
                                 {{-- Характеристики --}}
                                 <div class="card">
@@ -252,42 +274,47 @@
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label for="package">Что входит в комплект</label>
-                                            <textarea name="package" id="package" class="form-control summernote_class"></textarea>
+                                            <textarea name="complectation" id="package" class="form-control summernote_class">
+                                                    {!! $product->complectation !!}
+                                                </textarea>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-footer">
-                                <button class="btn btn-info" type="submit">
-                                    Сохранить
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
 
-                    {{-- SEO --}}
-                    <div class="card col-md-6">
-                        <div class="card-header">SEO-настройки</div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="meta_title">Meta Title</label>
-                                <input type="text" name="meta_title" id="meta_title" class="form-control"
-                                    placeholder="Унікальний текст про товар з вживанням ключових слів (300–500 слів)">
-                            </div>
+                        {{-- SEO --}}
+                        <div class="card col-md-6">
+                            <div class="card-header">SEO-настройки</div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="meta_title">Meta Title</label>
+                                    <input type="text" name="meta_title" id="meta_title" class="form-control"
+                                        placeholder="Унікальний текст про товар з вживанням ключових слів (300–500 слів)"
+                                        value="{{ $product->seo_title }}">
+                                </div>
 
-                            <div class="form-group">
-                                <label for="meta_keywords">Meta Keywords</label>
-                                <input type="text" name="meta_keywords" id="meta_keywords" class="form-control"
-                                    placeholder="пилосос, Samsung, пилосос з контейнером, без мішка, техніка для дому">
-                            </div>
+                                <div class="form-group">
+                                    <label for="meta_keywords">Meta Keywords</label>
+                                    <input type="text" name="meta_keywords" id="meta_keywords" class="form-control"
+                                        placeholder="пилосос, Samsung, пилосос з контейнером, без мішка, техніка для дому"
+                                        value="{{ $product->seo_keywords }}">
+                                </div>
 
-                            <div class="form-group">
-                                <label for="meta_description">Meta Description</label>
-                                <textarea name="meta_description" id="meta_description" class="form-control" rows="3"
-                                    placeholder="Купити пилосос Samsung VC07M25E0WB/UK недорого ✔ Гарантія 12 міс ✔ Потужність 750 Вт ✔ HEPA-фільтр ✔ Доставка по Україні"></textarea>
+                                <div class="form-group">
+                                    <label for="meta_description">Meta Description</label>
+                                    <textarea name="meta_description" id="meta_description" class="form-control" rows="3"
+                                        placeholder="Купити пилосос Samsung VC07M25E0WB/UK недорого ✔ Гарантія 12 міс ✔ Потужність 750 Вт ✔ HEPA-фільтр ✔ Доставка по Україні">{!! $product->seo_description !!}</textarea>
+                                </div>
                             </div>
                         </div>
-                    </div>
+
+                        <div class="form-footer">
+                            <button class="btn btn-info" type="submit">
+                                Сохранить
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
             <!-- /.card-body -->

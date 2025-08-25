@@ -19,7 +19,7 @@
 @endsection
 
 @section('seo')
-    <title>Головна сторінка</title>
+    <title>Магазин Zmart - Головна сторінка</title>
 @endsection
 
 @section('content')

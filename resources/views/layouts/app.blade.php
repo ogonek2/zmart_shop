@@ -43,6 +43,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css"
         rel="stylesheet">
 
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WT7RLCN3');</script>
+    <!-- End Google Tag Manager -->
+    
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WT7RLCN3"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     @yield('styles')
 </head>
 
@@ -52,6 +65,7 @@
         <div class="content-wrapper mb-5">
             @yield('content')
         </div>
+        @include('includes.main.footer')
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -71,6 +85,8 @@
 
     {{-- Mask --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
+    {{-- phoneUtils.js --}}
+    <script src="{{ asset('js/phoneUtils.js') }}"></script>
 
     <!-- Initialize Swiper -->
     <script>
@@ -81,37 +97,6 @@
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
             },
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebarWrapper = document.getElementById('sticky-sidebar');
-            const sidebarCol = sidebarWrapper.closest('aside');
-            const startScrollFix = sidebarWrapper.offsetTop + sidebarWrapper.offsetHeight;
-
-            function updateSidebarWidth() {
-                const colRect = sidebarCol.getBoundingClientRect();
-                sidebarWrapper.style.width = colRect.width + 'px';
-            }
-
-            window.addEventListener('scroll', () => {
-                const scrollY = window.scrollY + window.innerHeight;
-                const pageHeight = document.documentElement.scrollHeight;
-
-                if (window.scrollY > startScrollFix && scrollY < pageHeight + 100) {
-                    sidebarWrapper.classList.add('sidebar-fixed-bottom');
-                    updateSidebarWidth();
-                } else {
-                    sidebarWrapper.classList.remove('sidebar-fixed-bottom');
-                    sidebarWrapper.style.width = '';
-                }
-            });
-
-            window.addEventListener('resize', () => {
-                if (sidebarWrapper.classList.contains('sidebar-fixed-bottom')) {
-                    updateSidebarWidth();
-                }
-            });
         });
     </script>
 

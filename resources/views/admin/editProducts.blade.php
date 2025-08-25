@@ -5,8 +5,57 @@
         <div class="container-fluid">
             <!-- Main row -->
             <div class="row">
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>{{ $packages->count() }} /
+                                <small>{{ round(($packages->count() * 100) / $products->count(), 2) }}%</small></h3>
+                            <p>Заполнено характеристик товаров</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>{{ $products->count() }}</h3>
+
+                            <p>Всего товаров</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3>{{ $products->where('availability', 1)->count() }}</h3>
+
+                            <p>Товаров в наличии</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>{{ $products->where('image_path', null)->count() }}</h3>
+
+                            <p>Товары без изображений</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- ./col -->
+            </div>
+            <div class="row">
                 <div class="col-md-12">
                     <div class="card">
+                        <div class="card-header">
+                            <h6>Таблица товаров</h6>
+                        </div>
                         <div class="card-body">
                             <table id="example1" class="table table-bordered table-hover">
                                 <thead>
@@ -14,6 +63,8 @@
                                         <th>#</th>
                                         <th>Артикуль</th>
                                         <th>Название</th>
+                                        <th>Состояние</th>
+                                        <th>Бренд</th>
                                         <th>Страница</th>
                                         <th>Полное редактирование</th>
                                         <th>Управление</th>
@@ -31,13 +82,24 @@
                                                 </button>
                                             </td>
                                             <td>
+                                                @if ($item->availability === 1)
+                                                    <b class="text-success">В наличии</b>
+                                                @elseif ($item->availability === 2)
+                                                    <b class="text-success">Нету в наличии</b>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                {{ $item->brand }}
+                                            </td>
+                                            <td>
                                                 <a href="{{ route('catalog_product_page', $item->url) }}" target="_blank"
                                                     rel="noopener noreferrer">
                                                     Перейти <i class="fas fa-link"></i>
                                                 </a>
                                             </td>
                                             <td>
-                                                <a href="{{ route('products.edit', $item->id) }}" class="btn btn-outline-primary w-100">
+                                                <a href="{{ route('products.edit', $item->id) }}"
+                                                    class="btn btn-outline-primary w-100">
                                                     Перейти к управлению
                                                 </a>
                                             </td>
@@ -77,8 +139,7 @@
                                                                 <label for="title">Название товара</label>
                                                                 <input type="text" class="form-control" name="title"
                                                                     id="title"
-                                                                    value="{{ old('title', $item->name ?? '') }}"
-                                                                    required>
+                                                                    value="{{ old('title', $item->name ?? '') }}" required>
                                                             </div>
 
                                                             <div class="form-group">

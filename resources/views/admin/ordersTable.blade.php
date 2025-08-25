@@ -1,86 +1,143 @@
 @extends('admin.layouts.app')
 
-@section('header')
-    <div class="col-sm-6">
-        <h1 class="m-0">Заказы</h1>
-    </div><!-- /.col -->
-    {{-- <div class="col-sm-6">
-        <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-        </ol>
-    </div><!-- /.col --> --}}
-@endsection
-
 @section('content')
     <section class="content">
         <div class="container-fluid">
-            <!-- Small boxes (Stat box) -->
             <div class="row">
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-info">
-                        <div class="inner">
-                            <h3>150</h3>
-
-                            <p>New Orders</p>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6>Таблица заказов</h6>
                         </div>
-                        <div class="icon">
-                            <i class="ion ion-bag"></i>
+                        <div class="card-body">
+                            <table id="example1" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Дата</th>
+                                        <th>Имя</th>
+                                        <th>Состояние</th>
+                                        <th>Общая стоимость</th>
+                                        <th>Телефон</th>
+                                        <th>Доставка</th>
+                                        <th>Развернуть</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($orders_data as $item)
+                                        <tr>
+                                            <td>{{ $item->id }}</td>
+                                            <td>{{ $item->created_at }}</td>
+                                            <td>
+                                                <button class="btn w-100 h-100 text-left text-dark">
+                                                    {{ $item->name }} {{ $item->lastname }} {{ $item->fathername }}
+                                                </button>
+                                            </td>
+                                            <td>
+                                                {{ $item->created_at }}
+                                            </td>
+                                            <td>
+                                                {{ $item->total_price }} UAH
+                                            </td>
+                                            <td>
+                                                <a href="tel:{{ $item->phone }}" target="_blank"
+                                                    rel="noopener noreferrer">
+                                                    {{ $item->phone }} <i class="fas fa-link"></i>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                {{ $item->delivery_service }}
+                                            </td>
+                                            <td>
+                                                <button
+                                                    class="btn btn-outline-primary w-100" data-bs-toggle="modal"
+                                                    data-bs-target="#productsModal{{ $item->id }}">
+                                                    Просмотр
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <div class="modal fade" id="productsModal{{ $item->id }}" tabindex="-1"
+                                            role="dialog" aria-labelledby="productsModalLabel{{ $item->id }}"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title font-weight-normal"
+                                                            id="productsModalLabel{{ $item->id }}">
+                                                            #{{ $item->id }} / {{ $item->name }}
+                                                        </h5>
+                                                        <button type="button" class="btn text-dark" data-bs-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                    @php
+                                                        $cartItems = json_decode($item->cart, true); // true — для получения массива
+                                                    @endphp
+                                                    
+                                                    <div class="modal-body">
+                                                        <div class="card mb-2 p-2 border">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <span>Доставка: <b class="text-info">{{ $item->delivery_service ?? 'Отсутствует' }}</b></span><br>
+                                                                    <span>Город: <b class="text-info">{{ $item->city ?? 'Отсутствует'  }}</b></span><br>
+                                                                    <span>Отделение: <b class="text-info">{{ $item->warehouse ?? 'Отсутствует' }}</b></span><br>
+                                                                    <span>Адресс доставки: <b class="text-info">{{ $item->manual_address ?? 'Отсутствует' }}</b></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @if($cartItems)
+                                                            @foreach($cartItems as $cartItem)
+                                                                <div class="card mb-2 p-2 border">
+                                                                    <div class="row align-items-center">
+                                                                        <div class="col-12">
+                                                                            <b>ART: {{ $cartItem['articule'] ?? 'Пусто' }}</b>
+                                                                            <h6>{{ $cartItem['name'] }}</h6>
+                                                                            <span>Цена: {{ $cartItem['price'] }} грн</span> / <spam>Кол-во: {{ $cartItem['quantity'] }}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        @else
+                                                            <p>Кошик порожній або не вдалося розпарсити JSON.</p>
+                                                        @endif
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn bg-gradient-secondary"
+                                                            data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <!-- ./col -->
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-success">
-                        <div class="inner">
-                            <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                            <p>Bounce Rate</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-stats-bars"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <!-- ./col -->
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-warning">
-                        <div class="inner">
-                            <h3>44</h3>
-
-                            <p>User Registrations</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-person-add"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <!-- ./col -->
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-danger">
-                        <div class="inner">
-                            <h3>65</h3>
-
-                            <p>Unique Visitors</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-pie-graph"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <!-- ./col -->
             </div>
-            <!-- /.row -->
-            <!-- Main row -->
-
             <!-- /.row (main row) -->
         </div><!-- /.container-fluid -->
     </section>
+@endsection
+
+@section('scripts')
+    <script>
+        $(function() {
+            $("#example1").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
 @endsection

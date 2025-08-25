@@ -29,13 +29,10 @@
                 </h3>
             </li>
         </ul>
-        <button class="btn btn-success w-100 py-3">
+        <button class="btn btn-success w-100 py-3" id="submit_cart_ch_form">
             Оформити замовлення
         </button>
-        <div class="form-check form-check-inline mt-2">
-            <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked>
-            <label class="form-check-label" for="inlineCheckbox1">Передзвоніть мені</label>
-        </div>
+        <input type="hidden" id="total_price_stream" :value="totalPrice">
     </div>
     <div class="p-3 overflow-auto flex-grow-1">
         <h5 class="mb-2">Ваш кошик</h5>

@@ -3,7 +3,8 @@
         @click.stop>
         <input v-model="query" @input="searchProducts" @focus="showDropdown = true" type="text"
             class="form-control border-0 bg-transparent shadow-none" placeholder="Поиск" style="font-size: 16px;" />
-        <button class="btn btn-dark rounded-pill d-flex align-items-center justify-content-center ms-2"
+        <button @click="goToSearchResults"
+            class="btn btn-dark rounded-pill d-flex align-items-center justify-content-center ms-2"
             style="width: 80px; height: 40px;">
             <i class="fa-solid fa-magnifying-glass"></i>
         </button>
@@ -21,16 +22,22 @@
                     </div>
                 </div>
                 <div class="flex-grow-1" style="cursor: pointer;" @click="selectProduct(product)">
-                    <div class="d-flex gap-2 aligm-items-center"><div class="fw-bold truncated-text">{{ product.name }}</div> <b class="bg-danger p-1 text-white rounded-2" style="font-size: 12px; height: fit-content;" v-if="product.discount > 0">-{{ product.discount }}%</b></div>
+                    <div class="d-flex gap-2 aligm-items-center">
+                        <div class="fw-bold truncated-text">{{ product.name }}</div> <b
+                            class="bg-danger p-1 text-white rounded-2" style="font-size: 12px; height: fit-content;"
+                            v-if="product.discount > 0">-{{ product.discount }}%</b>
+                    </div>
                     <span style="font-size: 14px" v-if="product.discount > 0">{{ product.price - (product.price *
                         product.discount / 100) }} ₴</span>
                     <span style="font-size: 14px" v-else>{{ product.price }} ₴</span>
-                    <small v-if="product.discount > 0" class="text-danger" style="text-decoration: line-through; font-size: 12px; margin-left: 5px;">{{ product.price }} ₴</small>
+                    <small v-if="product.discount > 0" class="text-danger"
+                        style="text-decoration: line-through; font-size: 12px; margin-left: 5px;">{{ product.price }}
+                        ₴</small>
                 </div>
                 <div class="ml-auto align-self-end">
                     <CartButton :id="product.id" :name="product.name" :price="product.discount > 0
                         ? (product.price - (product.price * product.discount / 100))
-                        : product.price" :image="product.image_path" />
+                        : product.price" :image="product.image_path" :articule="product.articule" />
                 </div>
             </div>
         </div>
@@ -76,6 +83,12 @@ export default {
         handleClickOutside(event) {
             if (!this.$el.contains(event.target)) {
                 this.closeDropdown();
+            }
+        },
+        goToSearchResults() {
+            if (this.query.trim().length > 0) {
+                // Перенаправление на страницу с результатами поиска
+                window.location.href = '/search?q=' + encodeURIComponent(this.query.trim());
             }
         },
     },

@@ -148,17 +148,20 @@ class AdminProductsController extends Controller
             return redirect()->back()->with('success', 'Товар успешно обновлен!');
 
         } else if ($request->type_form == "demo_full") {
-            $request->validate([
-                'title' => 'required|string',
-                'price' => 'integer|required',
-                'articule' => 'required|string'
-            ]);
+            if (!empty($request->brand)) {
+                Product::where('name', 'like', '%' . $request->brand . '%')
+                    ->orWhere('description', 'like', '%' . $request->brand . '%')->update(['brand' => $request->brand]);
+            }
+            
             $product->update([
                 'articule' => $request->articule,
                 'name' => $request->title,
                 'discount' => $request->discount ?? 0,
                 'price' => $request->price,
-                'description' => $request->description ?? null
+                'description' => $request->description ?? null,
+                'brand' => $request->brand ?? null,
+                'availability' => $request->availability,
+                'condition_item' => $request->condition_item,
             ]);
 
             $product->categories()->sync($request->category);
@@ -168,7 +171,8 @@ class AdminProductsController extends Controller
         } else if ($request->type_form == "demo_values") {
             $product->update([
                 'seo_title' => $request->meta_title ?? null,
-                'seo_keywords' => $request->meta_keqwords ?? null,
+                'complectation' => $request->complectation ?? null,
+                'seo_keywords' => $request->meta_keywords ?? null,
                 'seo_description' => $request->meta_description ?? null
             ]);
 

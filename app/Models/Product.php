@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\ProductFeedService;
 
 class Product extends Model
 {
@@ -17,6 +18,10 @@ class Product extends Model
         'discount',
         'price',
         'image_path',
+        'complectation',
+        'brand',
+        'condition_item',
+        'availability',
         'seo_title',
         'seo_keywords',
         'seo_description',
@@ -41,6 +46,7 @@ class Product extends Model
             $product->catalogs()->detach(); // Удаляем связи many-to-many
         });
     }
+
 
     protected static function boot()
     {
@@ -67,6 +73,14 @@ class Product extends Model
                     $product->url = $baseUrl . '-' . uniqid();
                 }
             }
+        });
+
+        static::saved(function ($product) {
+            ProductFeedService::generate();
+        });
+
+        static::deleted(function ($product) {
+            ProductFeedService::generate();
         });
     }
 

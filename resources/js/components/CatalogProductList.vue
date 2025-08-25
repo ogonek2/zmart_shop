@@ -57,7 +57,7 @@
                     </div>
 
                     <cart-button :id="product.id" :name="product.name" :price="finalPrice(product)"
-                        :image="product.image_path" />
+                        :image="product.image_path" :articule="product.articule" />
                 </div>
 
                 <div v-if="product.discount > 0" class="card-label-duration">-{{ product.discount }}%</div>
