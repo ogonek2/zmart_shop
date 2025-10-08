@@ -32,6 +32,9 @@
     </div>
 </section>
 
+<!-- Лента категорий -->
+@include('includes.home.categories-carousel')
+
 <!-- Категории -->
 <section class="py-5">
     <div class="container">

@@ -102,6 +102,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'email.role', 'as' => 'admin.
     Route::delete('/test-delete/{id}', [AdminProductsController::class, 'destroy'])->name('test.delete');
 });
 
+// Маршруты для генерации PDF инвойсов
+Route::get('/invoice/{orderId}/download', [App\Http\Controllers\InvoiceController::class, 'generateInvoice'])->name('invoice.download');
+Route::get('/invoice/{orderId}/view', [App\Http\Controllers\InvoiceController::class, 'viewInvoice'])->name('invoice.view');
+
 Auth::routes();
 
 Route::get('logout', function () {

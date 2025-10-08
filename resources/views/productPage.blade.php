@@ -777,6 +777,19 @@
                                             ₴</span>
                                     @endif
                                 </div>
+                                
+                                @if($product->is_wholesale && $product->wholesale_price > 0)
+                                    <div class="wholesale-price mt-3">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="fas fa-boxes text-primary"></i>
+                                            <span class="text-muted">Оптовая цена:</span>
+                                            <span class="fw-bold text-primary">{{ number_format($product->wholesale_price, 0, ',', ' ') }} ₴</span>
+                                        </div>
+                                        <small class="text-muted d-block mt-1">
+                                            <i class="fas fa-info-circle me-1"></i>Доступна при заказе от 10 единиц
+                                        </small>
+                                    </div>
+                                @endif
                             </div>
 
                             <!-- Кнопки действий -->
@@ -886,10 +899,10 @@
                                     </div>
                                     <div class="delivery-item">
                                         <div class="delivery-icon">
-                                            <i class="fas fa-envelope"></i>
+                                            <i class="fas fa-globe"></i>
                                         </div>
                                         <div class="delivery-text">
-                                            <div class="delivery-title">Укрпошта</div>
+                                            <div class="delivery-title">Meest Express</div>
                                             <div class="delivery-subtitle">Отправим завтра</div>
                                         </div>
                                     </div>
@@ -901,7 +914,34 @@
                     <!-- Характеристики -->
                     <div class="tab-pane fade" id="specs" role="tabpanel">
                         <h4>Технические характеристики</h4>
-                        @if (isset($product->package) && count($product->package) > 0)
+                        
+                        @if (!empty($product->characteristics) && is_array($product->characteristics) && count($product->characteristics) > 0)
+                            <ul class="specs-list">
+                                @foreach ($product->characteristics as $charKey => $charValue)
+                                    @php
+                                        $label = is_string($charKey)
+                                            ? ucwords(str_replace(['_', '-'], ' ', $charKey))
+                                            : 'Параметр ' . ($loop->iteration);
+                                    @endphp
+                                    @if(!is_null($charValue) && $charValue !== '')
+                                        <li>
+                                            <span class="spec-name">{{ $label }}</span>
+                                            <span class="spec-value">{{ is_array($charValue) ? implode(', ', $charValue) : $charValue }}</span>
+                                        </li>
+                                    @endif
+                                @endforeach
+                            </ul>
+                        @elseif (!empty($characteristics) && count($characteristics) > 0)
+                            <ul class="specs-list">
+                                @foreach ($characteristics as $char)
+                                    <li>
+                                        <span class="spec-name">{{ $char['name'] ?? 'Не указано' }}</span>
+                                        <span class="spec-value">{{ $product->characteristics[$char['key']] ?? $char['default_value'] ?? '-' }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @elseif (isset($product->package) && count($product->package) > 0)
+                            {{-- Резервная старая система --}}
                             <ul class="specs-list">
                                 @foreach ($product->package as $item)
                                     <li>
@@ -912,6 +952,34 @@
                             </ul>
                         @else
                             <p class="text-muted">Технические характеристики отсутствуют.</p>
+                        @endif
+
+                        @if (!empty($modifications) && count($modifications) > 0)
+                            <div class="mt-4">
+                                <h6 class="fw-semibold mb-3">Модификации</h6>
+                                <ul class="specs-list">
+                                    @foreach ($modifications as $mod)
+                                        <li>
+                                            <span class="spec-name">{{ $mod['name'] ?? 'Не указано' }}</span>
+                                            <span class="spec-value">{{ $product->modifications[$mod['key']] ?? $mod['default_value'] ?? '-' }}</span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        @if (!empty($additionalFields) && count($additionalFields) > 0)
+                            <div class="mt-4">
+                                <h6 class="fw-semibold mb-3">Дополнительная информация</h6>
+                                <ul class="specs-list">
+                                    @foreach ($additionalFields as $field)
+                                        <li>
+                                            <span class="spec-name">{{ $field['name'] ?? 'Не указано' }}</span>
+                                            <span class="spec-value">{{ $product->additional_fields[$field['key']] ?? $field['default_value'] ?? '-' }}</span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         @endif
 
                         @if ($product->complectation)
@@ -940,15 +1008,6 @@
                                         </div>
                                         <div class="delivery-text">
                                             <div class="delivery-title">Новая Почта</div>
-                                            <div class="delivery-subtitle">Отправим завтра</div>
-                                        </div>
-                                    </div>
-                                    <div class="delivery-item">
-                                        <div class="delivery-icon">
-                                            <i class="fas fa-envelope"></i>
-                                        </div>
-                                        <div class="delivery-text">
-                                            <div class="delivery-title">Укрпошта</div>
                                             <div class="delivery-subtitle">Отправим завтра</div>
                                         </div>
                                     </div>

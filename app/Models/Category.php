@@ -10,12 +10,64 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'url',
+        'name',
+        'url',
+        'parent_id',
+        'template_id',
+        'seo_title',
+        'seo_description',
+        'seo_keywords',
+        'meta_image',
+        'description',
+        'is_active',
+        'sort_order',
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+        'sort_order' => 'integer',
+    ];
+
+    // Отношения
     public function products()
     {
         return $this->belongsToMany(Product::class);
+    }
+
+    public function template()
+    {
+        return $this->belongsTo(Template::class);
+    }
+
+    // Иерархические отношения (родитель-потомок)
+    public function parentCategory()
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    public function childCategories()
+    {
+        return $this->hasMany(Category::class, 'parent_id');
+    }
+
+    // Рекурсивное получение всех потомков
+    public function allChildren()
+    {
+        return $this->childCategories()->with('allChildren');
+    }
+
+    // Получить всех родителей
+    public function getParents()
+    {
+        $parents = collect();
+        $parent = $this->parentCategory;
+        
+        while ($parent) {
+            $parents->prepend($parent);
+            $parent = $parent->parentCategory;
+        }
+        
+        return $parents;
     }
 
     protected static function boot()
@@ -23,7 +75,9 @@ class Category extends Model
         parent::boot();
 
         static::saving(function ($category) {
-            $category->url = self::generateHref($category->name);
+            if (empty($category->url)) {
+                $category->url = self::generateHref($category->name);
+            }
         });
     }
 

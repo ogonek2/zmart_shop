@@ -139,28 +139,7 @@ class OrderController extends Controller
             }
         }
 
-        // Логируем данные заказа для отладки
-        \Log::info('Order data prepared:', [
-            'order_data' => $orderData,
-            'cart_final' => $cart,
-            'valid_items_count' => count($validItems),
-            'delivery_info' => [
-                'service' => $orderData['delivery_service'],
-                'city' => $orderData['city'],
-                'warehouse' => $orderData['warehouse'],
-                'manual_address' => $orderData['manual_address']
-            ],
-            'valid_items' => array_map(function($item) {
-                return [
-                    'name' => $item['name'],
-                    'price' => $item['price'],
-                    'quantity' => $item['quantity'],
-                    'total' => $item['price'] * $item['quantity']
-                ];
-            }, $validItems)
-        ]);
-
-        // Создаем заказ
+        // Создаем заказ со СТАРОЙ структурой (Orders модель)
         $order = Orders::create($orderData);
         
         \Log::info('Order created successfully:', [

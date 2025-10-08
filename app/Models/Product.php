@@ -17,6 +17,8 @@ class Product extends Model
         'url',
         'discount',
         'price',
+        'is_wholesale',
+        'wholesale_price',
         'image_path',
         'complectation',
         'brand',
@@ -25,6 +27,17 @@ class Product extends Model
         'seo_title',
         'seo_keywords',
         'seo_description',
+        'characteristics',
+        'modifications',
+        'additional_fields',
+    ];
+
+    protected $casts = [
+        'characteristics' => 'array',
+        'modifications' => 'array',
+        'additional_fields' => 'array',
+        'is_wholesale' => 'boolean',
+        'wholesale_price' => 'decimal:2',
     ];
 
     public function categories()
@@ -40,6 +53,57 @@ class Product extends Model
     public function packages()
     {
         return $this->belongsToMany(\App\Models\package::class);
+    }
+
+    public function relations()
+    {
+        return $this->hasMany(ProductCategoryCatalogRelation::class);
+    }
+    
+    public function images()
+    {
+        return $this->hasMany(\App\Models\productImage::class, 'product_id');
+    }
+
+    // Получить шаблон из связанной категории
+    public function getCategoryTemplate()
+    {
+        $category = $this->categories()->with('template')->first();
+        return $category?->template;
+    }
+
+    // Получить шаблон из связанного каталога
+    public function getCatalogTemplate()
+    {
+        $catalog = $this->catalogs()->with('template')->first();
+        return $catalog?->template;
+    }
+
+    // Получить активный шаблон (приоритет: каталог > категория)
+    public function getActiveTemplate()
+    {
+        return $this->getCatalogTemplate() ?? $this->getCategoryTemplate();
+    }
+
+    // Получить характеристики из шаблона
+    public function getTemplateCharacteristics()
+    {
+        $template = $this->getActiveTemplate();
+        return $template?->characteristics ?? [];
+    }
+
+    // Получить модификации из шаблона
+    public function getTemplateModifications()
+    {
+        $template = $this->getActiveTemplate();
+        return $template?->modifications ?? [];
+    }
+
+    // Получить дополнительные поля из шаблона
+    public function getTemplateAdditionalFields()
+    {
+        $template = $this->getActiveTemplate();
+        return $template?->additional_fields ?? [];
     }
 
     protected static function booted()

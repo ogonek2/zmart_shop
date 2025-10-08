@@ -10,7 +10,7 @@
                         <i class="fas fa-bolt text-warning me-2"></i>ZMART
                     </h3>
                     <p class="text-light mb-3">
-                        Ваш надежный партнер в мире бытовой техники. Мы предлагаем качественные товары 
+                        Ваш надежный партнер в мире бытовой техники и хозяйственных товаров. Мы предлагаем качественные товары 
                         от ведущих мировых брендов по доступным ценам.
                     </p>
                 </div>
@@ -64,53 +64,6 @@
                             Одесса, пром рынок "7 км",<br>
                             ул.Фабричная, маг. №2178
                         </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Дополнительные секции -->
-        <div class="row g-4 mb-5">
-            <!-- Преимущества -->
-            <div class="col-12">
-                <div class="features-section">
-                    <div class="row g-3">
-                        <div class="col-lg-3 col-md-6">
-                            <div class="feature-item text-center">
-                                <div class="feature-icon mb-2">
-                                    <i class="fas fa-shipping-fast fa-2x text-warning"></i>
-                                </div>
-                                <h6 class="text-light mb-1">Быстрая доставка</h6>
-                                <small class="text-muted">По всей Украине</small>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6">
-                            <div class="feature-item text-center">
-                                <div class="feature-icon mb-2">
-                                    <i class="fas fa-shield-alt fa-2x text-warning"></i>
-                                </div>
-                                <h6 class="text-light mb-1">Гарантия качества</h6>
-                                <small class="text-muted">Официальная гарантия</small>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6">
-                            <div class="feature-item text-center">
-                                <div class="feature-icon mb-2">
-                                    <i class="fas fa-headset fa-2x text-warning"></i>
-                                </div>
-                                <h6 class="text-light mb-1">Поддержка 24/7</h6>
-                                <small class="text-muted">Всегда на связи</small>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6">
-                            <div class="feature-item text-center">
-                                <div class="feature-icon mb-2">
-                                    <i class="fas fa-credit-card fa-2x text-warning"></i>
-                                </div>
-                                <h6 class="text-light mb-1">Удобная оплата</h6>
-                                <small class="text-muted">Множество способов</small>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

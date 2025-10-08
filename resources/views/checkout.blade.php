@@ -51,22 +51,7 @@
                                             </div>
                                         </div>
                                         
-                                        <div class="col-md-6">
-                                            <div class="delivery-option card h-100 border-2 border-light hover-shadow position-relative">
-                                                <div class="card-body p-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="bg-primary bg-opacity-10 rounded-3 p-3 me-3">
-                                                            <i class="fas fa-mail-bulk text-primary fs-5"></i>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <h5 class="card-title mb-1">Укрпошта</h5>
-                                                            <p class="card-text text-muted small mb-0">Доставка до відділення пошти</p>
-                                                        </div>
-                                                    </div>
-                                                    <input type="radio" name="delivery_service" value="ukrposhta" class="form-check-input position-absolute top-0 end-0 m-2" style="opacity: 0;">
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                         
                                         <div class="col-md-6">
                                             <div class="delivery-option card h-100 border-2 border-light hover-shadow position-relative">
@@ -313,7 +298,7 @@
                 
                 <!-- Боковая панель с корзиной -->
                 <div class="col-lg-4">
-                    <div class="card shadow-sm border-0 sticky-top" style="top: 2rem;">
+                    <div class="card shadow-sm border-0 ">
                         <div class="card-body p-4">
                             <h3 class="h5 fw-bold text-dark mb-4 d-flex align-items-center">
                                 <i class="fas fa-shopping-cart text-primary me-2"></i>

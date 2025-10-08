@@ -22,6 +22,13 @@ class CatalogController extends Controller
             $images = productImage::where('product_id', $getProduct->id)->get();
             \Log::info('Найдено изображений: ' . $images->count());
             
+            // Получаем характеристики из шаблона (новая система)
+            $characteristics = $getProduct->getTemplateCharacteristics();
+            $modifications = $getProduct->getTemplateModifications();
+            $additionalFields = $getProduct->getTemplateAdditionalFields();
+            
+            \Log::info('Характеристики из шаблона: ' . count($characteristics));
+            
             // Получаем рекомендуемые товары из тех же категорий
             $recommendedProducts = collect();
             try {
@@ -36,7 +43,7 @@ class CatalogController extends Controller
                     ->where('id', '!=', $getProduct->id) // Исключаем текущий товар
                     ->inRandomOrder() // Случайный порядок
                     ->limit(8) // Максимум 8 товаров
-                    ->get(['id', 'name', 'price', 'discount', 'image_path', 'url']);
+                    ->get(['id', 'name', 'price', 'discount', 'image_path', 'url', 'is_wholesale', 'wholesale_price']);
                     
                     \Log::info('Рекомендуемые товары найдены: ' . $recommendedProducts->count());
                 } else {
@@ -52,6 +59,9 @@ class CatalogController extends Controller
             return view('productPage', [
                 'product' => $getProduct,
                 'images' => $images,
+                'characteristics' => $characteristics,
+                'modifications' => $modifications,
+                'additionalFields' => $additionalFields,
                 'recommendedProducts' => $recommendedProducts,
             ]);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
@@ -67,6 +77,12 @@ class CatalogController extends Controller
     {
         $getCategory = Category::where('url', $url)->firstOrFail();
 
+        // Получаем подкатегории текущей категории
+        $subcategories = $getCategory->childCategories()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
+
         // Получаем продукты, связанные с категорией
         $getProducts = $getCategory->products()->paginate(45); // укажи нужное количество
 
@@ -80,6 +96,7 @@ class CatalogController extends Controller
 
         return view('categoryPage', [
             'category' => $getCategory,
+            'subcategories' => $subcategories,
             'products' => $getProducts,
             'paginationData' => $paginationData
         ]);

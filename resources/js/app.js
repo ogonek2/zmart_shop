@@ -14,31 +14,60 @@ import CatalogProductList from './components/CatalogProductList.vue';
 import CartList from './components/CartList.vue';
 import Search from './components/Search.vue';
 import ProductCard from './components/ProductCard.vue';
+import CategoryTreeManager from './components/CategoryTreeManager.vue';
+import CategoryTreeNode from './components/CategoryTreeNode.vue';
 
 // Ждем загрузки DOM
 document.addEventListener('DOMContentLoaded', function() {
     try {
-        // Создаем Vue приложение
-        const app = createApp({});
+        // Создаем Vue приложение для основного контента
+        const mainApp = document.getElementById('app');
+        if (mainApp) {
+            const app = createApp({});
 
-        // Регистрируем компоненты глобально
-        app.component('your-component', YourComponent);
-        app.component('product-list', ProductList);
-        app.component('cart-button', CartButton);
-        app.component('open-cart-button', OpenCartButton);
-        app.component('mini-cart', MiniCart);
-        app.component('wishlist-button', WishlistButton);
-        app.component('wishlist-panel', WishlistPanel);
-        app.component('toast-notification', ToastNotification);
-        app.component('catalog-product-list', CatalogProductList);
-        app.component('cart-list', CartList);
-        app.component('search', Search);
-        app.component('product-card', ProductCard);
+            // Регистрируем компоненты глобально
+            app.component('your-component', YourComponent);
+            app.component('product-list', ProductList);
+            app.component('cart-button', CartButton);
+            app.component('open-cart-button', OpenCartButton);
+            app.component('mini-cart', MiniCart);
+            app.component('wishlist-button', WishlistButton);
+            app.component('wishlist-panel', WishlistPanel);
+            app.component('toast-notification', ToastNotification);
+            app.component('catalog-product-list', CatalogProductList);
+            app.component('cart-list', CartList);
+            app.component('search', Search);
+            app.component('product-card', ProductCard);
 
-        // Монтируем приложение
-        app.mount('#app');
+            // Монтируем приложение
+            app.mount('#app');
+            
+            console.log('Vue приложение успешно инициализировано');
+        }
+
+        // Создаем отдельное приложение для админ-панели
+        const adminApp = document.getElementById('category-tree-app');
+        console.log('=== Vue Admin App Init ===');
+        console.log('Admin app element found:', !!adminApp);
         
-        console.log('Vue приложение успешно инициализировано');
+        if (adminApp) {
+            try {
+                console.log('Creating Vue app instance with CategoryTreeManager as root...');
+                const categoryApp = createApp(CategoryTreeManager);
+                
+                console.log('Registering CategoryTreeNode component...');
+                categoryApp.component('category-tree-node', CategoryTreeNode);
+                
+                console.log('Mounting to #category-tree-app...');
+                categoryApp.mount('#category-tree-app');
+                
+                console.log('✅ Vue Category Tree Manager успешно инициализирован');
+            } catch (error) {
+                console.error('❌ Ошибка инициализации Vue Category Tree:', error);
+            }
+        } else {
+            console.log('❌ Element #category-tree-app не найден');
+        }
     } catch (error) {
         console.error('Ошибка инициализации Vue приложения:', error);
     }

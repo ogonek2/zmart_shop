@@ -12,19 +12,59 @@ class Catalog extends Model
     protected $fillable = [
         'name',
         'url',
+        'parent_id',
+        'template_id',
+        'seo_title',
+        'seo_description',
+        'seo_keywords',
+        'meta_image',
+        'description',
+        'is_active',
+        'sort_order',
+        'type',
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+        'sort_order' => 'integer',
+    ];
+
+    // Отношения
     public function products()
     {
         return $this->belongsToMany(Product::class);
+    }
+
+    public function template()
+    {
+        return $this->belongsTo(Template::class);
+    }
+
+    // Иерархические отношения (родитель-потомок)
+    public function parentCatalog()
+    {
+        return $this->belongsTo(Catalog::class, 'parent_id');
+    }
+
+    public function childCatalogs()
+    {
+        return $this->hasMany(Catalog::class, 'parent_id');
+    }
+
+    // Рекурсивное получение всех потомков
+    public function allChildren()
+    {
+        return $this->childCatalogs()->with('allChildren');
     }
 
     protected static function boot()
     {
         parent::boot();
 
-        static::saving(function ($category) {
-            $category->url = self::generateHref($category->name);
+        static::saving(function ($catalog) {
+            if (empty($catalog->url)) {
+                $catalog->url = self::generateHref($catalog->name);
+            }
         });
     }
 

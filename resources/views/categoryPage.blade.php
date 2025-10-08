@@ -55,10 +55,175 @@
             background: rgba(37, 99, 235, 0.1);
         }
 
+        /* Современная сетка товаров - компактнее */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Современная карточка товара - компактная и минималистичная */
+        .product-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            border-color: #e2e8f0;
+        }
+
+        /* Изображение - компактнее */
+        .product-image-container {
+            position: relative;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+
+        .product-image {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.08);
+        }
+
+        .no-image-placeholder {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            color: #94a3b8;
+        }
+
+        /* Компактные бейджи */
+        .discount-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: #ef4444;
+            color: white;
+            padding: 0.35rem 0.6rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+
+        .availability-badge {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background: #f59e0b;
+            color: white;
+            padding: 0.35rem 0.6rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Компактная кнопка избранного */
+        .wishlist-btn {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border: none;
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .product-card:has(.availability-badge) .wishlist-btn {
+            left: 7rem;
+        }
+
+        .wishlist-btn:hover {
+            background: white;
+            color: #ef4444;
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Компактная информация о товаре */
+        .product-info {
+            padding: 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .product-title {
+            font-weight: 600;
+            color: #1e293b;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            font-size: 0.9rem;
+            min-height: 2.6em;
+        }
+
+        .product-title a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .product-title a:hover {
+            color: #2563eb;
+        }
+
+        /* Компактная цена */
+        .product-price {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        .price-current {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .price-old {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            text-decoration: line-through;
+        }
+
+        .product-actions {
+            margin-top: 0.75rem;
         }
 
         .pagination-wrapper {
@@ -87,26 +252,99 @@
             color: white;
         }
 
-        /* Улучшенная адаптивность */
-        @media (max-width: 1200px) {
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 1.25rem;
-            }
+        /* Стили для подкатегорий (как в карусели) */
+        .subcategories-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: flex-start;
         }
 
+        .subcategory-carousel-item {
+            flex: 0 0 auto;
+            width: 110px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        .subcategory-carousel-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .subcategory-carousel-item:hover .subcategory-image {
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+            border-color: var(--primary-color);
+        }
+        
+        .subcategory-image-wrapper {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 0.75rem;
+            position: relative;
+        }
+        
+        .subcategory-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #e5e7eb;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .subcategory-icon-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 3px solid #e5e7eb;
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            color: #94a3b8;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .subcategory-carousel-item:hover .subcategory-icon-placeholder {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+        
+        .subcategory-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+            line-height: 1.2;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .subcategory-count {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* Улучшенная адаптивность */
         @media (max-width: 992px) {
             .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-                gap: 1rem;
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             }
         }
 
         @media (max-width: 768px) {
             .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 1rem;
-                padding: 0 0.5rem;
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 0.75rem;
             }
             
             .sort-section {
@@ -126,13 +364,49 @@
             .category-header .lead {
                 font-size: 1rem;
             }
+
+            .product-info {
+                padding: 0.85rem;
+            }
+
+            .product-title {
+                font-size: 0.85rem;
+            }
+
+            .price-current {
+                font-size: 1.05rem;
+            }
+
+            .subcategories-grid {
+                gap: 1.5rem;
+            }
+
+            .subcategory-carousel-item {
+                width: 90px;
+            }
+
+            .subcategory-image-wrapper {
+                width: 75px;
+                height: 75px;
+            }
+
+            .subcategory-name {
+                font-size: 0.8rem;
+            }
+
+            .subcategory-count {
+                font-size: 0.7rem;
+            }
+
+            .subcategory-icon-placeholder {
+                font-size: 1.5rem;
+            }
         }
 
         @media (max-width: 576px) {
             .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                gap: 0.75rem;
-                padding: 0 0.25rem;
+                grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+                gap: 0.6rem;
             }
 
             .category-header {
@@ -156,13 +430,66 @@
                 padding: 0.4rem;
                 font-size: 0.85rem;
             }
+
+            .product-info {
+                padding: 0.75rem;
+            }
+
+            .product-title {
+                font-size: 0.8rem;
+                min-height: 2.4em;
+            }
+
+            .price-current {
+                font-size: 1rem;
+            }
+
+            .price-old {
+                font-size: 0.75rem;
+            }
+
+            .discount-badge,
+            .availability-badge {
+                padding: 0.3rem 0.5rem;
+                font-size: 0.7rem;
+            }
+
+            .wishlist-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 0.85rem;
+            }
+
+            .subcategories-grid {
+                gap: 1rem;
+                justify-content: center;
+            }
+
+            .subcategory-carousel-item {
+                width: 80px;
+            }
+
+            .subcategory-image-wrapper {
+                width: 65px;
+                height: 65px;
+            }
+
+            .subcategory-name {
+                font-size: 0.75rem;
+            }
+
+            .subcategory-count {
+                font-size: 0.7rem;
+            }
+
+            .subcategory-icon-placeholder {
+                font-size: 1.25rem;
+            }
         }
 
         @media (max-width: 480px) {
             .products-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
-                padding: 0 0.25rem;
             }
 
             .category-header h1 {
@@ -204,6 +531,49 @@
             </div>
         </div>
     </section>
+
+    <!-- Подкатегории (если есть) -->
+    @if($subcategories->count() > 0)
+    <section class="subcategories-section py-4" style="background: #f8f9fa;">
+        <div class="container">
+            <h3 class="mb-4 fw-bold">
+                <i class="fas fa-layer-group me-2 text-primary"></i>Подкатегории
+            </h3>
+            <div class="subcategories-grid">
+                @foreach($subcategories as $subcategory)
+                    @php
+                        $productCount = $subcategory->products()->count();
+                        // Получаем изображение из последнего товара подкатегории
+                        $latestProduct = $subcategory->products()->latest()->first();
+                        $hasProductImage = $latestProduct && $latestProduct->image_path;
+                        $subcategoryImage = $hasProductImage ? $latestProduct->image_path : null;
+                    @endphp
+                    <a href="{{ route('catalog_category_page', $subcategory->url) }}" 
+                       class="subcategory-carousel-item">
+                        <div class="subcategory-image-wrapper">
+                            @if($subcategoryImage)
+                                <img src="{{ $subcategoryImage }}" 
+                                     alt="{{ $subcategory->name }}" 
+                                     class="subcategory-image"
+                                     loading="lazy">
+                            @else
+                                <div class="subcategory-icon-placeholder">
+                                    <i class="fas fa-folder-open"></i>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="subcategory-name">{{ $subcategory->name }}</div>
+                        @if($productCount > 0)
+                            <div class="subcategory-count">{{ $productCount }} товаров</div>
+                        @else
+                            <div class="subcategory-count text-muted">Пусто</div>
+                        @endif
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
 
     <section class="py-4">
         <div class="container">
@@ -251,22 +621,84 @@
                     <!-- Сетка товаров -->
                     <div class="products-grid">
                         @foreach($products->items() as $product)
-                            <product-card 
-                                id="{{ $product->id }}"
-                                name="{{ $product->name }}"
-                                price="{{ $product->price }}"
-                                discount="{{ $product->discount }}"
-                                image_path="{{ $product->image_path ?? 'https://via.placeholder.com/300x300/f8f9fa/6c757d?text=Нет+фото' }}"
-                                url="{{ $product->url }}"
-                                articule="{{ $product->articule ?? 'Не указан' }}"
-                                rating="4.5"
-                                availability="{{ $product->availability ?? 1 }}"
-                                description="{{ $product->description ?? '' }}"
-                                variant="default"
-                                show-rating="true"
-                                show-compare="false"
-                                show-additional-info="false">
-                            </product-card>
+                            @php
+                                $finalPrice = $product->discount > 0 
+                                    ? $product->price - ($product->price * $product->discount / 100) 
+                                    : $product->price;
+                            @endphp
+                            <div class="product-card" 
+                                 data-id="{{ $product->id }}"
+                                 data-name="{{ $product->name }}"
+                                 data-price="{{ $finalPrice }}">
+                                <!-- Бейдж скидки -->
+                                @if($product->discount > 0)
+                                    <div class="discount-badge">
+                                        <i class="fas fa-tag me-1"></i>-{{ $product->discount }}%
+                                    </div>
+                                @endif
+                                
+                                <!-- Индикатор наличия -->
+                                @if($product->availability == 2)
+                                    <div class="availability-badge">
+                                        <i class="fas fa-times-circle me-1"></i>Нет в наличии
+                                    </div>
+                                @endif
+                                
+                                <!-- Кнопка избранного -->
+                                <button class="wishlist-btn" title="Добавить в избранное" 
+                                        onclick="toggleWishlist({{ $product->id }}, '{{ $product->name }}', {{ $finalPrice }}, '{{ $product->image_path ?? '' }}', {{ $product->discount ?? 0 }})">
+                                    <i class="far fa-heart"></i>
+                                </button>
+
+                                <!-- Изображение товара -->
+                                <div class="product-image-container">
+                                    <a href="{{ route('catalog_product_page', $product->url) }}" 
+                                       class="product-link" 
+                                       title="{{ $product->name }}">
+                                        @if($product->image_path)
+                                            <img src="{{ $product->image_path }}" 
+                                                 alt="{{ $product->name }}" 
+                                                 loading="lazy" 
+                                                 class="product-image">
+                                        @else
+                                            <div class="no-image-placeholder">
+                                                <i class="fas fa-image fa-2x text-muted"></i>
+                                                <small class="text-muted d-block mt-2">Нет фото</small>
+                                            </div>
+                                        @endif
+                                    </a>
+                                </div>
+
+                                <!-- Информация о товаре -->
+                                <div class="product-info">
+                                    <h5 class="product-title">
+                                        <a href="{{ route('catalog_product_page', $product->url) }}" 
+                                           class="text-decoration-none">
+                                            {{ $product->name }}
+                                        </a>
+                                    </h5>
+
+                                    <!-- Цена -->
+                                    <div class="product-price mb-3">
+                                        <span class="price-current">{{ number_format($finalPrice, 0, ',', ' ') }} ₴</span>
+                                        @if($product->discount > 0)
+                                            <span class="price-old">{{ number_format($product->price, 0, ',', ' ') }} ₴</span>
+                                        @endif
+                                    </div>
+
+                                    <!-- Кнопка корзины -->
+                                    <div class="product-actions">
+                                        <cart-button 
+                                            :id="{{ $product->id }}" 
+                                            name="{{ $product->name }}" 
+                                            :price="{{ $finalPrice }}"
+                                            image="{{ $product->image_path ?? '' }}"
+                                            articule="{{ $product->articule ?? 'Не указан' }}"
+                                            :availability="{{ $product->availability ?? 1 }}">
+                                        </cart-button>
+                                    </div>
+                                </div>
+                            </div>
                         @endforeach
                     </div>
 
@@ -294,7 +726,71 @@
 
 @section('scripts')
     <script>
+        // Функция работы с избранным
+        function toggleWishlist(productId, productName, price, image, discount) {
+            let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            const index = wishlist.findIndex(item => item.id === productId);
+            const button = event.currentTarget;
+            const icon = button.querySelector('i');
+            
+            if (index > -1) {
+                // Убираем из избранного
+                wishlist.splice(index, 1);
+                icon.className = 'far fa-heart';
+                
+                // Показываем уведомление
+                window.dispatchEvent(new CustomEvent('show-toast', {
+                    detail: {
+                        title: 'Убрано из избранного',
+                        message: 'Товар убран из вашего избранного',
+                        type: 'info',
+                        duration: 3000
+                    }
+                }));
+            } else {
+                // Добавляем в избранное
+                wishlist.push({
+                    id: productId,
+                    name: productName,
+                    price: price,
+                    image: image,
+                    discount: discount
+                });
+                icon.className = 'fas fa-heart text-danger';
+                
+                // Показываем уведомление
+                window.dispatchEvent(new CustomEvent('show-toast', {
+                    detail: {
+                        title: 'Добавлено в избранное!',
+                        message: 'Товар добавлен в ваше избранное',
+                        type: 'success',
+                        duration: 3000
+                    }
+                }));
+            }
+            
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            window.dispatchEvent(new Event('wishlist-updated'));
+        }
+
+        // Проверка избранного при загрузке
+        function updateWishlistButtons() {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            wishlist.forEach(item => {
+                const button = document.querySelector(`.wishlist-btn[onclick*="${item.id}"]`);
+                if (button) {
+                    const icon = button.querySelector('i');
+                    if (icon) {
+                        icon.className = 'fas fa-heart text-danger';
+                    }
+                }
+            });
+        }
+
         $(document).ready(function() {
+            // Обновляем кнопки избранного при загрузке
+            updateWishlistButtons();
+
             // Переключение вида товаров
             $('.view-btn').on('click', function() {
                 $('.view-btn').removeClass('active');
@@ -304,17 +800,7 @@
                 if (view === 'list') {
                     $('.products-grid').css('grid-template-columns', '1fr');
                 } else {
-                    $('.products-grid').css('grid-template-columns', 'repeat(auto-fill, minmax(280px, 1fr))');
-                }
-            });
-
-            // Обработка избранного
-            $('.wishlist-btn').on('click', function() {
-                const icon = $(this).find('i');
-                if (icon.hasClass('far')) {
-                    icon.removeClass('far').addClass('fas text-danger');
-                } else {
-                    icon.removeClass('fas text-danger').addClass('far');
+                    $('.products-grid').css('grid-template-columns', 'repeat(auto-fill, minmax(200px, 1fr))');
                 }
             });
 
@@ -335,15 +821,15 @@
                     
                     switch(sortValue) {
                         case 'price-asc':
-                            return parseFloat(productA.attr('price')) - parseFloat(productB.attr('price'));
+                            return parseFloat(productA.data('price')) - parseFloat(productB.data('price'));
                         case 'price-desc':
-                            return parseFloat(productB.attr('price')) - parseFloat(productA.attr('price'));
+                            return parseFloat(productB.data('price')) - parseFloat(productA.data('price'));
                         case 'name-asc':
-                            return productA.attr('name').localeCompare(productB.attr('name'), 'uk');
+                            return productA.data('name').localeCompare(productB.data('name'), 'uk');
                         case 'name-desc':
-                            return productB.attr('name').localeCompare(productA.attr('name'), 'uk');
+                            return productB.data('name').localeCompare(productA.data('name'), 'uk');
                         case 'new':
-                            return parseInt(productB.attr('id')) - parseInt(productA.attr('id'));
+                            return parseInt(productB.data('id')) - parseInt(productA.data('id'));
                         default: // popular
                             return 0; // Оставляем как есть
                     }
