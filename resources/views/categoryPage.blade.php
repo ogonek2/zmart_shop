@@ -689,12 +689,28 @@
                                     <!-- Кнопка корзины -->
                                     <div class="product-actions">
                                         <cart-button 
+                                            data-product-id="{{ $product->id }}" 
+                                            data-product-name="{{ $product->name }}"
+                                            data-product-price="{{ $finalPrice }}"
+                                            data-product-image="{{ $product->image_path ?? '' }}"
+                                            data-product-articule="{{ $product->articule ?? 'Не указан' }}"
+                                            @if($product->is_wholesale && $product->wholesale_price && $product->wholesale_min_quantity)
+                                            data-product-is-wholesale="true"
+                                            data-product-wholesale-price="{{ $product->wholesale_price }}"
+                                            data-product-wholesale-min-quantity="{{ $product->wholesale_min_quantity }}"
+                                            @endif
                                             :id="{{ $product->id }}" 
-                                            name="{{ $product->name }}" 
+                                            name="{{ $product->name }}"
                                             :price="{{ $finalPrice }}"
                                             image="{{ $product->image_path ?? '' }}"
                                             articule="{{ $product->articule ?? 'Не указан' }}"
-                                            :availability="{{ $product->availability ?? 1 }}">
+                                            :availability="{{ $product->availability ?? 1 }}"
+                                            @if($product->is_wholesale && $product->wholesale_price && $product->wholesale_min_quantity)
+                                            is-wholesale="true"
+                                            :wholesale-price="{{ $product->wholesale_price }}"
+                                            :wholesale-min-quantity="{{ $product->wholesale_min_quantity }}"
+                                            @endif
+                                            >
                                         </cart-button>
                                     </div>
                                 </div>

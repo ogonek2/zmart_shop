@@ -24,6 +24,18 @@ export default {
         availability: {
             type: Number,
             default: 1
+        },
+        isWholesale: {
+            type: Boolean,
+            default: false
+        },
+        wholesalePrice: {
+            type: [String, Number],
+            default: null
+        },
+        wholesaleMinQuantity: {
+            type: [String, Number],
+            default: null
         }
     },
     data() {
@@ -37,7 +49,10 @@ export default {
                 price: '',
                 image: '',
                 articule: '',
-                availability: 1
+                availability: 1,
+                isWholesale: false,
+                wholesalePrice: null,
+                wholesaleMinQuantity: null
             }
         };
     },
@@ -60,6 +75,15 @@ export default {
         },
         finalAvailability() {
             return this.productData.availability || this.availability;
+        },
+        finalIsWholesale() {
+            return this.productData.isWholesale || this.isWholesale;
+        },
+        finalWholesalePrice() {
+            return this.productData.wholesalePrice || this.wholesalePrice;
+        },
+        finalWholesaleMinQuantity() {
+            return this.productData.wholesaleMinQuantity || this.wholesaleMinQuantity;
         }
     },
     mounted() {
@@ -81,8 +105,17 @@ export default {
                     price: element.dataset.productPrice || '',
                     image: element.dataset.productImage || '',
                     articule: element.dataset.productArticule || '',
-                    availability: parseInt(element.dataset.productAvailability) || 1
+                    availability: parseInt(element.dataset.productAvailability) || 1,
+                    isWholesale: element.dataset.productIsWholesale === 'true' || element.dataset.productIsWholesale === '1',
+                    wholesalePrice: element.dataset.productWholesalePrice || null,
+                    wholesaleMinQuantity: parseInt(element.dataset.productWholesaleMinQuantity) || null
                 };
+                
+                console.log('CartButton - Прочитаны data-атрибуты:', {
+                    element: element,
+                    dataset: element.dataset,
+                    productData: this.productData
+                });
             }
         },
         checkCart() {
@@ -112,14 +145,30 @@ export default {
                 }));
             } else {
                 // Добавляем товар в корзину
-                cart.push({
+                const cartItem = {
                     id: this.finalId,
                     name: this.finalName,
                     price: this.finalPrice,
                     image: this.finalImage,
                     articule: this.finalArticule || 'Не указан',
                     quantity: 1
+                };
+                
+                // Добавляем оптовые данные, если товар оптовый
+                console.log('CartButton - Оптовые данные:', {
+                    finalIsWholesale: this.finalIsWholesale,
+                    finalWholesalePrice: this.finalWholesalePrice,
+                    finalWholesaleMinQuantity: this.finalWholesaleMinQuantity
                 });
+                
+                if (this.finalIsWholesale && this.finalWholesalePrice && this.finalWholesaleMinQuantity) {
+                    cartItem.isWholesale = true;
+                    cartItem.wholesalePrice = parseFloat(this.finalWholesalePrice);
+                    cartItem.wholesaleMinQuantity = parseInt(this.finalWholesaleMinQuantity);
+                    console.log('CartButton - Добавлены оптовые данные:', cartItem);
+                }
+                
+                cart.push(cartItem);
                 this.inCart = true;
                 this.cartItemQuantity = 1;
                 

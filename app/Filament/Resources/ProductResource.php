@@ -60,6 +60,7 @@ class ProductResource extends Resource
                                     ->afterStateUpdated(function ($state, callable $set) {
                                         if (!$state) {
                                             $set('wholesale_price', null);
+                                            $set('wholesale_min_quantity', null);
                                         }
                                     }),
                                 
@@ -69,6 +70,15 @@ class ProductResource extends Resource
                                     ->prefix('₴')
                                     ->visible(fn (callable $get) => $get('is_wholesale'))
                                     ->required(fn (callable $get) => $get('is_wholesale')),
+                                
+                                Forms\Components\TextInput::make('wholesale_min_quantity')
+                                    ->label('Минимальное количество для опта')
+                                    ->numeric()
+                                    ->minValue(1)
+                                    ->suffix('шт.')
+                                    ->visible(fn (callable $get) => $get('is_wholesale'))
+                                    ->required(fn (callable $get) => $get('is_wholesale'))
+                                    ->helperText('Минимальное количество товара для покупки по оптовой цене'),
                                 
                                 Forms\Components\TextInput::make('discount')
                                     ->label('Скидка')
@@ -113,16 +123,27 @@ class ProductResource extends Resource
                                     ->default('in_stock'),
                             ]),
                         
+                        // Управление главным изображением перенесено в отдельную страницу галереи
+                        
+                        
+                        // Управление галереей перенесено в отдельную страницу
+                        
+                    ])
+                    ->columnSpan(['lg' => 2]),
+                
+                Forms\Components\Card::make()
+                    ->schema([
+                        // При создании - показываем поля загрузки
+                        // При редактировании - показываем кнопку для перехода на страницу галереи
                         Forms\Components\FileUpload::make('image_path')
                             ->label('Главное изображение')
                             ->image()
                             ->directory('products')
-                            ->disk('public')
-                            ->preserveFilenames()
-                            ->enableOpen()
-                            ->enableDownload()
-                            ->visibility('public')
-                            ->columnSpan('full'),
+                            ->imagePreviewHeight('200')
+                            ->panelAspectRatio('2:1')
+                            ->panelLayout('integrated')
+                            ->helperText('Загрузите главное изображение товара')
+                            ->hiddenOn('edit'),
                         
                         Forms\Components\Repeater::make('gallery_images')
                             ->label('Галерея изображений')
@@ -131,21 +152,38 @@ class ProductResource extends Resource
                                     ->label('Изображение')
                                     ->image()
                                     ->directory('products/gallery')
-                                    ->disk('public')
-                                    ->preserveFilenames()
-                                    ->enableOpen()
-                                    ->enableDownload()
-                                    ->visibility('public')
+                                    ->imagePreviewHeight('150')
+                                    ->panelAspectRatio('1:1')
+                                    ->panelLayout('integrated')
                                     ->required(),
                             ])
-                            ->createItemButtonLabel('Добавить изображение')
                             ->collapsible()
-                            ->columnSpan('full'),
-                    ])
-                    ->columnSpan(['lg' => 2]),
-                
-                Forms\Components\Card::make()
-                    ->schema([
+                            ->collapsed(false)
+                            ->helperText('Добавьте дополнительные изображения товара')
+                            ->hiddenOn('edit'),
+                        
+                        // При редактировании показываем кнопку перехода на страницу галереи
+                        Forms\Components\Placeholder::make('Управление изображениями')
+                            ->content(function ($record) {
+                                $editUrl = route('filament.resources.products.manage-gallery', $record->id);
+                                
+                                return new \Illuminate\Support\HtmlString(
+                                    '<div style="padding: 20px; text-align: center;">
+                                        <div style="margin-bottom: 15px;">
+                                            <i class="fas fa-images" style="font-size: 48px; color: #3b82f6; margin-bottom: 10px;"></i>
+                                        </div>
+                                        <h3 style="margin: 0 0 10px 0; color: #374151; font-size: 18px;">Управление изображениями</h3>
+                                        <p style="margin: 0 0 20px 0; color: #6b7280; font-size: 14px;">Загружайте, редактируйте и управляйте изображениями товара</p>
+                                        <a href="' . $editUrl . '" target="_blank" 
+                                           style="display: inline-block; background: #3b82f6; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: 500; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: all 0.2s;">
+                                            <i class="fas fa-images" style="margin-right: 8px;"></i>
+                                            Открыть галерею
+                                        </a>
+                                    </div>'
+                                );
+                            })
+                            ->visibleOn('edit'),
+                        
                         Forms\Components\Placeholder::make('Связи'),
                         
                         Forms\Components\Select::make('categories')
@@ -282,6 +320,12 @@ class ProductResource extends Resource
                     ->sortable()
                     ->visible(fn ($record) => $record && $record->is_wholesale),
                 
+                Tables\Columns\TextColumn::make('wholesale_min_quantity')
+                    ->label('Мин. кол-во опт')
+                    ->sortable()
+                    ->suffix(' шт.')
+                    ->visible(fn ($record) => $record && $record->is_wholesale),
+                
                 Tables\Columns\TextColumn::make('discount')
                     ->label('Скидка %')
                     ->sortable(),
@@ -401,6 +445,11 @@ class ProductResource extends Resource
                     ->icon('heroicon-o-link')
                     ->url(fn ($record) => route('filament.resources.products.manage-relations', $record))
                     ->color('info'),
+                Tables\Actions\Action::make('manage_gallery')
+                    ->label('Галерея')
+                    ->icon('heroicon-o-photograph')
+                    ->url(fn ($record) => route('filament.resources.products.manage-gallery', $record))
+                    ->color('success'),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
@@ -423,10 +472,23 @@ class ProductResource extends Resource
             'create' => Pages\CreateProduct::route('/create'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
             'manage-relations' => Pages\ManageRelations::route('/{record}/manage-relations'),
+            'manage-gallery' => Pages\ManageGallery::route('/{record}/manage-gallery'),
             'hierarchy' => Pages\HierarchyManager::route('/hierarchy'),
             'tree' => Pages\TreeManager::route('/tree'),
             'vue-tree' => Pages\VueTreeManager::route('/vue-tree'),
         ];
-    }    
+    }
     
+    public static function getGlobalSearchResultTitle($record): string
+    {
+        return $record->name;
+    }
+    
+    public static function getGlobalSearchResultDetails($record): array
+    {
+        return [
+            'Артикул' => $record->articule,
+            'Цена' => $record->price . ' ₴',
+        ];
+    }
 }

@@ -29,6 +29,7 @@ class OrderController extends Controller
             'cart_raw' => $request->cart,
             'cart_decoded' => $cart,
             'cart_count' => is_array($cart) ? count($cart) : 'not array',
+            'total_price' => $request->total_price,
             'all_data' => $request->all()
         ]);
         
@@ -64,7 +65,38 @@ class OrderController extends Controller
             // Убеждаемся, что цена и количество - числа
             $item['price'] = is_numeric($item['price']) ? (float)$item['price'] : 0;
             $item['quantity'] = is_numeric($item['quantity']) ? (int)$item['quantity'] : 1;
+            
+            // Проверяем оптовые условия и обновляем цену если нужно
+            if (isset($item['isWholesale']) && $item['isWholesale'] && 
+                isset($item['wholesalePrice']) && isset($item['wholesaleMinQuantity'])) {
+                
+                $wholesalePrice = is_numeric($item['wholesalePrice']) ? (float)$item['wholesalePrice'] : 0;
+                $wholesaleMinQuantity = is_numeric($item['wholesaleMinQuantity']) ? (int)$item['wholesaleMinQuantity'] : 0;
+                
+                // Если количество достигло минимума для опта, используем оптовую цену
+                if ($item['quantity'] >= $wholesaleMinQuantity && $wholesalePrice > 0) {
+                    $item['price'] = $wholesalePrice;
+                    $item['wholesale_applied'] = true; // Помечаем, что применили оптовую цену
+                    
+                    \Log::info('Wholesale price applied', [
+                        'product_id' => $item['id'] ?? 'unknown',
+                        'product_name' => $item['name'],
+                        'quantity' => $item['quantity'],
+                        'min_quantity' => $wholesaleMinQuantity,
+                        'original_price' => $item['price'],
+                        'wholesale_price' => $wholesalePrice
+                    ]);
+                }
+            }
         }
+
+        // Логируем финальные данные корзины после обработки оптовых цен
+        \Log::info('Cart after wholesale processing:', [
+            'cart_items' => $cart,
+            'total_calculated' => array_sum(array_map(function($item) {
+                return $item['price'] * $item['quantity'];
+            }, $cart))
+        ]);
 
         $orderData = [
             'delivery_service' => $request->delivery_service,
@@ -150,7 +182,7 @@ class OrderController extends Controller
 
         // Отправляем письмо с данными заказа
         try {
-            Mail::to('zmartcomua@gmail.com')->send(new OrderSubmitted($orderData));
+            Mail::to('ytlemon290@gmail.com')->send(new OrderSubmitted($orderData));
             \Log::info('Order email sent successfully');
         } catch (\Exception $e) {
             \Log::error('Failed to send order email: ' . $e->getMessage());
@@ -167,14 +199,17 @@ class OrderController extends Controller
         foreach ($cart as $item) {
             $product = $products[$item['id']] ?? null;
             if (!$product) continue;
-    
+            
+            // Используем цену из корзины (уже с учетом оптовых скидок)
+            $finalPrice = $item['price'];
+            
             $items[] = [
                 'item_name'   => $product->name,
                 'item_id'     => $item['articule'] ?? 'Не указан',
                 'item_brand'  => $product->brand ?? 'Без бренду',
                 'item_category' => $product->categories()->first()->name ?? 'Без категорії',
-                'price'       => $product->price,
-                'discount'    => $product->discount, // можно добавить, если есть
+                'price'       => $finalPrice, // Используем финальную цену с учетом опта
+                'discount'    => $product->discount,
                 'quantity'    => $item['quantity'] ?? 1,
                 'currency' => 'UAH'
             ];

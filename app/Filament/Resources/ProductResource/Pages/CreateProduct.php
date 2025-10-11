@@ -61,7 +61,6 @@ class CreateProduct extends CreateRecord
             return $imagePath;
         }
         
-        $destinationPath = $directory . '/' . basename($imagePath);
         $localPath = storage_path('app/public/' . $imagePath);
         
         \Log::info('Trying to upload image to CDN', [
@@ -72,13 +71,19 @@ class CreateProduct extends CreateRecord
         
         if (file_exists($localPath)) {
             try {
-                $cdnUrl = uploadToBunnyCDN($localPath, $destinationPath);
+                // Используем глобальный хелпер uploadToBunnyCDN
+                $cdnUrl = uploadToBunnyCDN($localPath, $imagePath);
                 \Log::info('Image uploaded to CDN successfully', ['cdnUrl' => $cdnUrl]);
+                
+                // Удаляем локальный файл после успешной загрузки на CDN
+                unlink($localPath);
+                \Log::info('Local file deleted after CDN upload', ['localPath' => $localPath]);
+                
                 return $cdnUrl;
             } catch (\Exception $e) {
                 \Log::error('Failed to upload image to CDN: ' . $e->getMessage(), [
                     'localPath' => $localPath,
-                    'destinationPath' => $destinationPath
+                    'imagePath' => $imagePath
                 ]);
                 // Возвращаем оригинальный путь если загрузка не удалась
                 return $imagePath;
@@ -93,18 +98,27 @@ class CreateProduct extends CreateRecord
     {
         $galleryImages = $this->galleryImagesToSave;
         
+        if (empty($galleryImages) || !is_array($galleryImages)) {
+            \Log::info('No gallery images to save');
+            return;
+        }
+        
         \Log::info('Saving gallery images', ['count' => count($galleryImages)]);
         
-        if (!empty($galleryImages)) {
-            foreach ($galleryImages as $imageData) {
-                if (!empty($imageData['src'])) {
-                    $imageSrc = $this->uploadImageToCDN($imageData['src'], 'products/gallery');
-                    
-                    \App\Models\productImage::create([
-                        'product_id' => $this->record->id,
-                        'src' => $imageSrc,
-                    ]);
-                }
+        foreach ($galleryImages as $imageData) {
+            // Проверяем, есть ли ключ 'src' в массиве
+            $imageSrc = is_array($imageData) && isset($imageData['src']) ? $imageData['src'] : $imageData;
+            
+            if (!empty($imageSrc)) {
+                // Загружаем на CDN
+                $uploadedSrc = $this->uploadImageToCDN($imageSrc, 'products/gallery');
+                
+                \App\Models\productImage::create([
+                    'product_id' => $this->record->id,
+                    'src' => $uploadedSrc,
+                ]);
+                
+                \Log::info('Gallery image saved', ['src' => $uploadedSrc]);
             }
         }
     }

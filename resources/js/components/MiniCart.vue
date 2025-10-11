@@ -27,7 +27,11 @@
                             </div>
                             <div class="ps-3 flex-grow-1">
                                 <strong>{{ item.name }}</strong><br>
-                                <small class="text-success fw-bold">{{ formatPrice(item.price) }} ₴</small>
+                                <small class="text-success fw-bold">{{ formatPrice(getItemPrice(item)) }} ₴</small>
+                                <br v-if="isWholesaleActive(item)">
+                                <small v-if="isWholesaleActive(item)" class="text-primary">
+                                    <i class="fas fa-tags"></i> Оптовая цена
+                                </small>
                             </div>
                             <div class="btn-group btn-group-sm ms-auto d-flex align-items-center">
                                 <button class="btn btn-outline-secondary" @click="decrease(item.id)">
@@ -76,18 +80,7 @@ export default {
     computed: {
         totalPrice() {
             const total = this.cart.reduce((sum, item) => {
-                let price = item.price;
-                
-                // Если цена - строка, очищаем её
-                if (typeof price === 'string') {
-                    price = parseFloat(price.replace(/[^\d.,]/g, '').replace(',', '.'));
-                }
-                
-                // Проверяем, что цена - валидное число
-                if (isNaN(price) || typeof price !== 'number') {
-                    price = 0;
-                }
-                
+                const price = this.getItemPrice(item);
                 const quantity = parseInt(item.quantity) || 1;
                 return sum + (price * quantity);
             }, 0);
@@ -177,6 +170,41 @@ export default {
             window.dispatchEvent(new CustomEvent('cart-counter-updated', {
                 detail: { count: cartCount }
             }));
+        },
+        getItemPrice(item) {
+            console.log('MiniCart - Расчет цены для товара:', item);
+            
+            // Проверяем, является ли товар оптовым и достигнуто ли минимальное количество
+            if (item.isWholesale && item.wholesalePrice && item.wholesaleMinQuantity) {
+                console.log('MiniCart - Товар оптовый, проверяем количество:', {
+                    quantity: item.quantity,
+                    minQuantity: item.wholesaleMinQuantity,
+                    wholesalePrice: item.wholesalePrice
+                });
+                
+                if (item.quantity >= item.wholesaleMinQuantity) {
+                    console.log('MiniCart - Используем оптовую цену:', item.wholesalePrice);
+                    return parseFloat(item.wholesalePrice);
+                }
+            }
+            
+            // Возвращаем обычную цену
+            let price = item.price;
+            if (typeof price === 'string') {
+                price = parseFloat(price.replace(/[^\d.,]/g, '').replace(',', '.'));
+            }
+            if (isNaN(price) || typeof price !== 'number') {
+                price = 0;
+            }
+            console.log('MiniCart - Используем обычную цену:', price);
+            return price;
+        },
+        isWholesaleActive(item) {
+            // Проверяем, активна ли оптовая цена для данного товара
+            return item.isWholesale && 
+                   item.wholesalePrice && 
+                   item.wholesaleMinQuantity && 
+                   item.quantity >= item.wholesaleMinQuantity;
         }
     }
 };

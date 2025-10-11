@@ -647,6 +647,9 @@
                 // Показать прелоадер
                 $('#preloader').show();
                 
+                // Получаем общую сумму из скрытого поля
+                const totalPrice = $('#total_price_stream').val();
+                
                 // Подготовка данных
                 const formData = {
                     delivery_service: $('input[name="delivery_service"]:checked').val(),
@@ -660,6 +663,7 @@
                     comment: $('#comment').val().trim(),
                     payment: $('input[name="payment_method"]:checked').val(),
                     cart: cart,
+                    total_price: totalPrice,
                     _token: $('meta[name="csrf-token"]').attr('content')
                 };
                 

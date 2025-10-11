@@ -50,7 +50,11 @@
                     </div>
                     <div class="ps-3">
                         <strong>{{ item.name }}</strong><br>
-                        <small>Ціна: {{ item.price }} ₴</small>
+                        <small>Ціна: {{ getItemPrice(item) }} ₴</small>
+                        <br v-if="isWholesaleActive(item)">
+                        <small v-if="isWholesaleActive(item)" class="text-success">
+                            <i class="fas fa-tags"></i> Оптова ціна
+                        </small>
                     </div>
                     <div class="btn-group btn-group-sm ms-auto d-flex align-items-center">
                         <button class="btn btn-outline-secondary" @click="decrease(item.id)">−</button>
@@ -88,7 +92,8 @@ export default {
     computed: {
         totalPrice() {
             const total = this.cart.reduce((sum, item) => {
-                return sum + (item.price * item.quantity);
+                const price = this.getItemPrice(item);
+                return sum + (price * item.quantity);
             }, 0);
 
             // Убираем лишние нули в дробной части:
@@ -137,6 +142,22 @@ export default {
         remove(id) {
             this.cart = this.cart.filter(i => i.id != id);
             this.saveCart();
+        },
+        getItemPrice(item) {
+            // Проверяем, является ли товар оптовым и достигнуто ли минимальное количество
+            if (item.isWholesale && item.wholesalePrice && item.wholesaleMinQuantity) {
+                if (item.quantity >= item.wholesaleMinQuantity) {
+                    return parseFloat(item.wholesalePrice);
+                }
+            }
+            return parseFloat(item.price);
+        },
+        isWholesaleActive(item) {
+            // Проверяем, активна ли оптовая цена для данного товара
+            return item.isWholesale && 
+                   item.wholesalePrice && 
+                   item.wholesaleMinQuantity && 
+                   item.quantity >= item.wholesaleMinQuantity;
         }
     }
 };

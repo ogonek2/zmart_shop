@@ -66,3 +66,20 @@ function uploadToBunnyCDN($localFilePath, $destinationPath)
         throw new \Exception("Upload failed with HTTP code: " . $httpCode . " Response: " . $response);
     }
 }
+
+/**
+ * Генерирует уникальное название файла для изображения
+ */
+function generateUniqueImageName($originalName = null, $prefix = 'img') {
+    $extension = 'jpg'; // по умолчанию
+    
+    if ($originalName) {
+        $pathInfo = pathinfo($originalName);
+        $extension = $pathInfo['extension'] ?? 'jpg';
+    }
+    
+    // Генерируем уникальное название: префикс + uniqid + случайное число + расширение
+    $fileName = $prefix . '_' . uniqid('', true) . '_' . random_int(10000, 99999) . '.' . $extension;
+    
+    return $fileName;
+}

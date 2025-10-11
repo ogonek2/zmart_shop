@@ -778,7 +778,7 @@
                                     @endif
                                 </div>
                                 
-                                @if($product->is_wholesale && $product->wholesale_price > 0)
+                                @if($product->is_wholesale && $product->wholesale_price > 0 && $product->wholesale_min_quantity)
                                     <div class="wholesale-price mt-3">
                                         <div class="d-flex align-items-center gap-2">
                                             <i class="fas fa-boxes text-primary"></i>
@@ -786,7 +786,7 @@
                                             <span class="fw-bold text-primary">{{ number_format($product->wholesale_price, 0, ',', ' ') }} ₴</span>
                                         </div>
                                         <small class="text-muted d-block mt-1">
-                                            <i class="fas fa-info-circle me-1"></i>Доступна при заказе от 10 единиц
+                                            <i class="fas fa-info-circle me-1"></i>Доступна при заказе от {{ $product->wholesale_min_quantity }} {{ $product->wholesale_min_quantity == 1 ? 'единицы' : 'единиц' }}
                                         </small>
                                     </div>
                                 @endif
@@ -794,9 +794,28 @@
 
                             <!-- Кнопки действий -->
                             <div class="product-actions">
-                                <cart-button id="{{ $product->id }}" name="{{ $product->name }}"
+                                <cart-button 
+                                    data-product-id="{{ $product->id }}" 
+                                    data-product-name="{{ $product->name }}"
+                                    data-product-price="{{ number_format($product->price, 0, ',', ' ') }}"
+                                    data-product-image="{{ $product->image_path }}" 
+                                    data-product-articule="{{ $product->articule }}"
+                                    @if($product->is_wholesale && $product->wholesale_price && $product->wholesale_min_quantity)
+                                    data-product-is-wholesale="true"
+                                    data-product-wholesale-price="{{ $product->wholesale_price }}"
+                                    data-product-wholesale-min-quantity="{{ $product->wholesale_min_quantity }}"
+                                    @endif
+                                    id="{{ $product->id }}" 
+                                    name="{{ $product->name }}"
                                     price="{{ number_format($product->price, 0, ',', ' ') }}"
-                                    image="{{ $product->image_path }}" articule="{{ $product->articule }}"></cart-button>
+                                    image="{{ $product->image_path }}" 
+                                    articule="{{ $product->articule }}"
+                                    @if($product->is_wholesale && $product->wholesale_price && $product->wholesale_min_quantity)
+                                    is-wholesale="true"
+                                    wholesale-price="{{ $product->wholesale_price }}"
+                                    wholesale-min-quantity="{{ $product->wholesale_min_quantity }}"
+                                    @endif
+                                    ></cart-button>
                                 <button class="btn btn-wishlist" onclick="toggleWishlist({{ $product->id }})">
                                     <i class="fas fa-heart"></i>
                                 </button>
@@ -913,45 +932,61 @@
 
                     <!-- Характеристики -->
                     <div class="tab-pane fade" id="specs" role="tabpanel">
-                        <h4>Технические характеристики</h4>
+                        @php
+                            $hasValidCharacteristics = false;
+                            $validCharacteristics = [];
+                            
+                            // Проверяем характеристики из продукта
+                            if (!empty($product->characteristics) && is_array($product->characteristics)) {
+                                foreach ($product->characteristics as $charKey => $charValue) {
+                                    if (!is_null($charValue) && $charValue !== '' && $charValue !== 'Не указано') {
+                                        $hasValidCharacteristics = true;
+                                        $validCharacteristics[] = [
+                                            'name' => is_string($charKey) ? ucwords(str_replace(['_', '-'], ' ', $charKey)) : 'Параметр ' . count($validCharacteristics) + 1,
+                                            'value' => is_array($charValue) ? implode(', ', $charValue) : $charValue
+                                        ];
+                                    }
+                                }
+                            }
+                            
+                            // Если нет валидных характеристик из продукта, проверяем шаблон
+                            if (!$hasValidCharacteristics && !empty($characteristics) && count($characteristics) > 0) {
+                                foreach ($characteristics as $char) {
+                                    $value = (is_array($product->characteristics) ? $product->characteristics[$char['key']] : null) ?? $char['default_value'] ?? '-';
+                                    if ($value !== '-' && $value !== '' && $value !== 'Не указано') {
+                                        $hasValidCharacteristics = true;
+                                        $validCharacteristics[] = [
+                                            'name' => $char['name'] ?? 'Не указано',
+                                            'value' => $value
+                                        ];
+                                    }
+                                }
+                            }
+                            
+                            // Если все еще нет валидных характеристик, проверяем старую систему
+                            if (!$hasValidCharacteristics && isset($product->package) && count($product->package) > 0) {
+                                foreach ($product->package as $item) {
+                                    if (!empty($item->value) && $item->value !== 'Не указано') {
+                                        $hasValidCharacteristics = true;
+                                        $validCharacteristics[] = [
+                                            'name' => $item->name,
+                                            'value' => $item->value
+                                        ];
+                                    }
+                                }
+                            }
+                        @endphp
                         
-                        @if (!empty($product->characteristics) && is_array($product->characteristics) && count($product->characteristics) > 0)
+                        @if ($hasValidCharacteristics)
+                            <h4>Технические характеристики</h4>
                             <ul class="specs-list">
-                                @foreach ($product->characteristics as $charKey => $charValue)
-                                    @php
-                                        $label = is_string($charKey)
-                                            ? ucwords(str_replace(['_', '-'], ' ', $charKey))
-                                            : 'Параметр ' . ($loop->iteration);
-                                    @endphp
-                                    @if(!is_null($charValue) && $charValue !== '')
-                                        <li>
-                                            <span class="spec-name">{{ $label }}</span>
-                                            <span class="spec-value">{{ is_array($charValue) ? implode(', ', $charValue) : $charValue }}</span>
-                                        </li>
-                                    @endif
-                                @endforeach
-                            </ul>
-                        @elseif (!empty($characteristics) && count($characteristics) > 0)
-                            <ul class="specs-list">
-                                @foreach ($characteristics as $char)
+                                @foreach ($validCharacteristics as $char)
                                     <li>
-                                        <span class="spec-name">{{ $char['name'] ?? 'Не указано' }}</span>
-                                        <span class="spec-value">{{ $product->characteristics[$char['key']] ?? $char['default_value'] ?? '-' }}</span>
+                                        <span class="spec-name">{{ $char['name'] }}</span>
+                                        <span class="spec-value">{{ $char['value'] }}</span>
                                     </li>
                                 @endforeach
                             </ul>
-                        @elseif (isset($product->package) && count($product->package) > 0)
-                            {{-- Резервная старая система --}}
-                            <ul class="specs-list">
-                                @foreach ($product->package as $item)
-                                    <li>
-                                        <span class="spec-name">{{ $item->name }}</span>
-                                        <span class="spec-value">{{ $item->value }}</span>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @else
-                            <p class="text-muted">Технические характеристики отсутствуют.</p>
                         @endif
 
                         @if (!empty($modifications) && count($modifications) > 0)
@@ -1109,10 +1144,28 @@
                                         @endif
                                     </div>
                                     <div class="card-actions">
-                                        <cart-button id="{{ $recProduct->id }}" name="{{ $recProduct->name }}"
+                                        <cart-button 
+                                            data-product-id="{{ $recProduct->id }}" 
+                                            data-product-name="{{ $recProduct->name }}"
+                                            data-product-price="{{ number_format($recProduct->price, 0, ',', ' ') }}"
+                                            data-product-image="{{ $recProduct->image_path }}" 
+                                            data-product-articule="{{ $recProduct->articule }}"
+                                            @if($recProduct->is_wholesale && $recProduct->wholesale_price && $recProduct->wholesale_min_quantity)
+                                            data-product-is-wholesale="true"
+                                            data-product-wholesale-price="{{ $recProduct->wholesale_price }}"
+                                            data-product-wholesale-min-quantity="{{ $recProduct->wholesale_min_quantity }}"
+                                            @endif
+                                            id="{{ $recProduct->id }}" 
+                                            name="{{ $recProduct->name }}"
                                             price="{{ number_format($recProduct->price, 0, ',', ' ') }}"
                                             image="{{ $recProduct->image_path }}"
-                                            articule="{{ $recProduct->articule }}"></cart-button>
+                                            articule="{{ $recProduct->articule }}"
+                                            @if($recProduct->is_wholesale && $recProduct->wholesale_price && $recProduct->wholesale_min_quantity)
+                                            is-wholesale="true"
+                                            wholesale-price="{{ $recProduct->wholesale_price }}"
+                                            wholesale-min-quantity="{{ $recProduct->wholesale_min_quantity }}"
+                                            @endif
+                                            ></cart-button>
                                         <button class="btn btn-card btn-card-outline"
                                             onclick="toggleRecommendedWishlist({{ $recProduct->id }})">
                                             <i class="fas fa-heart"></i>

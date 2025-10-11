@@ -19,6 +19,7 @@ class Product extends Model
         'price',
         'is_wholesale',
         'wholesale_price',
+        'wholesale_min_quantity',
         'image_path',
         'complectation',
         'brand',
@@ -38,6 +39,7 @@ class Product extends Model
         'additional_fields' => 'array',
         'is_wholesale' => 'boolean',
         'wholesale_price' => 'decimal:2',
+        'wholesale_min_quantity' => 'integer',
     ];
 
     public function categories()
@@ -104,6 +106,33 @@ class Product extends Model
     {
         $template = $this->getActiveTemplate();
         return $template?->additional_fields ?? [];
+    }
+
+    // Получить путь к изображению (с поддержкой CDN)
+    public function getImagePath()
+    {
+        if (!$this->image_path) {
+            return asset('dist/img/no-image.png'); // Fallback изображение
+        }
+
+        // Если путь уже содержит полный URL (например, из CDN)
+        if (str_starts_with($this->image_path, 'http://') || str_starts_with($this->image_path, 'https://')) {
+            return $this->image_path;
+        }
+
+        // Проверяем, есть ли изображение в локальном хранилище
+        $localPath = storage_path('app/public/' . $this->image_path);
+        if (file_exists($localPath)) {
+            return asset('storage/' . $this->image_path);
+        }
+
+        // Если изображение на CDN (BunnyCDN)
+        if (config('app.cdn_url')) {
+            return config('app.cdn_url') . '/' . $this->image_path;
+        }
+
+        // Fallback на storage
+        return asset('storage/' . $this->image_path);
     }
 
     protected static function booted()

@@ -41,10 +41,8 @@ class EditProduct extends EditRecord
             }
         }
         
-        // Загружаем галерею изображений с полными URL (CDN или локальные)
-        $data['gallery_images'] = $product->images()->get()->map(function ($image) {
-            return ['src' => $image->src];
-        })->toArray();
+        // Галерея изображений теперь управляется отдельно через ManageGallery
+        // Не нужно загружать gallery_images в форму
         
         // Для основного изображения оставляем как есть (CDN URL или локальный путь)
         // FileUpload может работать с URL
@@ -67,19 +65,16 @@ class EditProduct extends EditRecord
             $data['image_path'] = $this->record->image_path;
         }
         
-        // Сохраняем галерею изображений во временную переменную
-        if (isset($data['gallery_images'])) {
-            $this->galleryImagesToSave = $data['gallery_images'];
-        }
-        unset($data['gallery_images']); // Удаляем из данных для сохранения
+        // Галерея изображений теперь управляется отдельно через ManageGallery
+        // Не обрабатываем gallery_images, так как их нет в форме
         
         return $data;
     }
     
     protected function afterSave(): void
     {
-        // Сохраняем галерею изображений
-        $this->saveGalleryImages();
+        // Галерея изображений теперь управляется отдельно через ManageGallery
+        // Не нужно вызывать saveGalleryImages()
     }
     
     protected function uploadImageToCDN($imagePath, $directory = 'products')
@@ -93,7 +88,6 @@ class EditProduct extends EditRecord
             return $imagePath;
         }
         
-        $destinationPath = $directory . '/' . basename($imagePath);
         $localPath = storage_path('app/public/' . $imagePath);
         
         \Log::info('Trying to upload image to CDN', [
@@ -104,13 +98,19 @@ class EditProduct extends EditRecord
         
         if (file_exists($localPath)) {
             try {
-                $cdnUrl = uploadToBunnyCDN($localPath, $destinationPath);
+                // Используем глобальный хелпер uploadToBunnyCDN
+                $cdnUrl = uploadToBunnyCDN($localPath, $imagePath);
                 \Log::info('Image uploaded to CDN successfully', ['cdnUrl' => $cdnUrl]);
+                
+                // Удаляем локальный файл после успешной загрузки на CDN
+                unlink($localPath);
+                \Log::info('Local file deleted after CDN upload', ['localPath' => $localPath]);
+                
                 return $cdnUrl;
             } catch (\Exception $e) {
                 \Log::error('Failed to upload image to CDN: ' . $e->getMessage(), [
                     'localPath' => $localPath,
-                    'destinationPath' => $destinationPath
+                    'imagePath' => $imagePath
                 ]);
                 // Возвращаем оригинальный путь если загрузка не удалась
                 return $imagePath;
@@ -225,5 +225,58 @@ class EditProduct extends EditRecord
             'modifications' => $category->template->modifications ?? [],
             'additional_fields' => $category->template->additional_fields ?? [],
         ];
+    }
+    
+    protected function getFooterWidgets(): array
+    {
+        return [
+            // Добавляем виджет с JavaScript для управления изображениями
+        ];
+    }
+    
+    protected function getFooterActions(): array
+    {
+        return [
+            Actions\Action::make('manage_gallery')
+                ->label('Управление галереей')
+                ->icon('heroicon-o-photograph')
+                ->url(fn () => route('filament.resources.products.manage-gallery', $this->record))
+                ->color('success')
+                ->openUrlInNewTab(),
+        ];
+    }
+    
+    public function setAsMainImage()
+    {
+        $imageId = request()->input('image_id');
+        $image = \App\Models\productImage::find($imageId);
+        
+        if ($image && $image->product_id === $this->record->id) {
+            $this->record->image_path = $image->src;
+            $this->record->save();
+            
+            return response()->json(['success' => true, 'message' => 'Главное изображение установлено']);
+        }
+        
+        return response()->json(['success' => false, 'message' => 'Изображение не найдено']);
+    }
+    
+    public function deleteGalleryImage()
+    {
+        $imageId = request()->input('image_id');
+        $image = \App\Models\productImage::find($imageId);
+        
+        if ($image && $image->product_id === $this->record->id) {
+            // Удаляем файл с диска (если не из CDN)
+            if ($image->src && !str_starts_with($image->src, 'http')) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($image->src);
+            }
+            
+            $image->delete();
+            
+            return response()->json(['success' => true, 'message' => 'Изображение удалено']);
+        }
+        
+        return response()->json(['success' => false, 'message' => 'Изображение не найдено']);
     }
 }
