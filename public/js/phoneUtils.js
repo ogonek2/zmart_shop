@@ -1,6 +1,6 @@
 // phoneUtils.js
 
-export function isValidUAPhone(phone) {
+function isValidUAPhone(phone) {
     const cleaned = phone.replace(/\D/g, '');
     if (cleaned.length !== 12 || !cleaned.startsWith('380')) return false;
 

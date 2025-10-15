@@ -1,348 +1,271 @@
-<div class="recommended-products">
-    <div class="section-header text-center mb-4">
-        <h3 class="section-title">
-            <i class="fas fa-star text-warning me-2"></i>
-            Рекомендуемые товары
-        </h3>
-        <p class="section-subtitle text-muted">Лучшие предложения для вас</p>
-    </div>
-
-    <!-- Индикатор загрузки -->
-    <div id="loading-indicator" class="text-center py-4">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Загрузка...</span>
+<div class="recommended-products bg-white rounded-2xl shadow-sm p-8">
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="text-center py-12">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl mb-4">
+            <div class="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
-        <p class="mt-2 text-muted">Загружаем рекомендуемые товары...</p>
+        <p class="text-gray-600 font-medium">Загружаем рекомендуемые товары...</p>
     </div>
 
-    <!-- Контейнер для слайдера -->
-    <div id="swiper-container" class="d-none">
+    <!-- Products Grid -->
+    <div id="products-grid" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+        <!-- Products will be loaded via Ajax -->
+    </div>
+
+    <!-- Swiper Container (for mobile) -->
+    <div id="swiper-container" class="hidden">
         <div class="swiper recommendedSwiper">
             <div class="swiper-wrapper" id="swiper-wrapper">
-                <!-- Товары будут загружены через Ajax -->
+                <!-- Products will be loaded via Ajax -->
             </div>
 
-            <!-- Навигация Swiper -->
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
+            <!-- Navigation -->
+            <div class="flex justify-center mt-8 space-x-4">
+                <button class="swiper-button-prev w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl flex items-center justify-center hover:from-emerald-600 hover:to-teal-600 transition-all duration-200 shadow-lg">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="swiper-button-next w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl flex items-center justify-center hover:from-emerald-600 hover:to-teal-600 transition-all duration-200 shadow-lg">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
             
-            <!-- Пагинация -->
-            <div class="swiper-pagination"></div>
+            <!-- Pagination -->
+            <div class="swiper-pagination mt-6"></div>
         </div>
     </div>
 
-    <!-- Сообщение об ошибке -->
-    <div id="error-message" class="text-center py-4 d-none">
-        <div class="alert alert-warning" role="alert">
-            <i class="fas fa-exclamation-triangle me-2"></i>
-            Не удалось загрузить рекомендуемые товары. Попробуйте обновить страницу.
+    <!-- Error Message -->
+    <div id="error-message" class="hidden text-center py-12">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-2xl mb-4">
+            <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
         </div>
+        <h4 class="text-lg font-bold text-gray-900 mb-2">Ошибка загрузки</h4>
+        <p class="text-gray-600 mb-4">Не удалось загрузить рекомендуемые товары</p>
+        <button onclick="loadRecommendedProducts()" class="btn-primary">
+            <i class="fas fa-refresh mr-2"></i>
+            Попробовать снова
+        </button>
     </div>
 </div>
-
-<style>
-    .recommended-products {
-        margin: 3rem 0;
-        padding: 2rem 0;
-        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-        border-radius: 20px;
-    }
-
-    .section-header {
-        margin-bottom: 2rem;
-    }
-
-    .section-title {
-        color: var(--dark-color);
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-    }
-
-    .section-subtitle {
-        font-size: 1.1rem;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-    .recommendedSwiper {
-        padding: 1rem 0;
-        position: relative;
-    }
-
-    .swiper-slide {
-        height: auto;
-        padding: 0.25rem;
-    }
-
-    /* Стили для навигации Swiper */
-    .swiper-button-next,
-    .swiper-button-prev {
-        background: var(--primary-color);
-        color: white;
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        box-shadow: var(--shadow-md);
-        transition: all 0.3s ease;
-        z-index: 10;
-    }
-
-    .swiper-button-next:hover,
-    .swiper-button-prev:hover {
-        background: var(--primary-hover);
-        transform: scale(1.1);
-        box-shadow: var(--shadow-lg);
-    }
-
-    .swiper-button-next::after,
-    .swiper-button-prev::after {
-        font-size: 1.2rem;
-        font-weight: 600;
-    }
-
-    /* Стили для пагинации */
-    .swiper-pagination {
-        position: relative;
-        margin-top: 1rem;
-    }
-
-    .swiper-pagination-bullet {
-        background: var(--primary-color);
-        opacity: 0.5;
-        transition: all 0.3s ease;
-    }
-
-    .swiper-pagination-bullet-active {
-        opacity: 1;
-        transform: scale(1.2);
-    }
-
-    /* Адаптивность */
-    @media (max-width: 768px) {
-        .recommended-products {
-            margin: 2rem 0;
-            padding: 1.5rem 0;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-        }
-
-        .section-subtitle {
-            font-size: 1rem;
-        }
-
-        .swiper-button-next,
-        .swiper-button-prev {
-            width: 36px;
-            height: 36px;
-        }
-
-        .swiper-button-next::after,
-        .swiper-button-prev::after {
-            font-size: 1rem;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .section-title {
-            font-size: 1.25rem;
-        }
-
-        .swiper-slide {
-            padding: 0.15rem;
-        }
-    }
-
-    /* Анимация появления */
-    .fade-in {
-        animation: fadeIn 0.5s ease-in;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     let recommendedSwiper = null;
     
-    // Функция загрузки рекомендуемых товаров
+    // Function to load recommended products
     async function loadRecommendedProducts() {
         try {
-            console.log('Начинаем загрузку рекомендуемых товаров...');
+            console.log('Loading recommended products...');
+            
+            // Show loading indicator
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const productsGrid = document.getElementById('products-grid');
+            const swiperContainer = document.getElementById('swiper-container');
+            const errorMessage = document.getElementById('error-message');
+            
+            if (loadingIndicator) loadingIndicator.classList.remove('hidden');
+            if (productsGrid) productsGrid.classList.add('hidden');
+            if (swiperContainer) swiperContainer.classList.add('hidden');
+            if (errorMessage) errorMessage.classList.add('hidden');
             
             const response = await fetch('/api/recommended-products');
-            console.log('Ответ получен:', response);
+            console.log('Response received:', response);
             
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             
             const data = await response.json();
-            console.log('Данные получены:', data);
+            console.log('Data received:', data);
             
             if (data.success && data.products.length > 0) {
-                console.log('Товары успешно загружены, количество:', data.products.length);
+                console.log('Products loaded successfully:', data.products.length);
                 
-                // Скрываем индикатор загрузки
-                document.getElementById('loading-indicator').classList.add('d-none');
+                // Hide loading indicator
+                if (loadingIndicator) loadingIndicator.classList.add('hidden');
                 
-                // Показываем контейнер слайдера
-                document.getElementById('swiper-container').classList.remove('d-none');
-                
-                // Заполняем слайдер товарами
-                populateSwiper(data.products);
-                
-                // Даем Vue время на инициализацию компонентов
-                setTimeout(() => {
-                    // Инициализируем Swiper
-                    initializeSwiper();
-                }, 100);
+                // Show products
+                if (window.innerWidth >= 1024) {
+                    // Desktop: Show grid
+                    populateProductsGrid(data.products);
+                    if (productsGrid) productsGrid.classList.remove('hidden');
+                } else {
+                    // Mobile: Show swiper
+                    populateSwiper(data.products);
+                    if (swiperContainer) swiperContainer.classList.remove('hidden');
+                    
+                    // Initialize Swiper after Vue components are ready
+                    setTimeout(() => {
+                        initializeSwiper();
+                    }, 100);
+                }
                 
             } else {
-                console.log('Нет товаров или ошибка в данных:', data);
-                throw new Error(data.message || 'Нет данных');
+                console.log('No products or data error:', data);
+                throw new Error(data.message || 'No data');
             }
             
         } catch (error) {
-            console.error('Ошибка загрузки рекомендуемых товаров:', error);
+            console.error('Error loading recommended products:', error);
             
-            // Скрываем индикатор загрузки
-            document.getElementById('loading-indicator').classList.add('d-none');
+            // Hide loading indicator
+            if (loadingIndicator) loadingIndicator.classList.add('hidden');
             
-            // Показываем сообщение об ошибке
-            document.getElementById('error-message').classList.remove('d-none');
-            
-            // Добавляем детали ошибки в сообщение
-            const errorMessage = document.querySelector('#error-message .alert');
-            if (errorMessage) {
-                errorMessage.innerHTML = `
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    Не удалось загрузить рекомендуемые товары: ${error.message}
-                    <br><small class="mt-2 d-block">Попробуйте обновить страницу или проверьте консоль браузера</small>
-                `;
-            }
+            // Show error message
+            if (errorMessage) errorMessage.classList.remove('hidden');
         }
     }
     
-    // Функция заполнения слайдера товарами
+    // Function to populate products grid (desktop)
+    function populateProductsGrid(products) {
+        console.log('Populating products grid:', products);
+        
+        const productsGrid = document.getElementById('products-grid');
+        if (!productsGrid) {
+            console.error('Products grid element not found!');
+            return;
+        }
+        
+        productsGrid.innerHTML = '';
+        
+        products.forEach((product, index) => {
+            const productCard = createProductCard(product, index);
+            productsGrid.appendChild(productCard);
+        });
+        
+        console.log(`Created ${products.length} product cards for grid`);
+    }
+    
+    // Function to populate swiper (mobile)
     function populateSwiper(products) {
-        console.log('Начинаем заполнение слайдера товарами:', products);
+        console.log('Populating swiper:', products);
         
         const swiperWrapper = document.getElementById('swiper-wrapper');
         if (!swiperWrapper) {
-            console.error('Элемент swiper-wrapper не найден!');
+            console.error('Swiper wrapper element not found!');
             return;
         }
         
         swiperWrapper.innerHTML = '';
-        console.log('Очистили swiper-wrapper');
         
         products.forEach((product, index) => {
-            console.log(`Создаем слайд для товара ${index + 1}:`, product);
-            
             const slide = document.createElement('div');
-            slide.className = 'swiper-slide fade-in';
+            slide.className = 'swiper-slide';
             
-            // Создаем Vue компонент product-card правильно
-            const productCard = document.createElement('product-card');
-            
-            // Устанавливаем все атрибуты через setAttribute
-            productCard.setAttribute('id', product.id);
-            productCard.setAttribute('name', escapeHtml(product.name));
-            productCard.setAttribute('price', product.price);
-            productCard.setAttribute('discount', product.discount || 0);
-            productCard.setAttribute('image_path', escapeUrl(product.image_path) || 'https://via.placeholder.com/300x300/f8f9fa/6c757d?text=Нет+фото');
-            productCard.setAttribute('url', escapeUrl(product.url));
-            productCard.setAttribute('articule', escapeHtml(product.articule || 'Не указан'));
-            productCard.setAttribute('rating', '4.5');
-            productCard.setAttribute('availability', product.availability || 1);
-            productCard.setAttribute('description', escapeHtml(product.description || ''));
-            productCard.setAttribute('variant', 'featured');
-            productCard.setAttribute('show-rating', 'true');
-            productCard.setAttribute('show-compare', 'false');
-            productCard.setAttribute('show-additional-info', 'true');
-            
-            // Добавляем компонент в слайд
+            const productCard = createProductCard(product, index);
             slide.appendChild(productCard);
             
             swiperWrapper.appendChild(slide);
-            console.log(`Слайд ${index + 1} добавлен в swiper-wrapper`);
         });
         
-        console.log(`Всего создано слайдов: ${products.length}`);
+        console.log(`Created ${products.length} slides for swiper`);
     }
     
-    // Функция радикального экранирования HTML
-    function escapeHtml(text) {
-        if (!text) return '';
+    // Function to create product card
+    function createProductCard(product, index) {
+        const card = document.createElement('div');
+        card.className = 'product-card bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden';
+        card.style.animationDelay = `${index * 100}ms`;
         
-        // Радикальное экранирование - оставляем только буквы, цифры и пробелы
-        let cleaned = text.toString()
-            // Убираем все HTML теги
-            .replace(/<[^>]*>/g, '')
-            // Убираем все специальные символы, кроме букв, цифр и пробелов
-            .replace(/[^\w\sа-яёіїєА-ЯЁІЇЄ]/g, '')
-            // Убираем лишние пробелы
-            .replace(/\s+/g, ' ')
-            .trim();
+        const finalPrice = product.discount > 0 
+            ? product.price * (1 - product.discount / 100) 
+            : product.price;
         
-        // Если после очистки ничего не осталось, возвращаем "Без описания"
-        if (!cleaned || cleaned.length < 2) {
-            return 'Без описания';
-        }
+        card.innerHTML = `
+            <div class="relative overflow-hidden">
+                <!-- Product Image -->
+                <div class="aspect-square bg-gradient-to-br from-gray-100 to-gray-200">
+                    <img src="${escapeUrl(product.image_path) || 'https://via.placeholder.com/300x300/f3f4f6/9ca3af?text=Нет+фото'}" 
+                         alt="${escapeHtml(product.name)}"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                </div>
+                
+                <!-- Discount Badge -->
+                ${product.discount > 0 ? `
+                    <div class="absolute top-3 left-3">
+                        <span class="badge-danger">-${product.discount}%</span>
+                    </div>
+                ` : ''}
+                
+                <!-- Wholesale Badge -->
+                ${product.is_wholesale && product.wholesale_price ? `
+                    <div class="absolute top-3 right-3">
+                        <span class="badge-warning">
+                            <i class="fas fa-boxes mr-1"></i>Опт
+                        </span>
+                    </div>
+                ` : ''}
+                
+                <!-- Wishlist Button -->
+                <button class="absolute top-3 right-3 w-8 h-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-sm transition-all hover:scale-110" 
+                        onclick="toggleWishlist(${product.id})">
+                    <i class="fas fa-heart text-gray-400 hover:text-red-500 transition-colors"></i>
+                </button>
+            </div>
+            
+            <!-- Product Info -->
+            <div class="p-4">
+                <h4 class="font-bold text-gray-900 mb-2 line-clamp-2 text-sm">
+                    ${escapeHtml(product.name)}
+                </h4>
+                
+                <!-- Price -->
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-lg font-bold text-emerald-600">
+                        ${Math.round(finalPrice).toLocaleString()} ₴
+                    </span>
+                    ${product.discount > 0 ? `
+                        <span class="text-sm text-gray-500 line-through">
+                            ${Math.round(product.price).toLocaleString()} ₴
+                        </span>
+                    ` : ''}
+                </div>
+                
+                <!-- Wholesale Price -->
+                ${product.is_wholesale && product.wholesale_price && product.wholesale_min_quantity ? `
+                    <div class="flex items-center text-xs text-teal-600 mb-3">
+                        <i class="fas fa-boxes mr-1"></i>
+                        Опт от ${product.wholesale_min_quantity} шт: ${Math.round(product.wholesale_price).toLocaleString()} ₴
+                    </div>
+                ` : ''}
+                
+                <!-- Actions -->
+                <div class="flex gap-2">
+                    <a href="/catalog/${escapeUrl(product.url)}" 
+                       class="flex-1 btn-primary text-center py-2 text-sm">
+                        <i class="fas fa-eye mr-1"></i>Подробнее
+                    </a>
+                    <button class="btn-secondary px-3 py-2" 
+                            onclick="addToCart(${product.id}, '${escapeHtml(product.name)}', ${finalPrice}, '${escapeUrl(product.image_path) || ''}', '${escapeHtml(product.articule || 'Не указан')}', ${product.availability || 1}${product.is_wholesale ? `, true, ${product.wholesale_price || 0}, ${product.wholesale_min_quantity || 0}` : ''})">
+                        <i class="fas fa-shopping-cart"></i>
+                    </button>
+                </div>
+            </div>
+        `;
         
-        // Ограничиваем длину описания
-        if (cleaned.length > 100) {
-            cleaned = cleaned.substring(0, 97) + '...';
-        }
-        
-        return cleaned;
+        return card;
     }
     
-    // Функция экранирования для URL и изображений
-    function escapeUrl(text) {
-        if (!text) return '';
-        
-        // Для URL и изображений оставляем только безопасные символы
-        let cleaned = text.toString()
-            // Убираем все HTML теги
-            .replace(/<[^>]*>/g, '')
-            // Убираем все опасные символы, оставляем только буквы, цифры, дефисы и точки
-            .replace(/[^\w\-\.\/\:]/g, '')
-            .trim();
-        
-        return cleaned || 'bez-url';
-    }
-    
-    // Функция инициализации Swiper
+    // Function to initialize Swiper
     function initializeSwiper() {
-        console.log('Начинаем инициализацию Swiper...');
+        console.log('Initializing Swiper...');
         
         const swiperElement = document.querySelector('.recommendedSwiper');
         if (!swiperElement) {
-            console.error('Элемент .recommendedSwiper не найден!');
+            console.error('Swiper element not found!');
             return;
         }
         
-        console.log('Элемент .recommendedSwiper найден:', swiperElement);
-        
         if (recommendedSwiper) {
-            console.log('Swiper уже инициализирован, уничтожаем старый экземпляр...');
+            console.log('Destroying existing Swiper...');
             recommendedSwiper.destroy(true, true);
             recommendedSwiper = null;
         }
         
         try {
-            console.log('Создаем новый экземпляр Swiper...');
-            
             recommendedSwiper = new Swiper('.recommendedSwiper', {
                 slidesPerView: 1,
-                spaceBetween: 15,
+                spaceBetween: 16,
                 loop: true,
                 autoplay: {
                     delay: 5000,
@@ -361,26 +284,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 breakpoints: {
                     576: {
                         slidesPerView: 2,
-                        spaceBetween: 15,
+                        spaceBetween: 16,
                     },
                     768: {
                         slidesPerView: 3,
                         spaceBetween: 20,
-                    },
-                    992: {
-                        slidesPerView: 4,
-                        spaceBetween: 20,
-                    },
-                    1200: {
-                        slidesPerView: 5,
-                        spaceBetween: 20,
-                    },
-                    1400: {
-                        slidesPerView: 6,
-                        spaceBetween: 20,
                     }
                 },
-                // Улучшенные настройки
                 grabCursor: true,
                 keyboard: {
                     enabled: true,
@@ -389,26 +299,81 @@ document.addEventListener('DOMContentLoaded', function() {
                 mousewheel: {
                     forceToAxis: true,
                 },
-                // Эффекты
                 effect: 'slide',
                 speed: 600,
             });
             
-            console.log('Swiper успешно инициализирован:', recommendedSwiper);
-            
-            // Проверяем количество слайдов
-            const slides = swiperElement.querySelectorAll('.swiper-slide');
-            console.log('Количество слайдов в Swiper:', slides.length);
+            console.log('Swiper initialized successfully');
             
         } catch (error) {
-            console.error('Ошибка инициализации Swiper:', error);
+            console.error('Error initializing Swiper:', error);
         }
     }
     
-    // Загружаем товары при загрузке страницы
+    // Helper functions
+    function escapeHtml(text) {
+        if (!text) return '';
+        
+        return text.toString()
+            .replace(/<[^>]*>/g, '')
+            .replace(/[^\w\sа-яёіїєА-ЯЁІЇЄ]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim() || 'Без названия';
+    }
+    
+    function escapeUrl(text) {
+        if (!text) return '';
+        
+        return text.toString()
+            .replace(/<[^>]*>/g, '')
+            .replace(/[^\w\-\.\/\:]/g, '')
+            .trim() || '';
+    }
+    
+    // Global functions for product interactions
+    window.toggleWishlist = function(productId) {
+        // Implement wishlist toggle
+        console.log('Toggle wishlist for product:', productId);
+    };
+    
+    window.addToCart = function(productId, name, price, image, articule, availability, isWholesale = false, wholesalePrice = 0, wholesaleMinQuantity = 0) {
+        // Implement add to cart
+        console.log('Add to cart:', {productId, name, price, image, articule, availability, isWholesale, wholesalePrice, wholesaleMinQuantity});
+        
+        // Trigger Vue cart component if available
+        if (window.Vue && window.Vue.globalProperties.$cart) {
+            window.Vue.globalProperties.$cart.addItem({
+                id: productId,
+                name: name,
+                price: price,
+                image: image,
+                articule: articule,
+                quantity: 1,
+                availability: availability,
+                isWholesale: isWholesale,
+                wholesalePrice: wholesalePrice,
+                wholesaleMinQuantity: wholesaleMinQuantity
+            });
+        }
+    };
+    
+    // Load products on page load
     loadRecommendedProducts();
     
-    // Обновляем товары каждые 30 минут
+    // Handle window resize
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function() {
+            if (recommendedSwiper && window.innerWidth >= 1024) {
+                // Destroy swiper on desktop
+                recommendedSwiper.destroy(true, true);
+                recommendedSwiper = null;
+            }
+        }, 250);
+    });
+    
+    // Refresh products every 30 minutes
     setInterval(loadRecommendedProducts, 30 * 60 * 1000);
 });
 </script>

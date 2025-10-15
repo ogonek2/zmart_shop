@@ -15,8 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" onload="console.log('Bootstrap CSS загружен')" onerror="console.error('Ошибка загрузки Bootstrap CSS')">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}" onload="console.log('App CSS загружен')" onerror="console.error('Ошибка загрузки App CSS')">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ time() }}" onload="console.log('App CSS загружен')" onerror="console.error('Ошибка загрузки App CSS')">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" onload="console.log('Swiper CSS загружен')" onerror="console.error('Ошибка загрузки Swiper CSS')" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onload="console.log('Font Awesome CSS загружен')" onerror="console.error('Ошибка загрузки Font Awesome CSS')">
 
@@ -339,6 +338,105 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
     {{-- Scripts --}}
     @yield('scripts')
+    
+    <script>
+    // Mobile Menu Functions
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        const overlay = document.getElementById('mobileMenuOverlay');
+        
+        if (menu && overlay) {
+            menu.classList.toggle('translate-x-full');
+            overlay.classList.toggle('hidden');
+            document.body.classList.toggle('overflow-hidden');
+        }
+    }
+
+    function closeMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        const overlay = document.getElementById('mobileMenuOverlay');
+        
+        if (menu && overlay) {
+            menu.classList.add('translate-x-full');
+            overlay.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+    }
+
+    // Mobile Catalog Functions
+    function toggleMobileCatalog() {
+        const items = document.getElementById('mobileCatalogItems');
+        const icon = document.getElementById('mobileCatalogIcon');
+        
+        if (items && icon) {
+            items.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+    }
+
+    // Desktop Catalog Menu Functions
+    function toggleCatalogMenu() {
+        const menu = document.getElementById('catalogMenu');
+        const overlay = document.getElementById('catalogMenuOverlay');
+        
+        if (menu && overlay) {
+            menu.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+    }
+
+    function closeCatalogMenu() {
+        const menu = document.getElementById('catalogMenu');
+        const overlay = document.getElementById('catalogMenuOverlay');
+        
+        if (menu && overlay) {
+            menu.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        }
+    }
+
+    // Navigation initialization
+    document.addEventListener('DOMContentLoaded', function() {
+        // Catalog Search
+        const catalogSearch = document.getElementById('catalogSearch');
+        const catalogList = document.getElementById('catalogList');
+        
+        if (catalogSearch && catalogList) {
+            const catalogItems = catalogList.querySelectorAll('.catalog-item');
+            
+            if (catalogItems.length > 0) {
+                catalogSearch.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase().trim();
+                    
+                    catalogItems.forEach(item => {
+                        const itemText = item.textContent.toLowerCase();
+                        
+                        if (searchTerm === '' || itemText.includes(searchTerm)) {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            }
+        }
+        
+        // Close mobile menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMobileMenu();
+                closeCatalogMenu();
+            }
+        });
+        
+        // Close mobile menu on window resize to desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 1024) {
+                closeMobileMenu();
+            }
+        });
+    });
+    </script>
 </body>
 
 </html>

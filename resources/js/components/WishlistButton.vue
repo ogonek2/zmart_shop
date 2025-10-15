@@ -1,8 +1,9 @@
 <template>
-    <button class="btn btn-outline-danger position-relative" @click="toggleWishlist">
-        <i class="fas fa-heart me-2"></i>
-        <span class="d-none d-md-inline">Избранное</span>
-        <span v-if="wishlistCount > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+    <button @click="toggleWishlist" 
+            class="relative p-2 text-gray-700 hover:text-emerald-600 transition-colors">
+        <i class="fas fa-heart text-xl"></i>
+        <span v-if="wishlistCount > 0" 
+              class="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
             {{ wishlistCount }}
         </span>
     </button>
@@ -24,42 +25,18 @@ export default {
         window.removeEventListener('wishlist-updated', this.updateWishlistCount);
     },
     methods: {
-        toggleWishlist() {
-            // Отправляем глобальное событие
-            window.dispatchEvent(new Event('toggle-wishlist'));
-        },
         updateWishlistCount() {
             try {
                 const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
                 this.wishlistCount = wishlist.length;
-            } catch (error) {
-                console.error('Ошибка обновления счетчика избранного:', error);
+            } catch (e) {
+                console.error('Error updating wishlist count:', e);
                 this.wishlistCount = 0;
             }
+        },
+        toggleWishlist() {
+            window.dispatchEvent(new Event('toggle-wishlist-panel'));
         }
     }
 };
 </script>
-
-<style scoped>
-.btn {
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.badge {
-    font-size: 0.7rem;
-    min-width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-</style>

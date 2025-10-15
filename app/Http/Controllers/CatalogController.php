@@ -83,8 +83,35 @@ class CatalogController extends Controller
             ->orderBy('sort_order')
             ->get();
 
-        // Получаем продукты, связанные с категорией
-        $getProducts = $getCategory->products()->paginate(45); // укажи нужное количество
+        // Получаем продукты
+        // Если в категории нет товаров, но есть подкатегории - показываем товары из подкатегорий
+        $categoryProducts = $getCategory->products();
+        
+        if ($categoryProducts->count() === 0 && $subcategories->count() > 0) {
+            // Собираем ID всех подкатегорий
+            $subcategoryIds = $subcategories->pluck('id')->toArray();
+            $subcategoryIds[] = $getCategory->id; // добавляем текущую категорию
+            
+            // Получаем товары из всех подкатегорий
+            $getProducts = Product::select([
+                    'id', 'name', 'price', 'discount', 'image_path', 'url', 
+                    'articule', 'availability', 'is_wholesale', 'wholesale_price', 'wholesale_min_quantity'
+                ])
+                ->whereHas('categories', function($query) use ($subcategoryIds) {
+                    $query->whereIn('categories.id', $subcategoryIds);
+                })
+                ->orderBy('created_at', 'desc')
+                ->paginate(45);
+        } else {
+            // Обычная логика - товары только из текущей категории
+            $getProducts = $categoryProducts
+                ->select([
+                    'products.id', 'products.name', 'products.price', 'products.discount', 
+                    'products.image_path', 'products.url', 'products.articule', 'products.availability', 
+                    'products.is_wholesale', 'products.wholesale_price', 'products.wholesale_min_quantity'
+                ])
+                ->paginate(45);
+        }
 
         $paginationData = [
             'current_page' => $getProducts->currentPage(),
@@ -142,14 +169,17 @@ class CatalogController extends Controller
         }
 
         // Поиск товаров по названию и артикулу
-        $getProducts = Product::where(function($q) use ($query) {
-            $q->where('name', 'like', '%' . $query . '%')
-              ->orWhere('articule', 'like', '%' . $query . '%')
-              ->orWhere('description', 'like', '%' . $query . '%');
-        })
-        ->where('availability', 1)
-        ->with('categories')
-        ->paginate(12);
+        $getProducts = Product::select([
+                'id', 'name', 'price', 'discount', 'image_path', 'url', 
+                'articule', 'availability', 'is_wholesale', 'wholesale_price', 'wholesale_min_quantity'
+            ])
+            ->where(function($q) use ($query) {
+                $q->where('name', 'like', '%' . $query . '%')
+                  ->orWhere('articule', 'like', '%' . $query . '%')
+                  ->orWhere('description', 'like', '%' . $query . '%');
+            })
+            ->with('categories')
+            ->paginate(12);
 
         // Генерируем предложения для поиска
         $suggestions = $this->generateSearchSuggestions($query);
@@ -159,14 +189,17 @@ class CatalogController extends Controller
         if ($getProducts->isEmpty() && !empty($suggestions)) {
             // Пробуем поиск по первому предложению
             $alternativeQuery = $suggestions[0];
-            $getProducts = Product::where(function($q) use ($alternativeQuery) {
-                $q->where('name', 'like', '%' . $alternativeQuery . '%')
-                  ->orWhere('articule', 'like', '%' . $alternativeQuery . '%')
-                  ->orWhere('description', 'like', '%' . $alternativeQuery . '%');
-            })
-            ->where('availability', 1)
-            ->with('categories')
-            ->paginate(12);
+            $getProducts = Product::select([
+                    'id', 'name', 'price', 'discount', 'image_path', 'url', 
+                    'articule', 'availability', 'is_wholesale', 'wholesale_price', 'wholesale_min_quantity'
+                ])
+                ->where(function($q) use ($alternativeQuery) {
+                    $q->where('name', 'like', '%' . $alternativeQuery . '%')
+                      ->orWhere('articule', 'like', '%' . $alternativeQuery . '%')
+                      ->orWhere('description', 'like', '%' . $alternativeQuery . '%');
+                })
+                ->with('categories')
+                ->paginate(12);
             
             $query = $alternativeQuery;
             $usedAlternative = true;
@@ -241,7 +274,10 @@ class CatalogController extends Controller
                 'products.url',
                 'products.articule',
                 'products.availability',
-                'products.description'
+                'products.description',
+                'products.is_wholesale',
+                'products.wholesale_price',
+                'products.wholesale_min_quantity'
             )
             ->where('products.availability', 1)
             ->whereHas('categories') // Только товары с категориями

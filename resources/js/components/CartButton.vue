@@ -1,12 +1,16 @@
 <template>
     <div>
-        <!-- Кнопка добавления в корзину -->
-        <button class="btn cart-add-btn position-relative" 
-                :class="inCart ? 'btn-success' : 'btn-outline-primary'" 
+        <!-- Cart Button -->
+        <button class="cart-btn" 
+                :class="[cartButtonClass, compactMode ? 'compact' : '']" 
                 @click="toggleCart"
-                :disabled="availability === 2">
-            <i class="fas fa-shopping-cart me-2"></i>
-            {{ availability === 2 ? 'Нет в наличии' : (inCart ? `В корзине (${cartItemQuantity})` : 'В корзину') }}
+                :disabled="finalAvailability === 2">
+            <i class="fas" :class="[cartIconClass, compactMode ? '' : 'mr-2']"></i>
+            <span v-if="!compactMode">
+                <span v-if="finalAvailability === 2">Немає в наявності</span>
+                <span v-else-if="inCart">В кошику ({{ cartItemQuantity }})</span>
+                <span v-else>Додати в кошик</span>
+            </span>
         </button>
     </div>
 </template>
@@ -15,11 +19,10 @@
 export default {
     name: "CartButton",
     props: {
-        // Оставляем props для обратной совместимости, но приоритет у data-атрибутов
         id: [String, Number],
         name: String,
         image: String,
-        price: String,
+        price: [String, Number],
         articule: String,
         availability: {
             type: Number,
@@ -42,7 +45,6 @@ export default {
         return {
             inCart: false,
             cartItemQuantity: 0,
-            // Данные из data-атрибутов
             productData: {
                 id: null,
                 name: '',
@@ -57,7 +59,10 @@ export default {
         };
     },
     computed: {
-        // Приоритет data-атрибутам, fallback на props
+        compactMode() {
+            // Проверяем, есть ли класс 'compact' у родительского элемента
+            return this.$el && this.$el.classList && this.$el.classList.contains('compact');
+        },
         finalId() {
             return this.productData.id || this.id;
         },
@@ -84,6 +89,18 @@ export default {
         },
         finalWholesaleMinQuantity() {
             return this.productData.wholesaleMinQuantity || this.wholesaleMinQuantity;
+        },
+        cartButtonClass() {
+            if (this.finalAvailability === 2) {
+                return 'cart-btn-disabled';
+            }
+            return this.inCart ? 'cart-btn-active' : 'cart-btn-default';
+        },
+        cartIconClass() {
+            if (this.finalAvailability === 2) {
+                return 'fa-times-circle';
+            }
+            return this.inCart ? 'fa-check' : 'fa-shopping-cart';
         }
     },
     mounted() {
@@ -96,140 +113,113 @@ export default {
     },
     methods: {
         readDataAttributes() {
-            // Читаем данные из data-атрибутов
             const element = this.$el;
             if (element) {
                 this.productData = {
-                    id: element.dataset.productId || element.dataset.productId,
-                    name: element.dataset.productName || '',
-                    price: element.dataset.productPrice || '',
-                    image: element.dataset.productImage || '',
-                    articule: element.dataset.productArticule || '',
-                    availability: parseInt(element.dataset.productAvailability) || 1,
-                    isWholesale: element.dataset.productIsWholesale === 'true' || element.dataset.productIsWholesale === '1',
-                    wholesalePrice: element.dataset.productWholesalePrice || null,
-                    wholesaleMinQuantity: parseInt(element.dataset.productWholesaleMinQuantity) || null
+                    id: parseInt(element.dataset.productId) || this.id,
+                    name: element.dataset.productName || this.name,
+                    price: element.dataset.productPrice || this.price,
+                    image: element.dataset.productImage || this.image,
+                    articule: element.dataset.productArticule || this.articule,
+                    availability: parseInt(element.dataset.productAvailability) || this.availability || 1,
+                    isWholesale: element.dataset.productIsWholesale === 'true' || this.isWholesale,
+                    wholesalePrice: element.dataset.productWholesalePrice || this.wholesalePrice,
+                    wholesaleMinQuantity: parseInt(element.dataset.productWholesaleMinQuantity) || this.wholesaleMinQuantity
                 };
-                
-                console.log('CartButton - Прочитаны data-атрибуты:', {
-                    element: element,
-                    dataset: element.dataset,
-                    productData: this.productData
-                });
             }
         },
         checkCart() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const cartItem = cart.find(item => item.id == this.finalId);
-            this.inCart = !!cartItem;
-            this.cartItemQuantity = cartItem ? cartItem.quantity : 0;
+            const item = cart.find(item => item.id == this.finalId);
+            
+            if (item) {
+                this.inCart = true;
+                this.cartItemQuantity = item.quantity;
+            } else {
+                this.inCart = false;
+                this.cartItemQuantity = 0;
+            }
         },
         toggleCart() {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const cartItem = cart.find(item => item.id == this.finalId);
-
-            if (cartItem) {
-                // Убираем товар из корзины
-                cart = cart.filter(item => item.id != this.finalId);
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const index = cart.findIndex(item => item.id == this.finalId);
+            
+            if (index > -1) {
+                cart.splice(index, 1);
                 this.inCart = false;
                 this.cartItemQuantity = 0;
                 
-                // Показываем уведомление через тостер
-                window.dispatchEvent(new CustomEvent('show-toast', {
-                    detail: {
-                        title: 'Товар удален из корзины',
-                        message: 'Товар успешно удален из вашей корзины',
-                        type: 'info',
-                        duration: 3000
-                    }
-                }));
+                if (this.$toast) {
+                    this.$toast.info('Видалено з кошика');
+                }
             } else {
-                // Добавляем товар в корзину
                 const cartItem = {
                     id: this.finalId,
                     name: this.finalName,
                     price: this.finalPrice,
                     image: this.finalImage,
-                    articule: this.finalArticule || 'Не указан',
+                    articule: this.finalArticule || 'Не вказано',
                     quantity: 1
                 };
-                
-                // Добавляем оптовые данные, если товар оптовый
-                console.log('CartButton - Оптовые данные:', {
-                    finalIsWholesale: this.finalIsWholesale,
-                    finalWholesalePrice: this.finalWholesalePrice,
-                    finalWholesaleMinQuantity: this.finalWholesaleMinQuantity
-                });
                 
                 if (this.finalIsWholesale && this.finalWholesalePrice && this.finalWholesaleMinQuantity) {
                     cartItem.isWholesale = true;
                     cartItem.wholesalePrice = parseFloat(this.finalWholesalePrice);
                     cartItem.wholesaleMinQuantity = parseInt(this.finalWholesaleMinQuantity);
-                    console.log('CartButton - Добавлены оптовые данные:', cartItem);
                 }
                 
                 cart.push(cartItem);
                 this.inCart = true;
                 this.cartItemQuantity = 1;
                 
-                // Показываем уведомление через тостер
-                window.dispatchEvent(new CustomEvent('show-toast', {
-                    detail: {
-                        title: 'Товар добавлен в корзину!',
-                        message: 'Товар успешно добавлен в вашу корзину',
-                        type: 'success',
-                        product: {
-                            id: this.finalId,
-                            name: this.finalName,
-                            price: this.finalPrice,
-                            image: this.finalImage,
-                            articule: this.finalArticule || 'Не указан'
-                        },
-                        duration: 4000
-                    }
-                }));
+                if (this.$toast) {
+                    this.$toast.success('Додано в кошик');
+                }
             }
-
-            // Сохраняем корзину
-            localStorage.setItem('cart', JSON.stringify(cart));
             
-            // Отправляем событие обновления корзины
+            localStorage.setItem('cart', JSON.stringify(cart));
             window.dispatchEvent(new Event('cart-updated'));
         }
-    }
+    },
 };
 </script>
 
 <style scoped>
-.cart-add-btn {
-    width: 100%;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.2s ease;
+/* Полный режим (по умолчанию) - для страницы товара */
+.cart-btn {
+    @apply w-full py-4 px-6 rounded-xl flex items-center justify-center transition-all duration-200 font-bold text-base;
 }
 
-.cart-add-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+.cart-btn-default {
+    @apply bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg hover:shadow-xl;
 }
 
-.cart-add-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+.cart-btn-active {
+    @apply bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg;
 }
 
-.cart-add-btn:disabled:hover {
-    transform: none;
-    box-shadow: none;
+.cart-btn-disabled {
+    @apply bg-gray-300 text-gray-500 cursor-not-allowed shadow-none;
 }
 
-/* CSS переменные для совместимости */
-:root {
-    --primary-color: #2563eb;
-    --success-color: #10b981;
-    --danger-color: #ef4444;
-    --dark-color: #1e293b;
+.cart-btn:not(.cart-btn-disabled):hover {
+    @apply transform -translate-y-0.5;
+}
+
+/* Компактный режим - для карточек товаров */
+.compact .cart-btn {
+    @apply w-10 h-10 p-0 text-sm;
+}
+
+.compact .cart-btn span {
+    @apply hidden;
+}
+
+.compact .cart-btn i {
+    @apply m-0;
+}
+
+.compact .cart-btn:not(.cart-btn-disabled):hover {
+    @apply scale-110;
 }
 </style>

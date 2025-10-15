@@ -1,328 +1,202 @@
 @extends('layouts.app')
 
-@section('styles')
-<style>
-    .search-results-page {
-        padding: 2rem 0;
-    }
-    
-    .search-header {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: white;
-        padding: 3rem 0;
-        margin-bottom: 2rem;
-        border-radius: 16px;
-    }
-    
-    .search-query {
-        font-size: 2rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-    }
-    
-    .search-stats {
-        font-size: 1.1rem;
-        opacity: 0.9;
-    }
-    
-    .suggestions-section {
-        background: white;
-        border-radius: 16px;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid var(--border-color);
-    }
-    
-    .suggestions-title {
-        color: var(--dark-color);
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .suggestion-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-    }
-    
-    .suggestion-link {
-        background: var(--light-color);
-        color: var(--primary-color);
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        border: 1px solid transparent;
-    }
-    
-    .suggestion-link:hover {
-        background: var(--primary-color);
-        color: white;
-        transform: translateY(-1px);
-        text-decoration: none;
-    }
-    
-    .alternative-query {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 0.75rem 1rem;
-        border-radius: 8px;
-        margin-top: 1rem;
-        font-size: 0.9rem;
-    }
-    
-    .no-results-section {
-        background: white;
-        border-radius: 16px;
-        padding: 3rem 2rem;
-        text-align: center;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid var(--border-color);
-    }
-    
-    .no-results-icon {
-        font-size: 4rem;
-        color: var(--gray-color);
-        margin-bottom: 1.5rem;
-    }
-    
-    .no-results-title {
-        color: var(--dark-color);
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-    }
-    
-    .no-results-text {
-        color: var(--gray-color);
-        font-size: 1.1rem;
-        margin-bottom: 2rem;
-    }
-    
-    .search-tips {
-        background: var(--light-color);
-        border-radius: 12px;
-        padding: 1.5rem;
-        text-align: left;
-    }
-    
-    .search-tips h6 {
-        color: var(--dark-color);
-        font-weight: 600;
-        margin-bottom: 1rem;
-    }
-    
-    .search-tips ul {
-        margin: 0;
-        padding-left: 1.5rem;
-    }
-    
-    .search-tips li {
-        color: var(--gray-color);
-        margin-bottom: 0.5rem;
-    }
-    
-    .search-tips li:last-child {
-        margin-bottom: 0;
-    }
-    
-    .back-to-catalog {
-        background: var(--primary-color);
-        color: white;
-        padding: 1rem 2rem;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .back-to-catalog:hover {
-        background: var(--primary-hover);
-        color: white;
-        transform: translateY(-2px);
-        text-decoration: none;
-        box-shadow: var(--shadow-md);
-    }
-    
-    @media (max-width: 768px) {
-        .search-header {
-            padding: 2rem 0;
-            margin-bottom: 1.5rem;
-        }
-        
-        .search-query {
-            font-size: 1.5rem;
-        }
-        
-        .suggestions-section {
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .suggestion-links {
-            gap: 0.5rem;
-        }
-        
-        .suggestion-link {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.9rem;
-        }
-        
-        .no-results-section {
-            padding: 2rem 1rem;
-        }
-        
-        .no-results-icon {
-            font-size: 3rem;
-        }
-        
-        .no-results-title {
-            font-size: 1.25rem;
-        }
-    }
-</style>
-@endsection
-
 @section('seo')
-    <title>ZMART - Результаты поиска: "{{ $query }}" | Поиск</title>
+    <title>Результати пошуку: {{ $originalQuery }} - ZMART</title>
+    <meta name="description" content="Результати пошуку товарів за запитом {{ $originalQuery }}">
 @endsection
 
 @section('content')
-<section class="search-results-page">
-    <div class="container">
-        <!-- Заголовок результатов поиска -->
-        <div class="search-header text-center">
-            <h1 class="search-query">
-                <i class="fas fa-search me-3"></i>
-                Результаты поиска «{{ $originalQuery }}»
+<!-- Breadcrumbs -->
+<section class="bg-gray-50 py-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav class="flex items-center space-x-2 text-sm">
+            <a href="{{ url('/') }}" class="text-gray-600 hover:text-emerald-600 transition-colors">
+                <i class="fas fa-home"></i>
+            </a>
+            <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+            <span class="text-gray-900 font-medium">Пошук</span>
+        </nav>
+    </div>
+</section>
+
+<!-- Search Header -->
+<section class="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center text-white">
+            <div class="flex items-center justify-center mb-4">
+                <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                    <i class="fas fa-search text-3xl"></i>
+                </div>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold mb-3">
+                Результати пошуку
             </h1>
-            <div class="search-stats">
+            <p class="text-xl text-emerald-100 mb-4">
+                За запитом: <span class="font-bold text-yellow-300">«{{ $originalQuery }}»</span>
+            </p>
+            <div class="text-lg">
                 @if (!empty($getProducts) && $getProducts->count() > 0)
-                    Найдено {{ $getProducts->total() }} товаров
+                    Знайдено <span class="font-bold">{{ $getProducts->total() }}</span> {{ $getProducts->total() == 1 ? 'товар' : 'товарів' }}
                 @else
-                    По вашему запросу ничего не найдено
+                    За вашим запитом нічого не знайдено
                 @endif
             </div>
             
             @if ($usedAlternative && $query !== $originalQuery)
-                <div class="alternative-query">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Показаны результаты для <strong>{{ $query }}</strong>
+                <div class="mt-4 inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-xl">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    Показано результати для <strong class="ml-1">«{{ $query }}»</strong>
                 </div>
             @endif
         </div>
-
-        @if (!empty($suggestions))
-            <!-- Предложения по поиску -->
-            <div class="suggestions-section">
-                <h3 class="suggestions-title">
-                    <i class="fas fa-lightbulb text-warning"></i>
-                    Возможно, вы имели в виду:
-                </h3>
-                <div class="suggestion-links">
-                    @foreach ($suggestions as $suggestion)
-                        <a href="{{ url('/search?q=' . urlencode($suggestion)) }}" 
-                           class="suggestion-link">
-                            «{{ $suggestion }}»
-                        </a>
-                    @endforeach
-                </div>
-            </div>
-        @endif
-
-        @if ($getProducts->isEmpty())
-            <!-- Сообщение об отсутствии результатов -->
-            <div class="no-results-section">
-                <div class="no-results-icon">
-                    <i class="fas fa-search"></i>
-                </div>
-                <h2 class="no-results-title">Ничего не найдено</h2>
-                <p class="no-results-text">
-                    По вашему запросу «<strong>{{ $originalQuery }}</strong>» товары не найдены.
-                </p>
-                
-                <!-- Советы по поиску -->
-                <div class="search-tips">
-                    <h6><i class="fas fa-lightbulb text-warning me-2"></i>Советы по поиску:</h6>
-                    <ul>
-                        <li>Проверьте правильность написания</li>
-                        <li>Попробуйте использовать более общие слова</li>
-                        <li>Используйте синонимы</li>
-                        <li>Убедитесь, что все слова написаны правильно</li>
-                    </ul>
-                </div>
-                
-                <div class="mt-4">
-                    <a href="{{ route('home') }}" class="back-to-catalog">
-                        <i class="fas fa-arrow-left"></i>
-                        Вернуться в каталог
-                    </a>
-                </div>
-            </div>
-        @else
-            <!-- Мобильная кнопка для открытия боковой панели -->
-            <div class="d-lg-none mb-3">
-                <button class="btn btn-primary w-100" type="button" data-bs-toggle="offcanvas" data-bs-target="#categoriesOffcanvas">
-                    <i class="fas fa-th-large me-2"></i>Категории
-                </button>
-            </div>
-
-            <!-- Результаты поиска -->
-            <div class="row">
-                <!-- Боковая панель с категориями -->
-                <div class="col-12 col-lg-3 d-none d-lg-block">
-                    @include('includes.catalog.categories-sidebar')
-                </div>
-
-                <!-- Основной контент -->
-                <main class="col-12 col-lg-9">
-                    <div class="results-info mb-4">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                            <div>
-                                <h5 class="mb-0 text-muted">
-                                    <i class="fas fa-list me-2"></i>
-                                    Найдено {{ $getProducts->total() }} товаров
-                                </h5>
-                                <small class="text-muted">
-                                    Страница {{ $getProducts->currentPage() }} из {{ $getProducts->lastPage() }}
-                                </small>
-                            </div>
-                            
-                            <div class="d-flex align-items-center gap-2">
-                                <a href="{{ route('home') }}" class="btn btn-outline-primary btn-sm">
-                                    <i class="fas fa-arrow-left me-2"></i>В каталог
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Список товаров -->
-                    <catalog-product-list :products='@json($getProducts->items())'
-                                        :pagination='@json($paginationData)'>
-                    </catalog-product-list>
-                </main>
-            </div>
-        @endif
     </div>
 </section>
 
-<!-- Мобильная боковая панель с категориями -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="categoriesOffcanvas" 
-     aria-labelledby="categoriesOffcanvasLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="categoriesOffcanvasLabel">Категории</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+<!-- Suggestions -->
+@if (!empty($suggestions))
+<section class="bg-white py-6 border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+            <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+            Можливо, ви мали на увазі:
+        </h3>
+        <div class="flex flex-wrap gap-3">
+            @foreach ($suggestions as $suggestion)
+                <a href="{{ url('/search?q=' . urlencode($suggestion)) }}" 
+                   class="px-4 py-2 bg-gray-100 hover:bg-emerald-500 hover:text-white rounded-xl text-gray-700 font-medium transition-all duration-200">
+                    «{{ $suggestion }}»
+                </a>
+            @endforeach
+        </div>
     </div>
-    <div class="offcanvas-body">
-        @include('includes.catalog.categories-sidebar')
+</section>
+@endif
+
+<!-- Main Content -->
+<section class="py-8 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        @if ($getProducts->isEmpty())
+            <!-- No Results -->
+            <div class="bg-white rounded-2xl shadow-sm p-12 text-center">
+                <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-search text-4xl text-gray-400"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Нічого не знайдено</h2>
+                <p class="text-lg text-gray-600 mb-8">
+                    За вашим запитом <span class="font-bold text-emerald-600">«{{ $originalQuery }}»</span> товари не знайдені.
+                </p>
+                
+                <!-- Search Tips -->
+                <div class="bg-gray-50 rounded-xl p-6 text-left max-w-md mx-auto mb-8">
+                    <h3 class="font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                        Поради щодо пошуку:
+                    </h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-emerald-500 mr-2 mt-1"></i>
+                            Перевірте правильність написання
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-emerald-500 mr-2 mt-1"></i>
+                            Спробуйте використовувати більш загальні слова
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-emerald-500 mr-2 mt-1"></i>
+                            Використовуйте синоніми
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-emerald-500 mr-2 mt-1"></i>
+                            Переконайтеся, що всі слова написані правильно
+                        </li>
+                    </ul>
+                </div>
+                
+                <a href="{{ route('catalog') }}" 
+                   class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl font-bold hover:from-emerald-600 hover:to-teal-600 transition-all duration-200 shadow-lg">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Повернутися в каталог
+                </a>
+            </div>
+        @else
+            <!-- Results -->
+            <div class="mb-6 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900">Знайдені товари</h2>
+                    <p class="text-gray-600">
+                        Сторінка {{ $getProducts->currentPage() }} з {{ $getProducts->lastPage() }}
+                    </p>
+                </div>
+                <a href="{{ route('catalog') }}" 
+                   class="inline-flex items-center px-4 py-2 border-2 border-gray-300 text-gray-700 rounded-lg hover:border-emerald-500 hover:text-emerald-600 transition-all">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    До каталогу
+                </a>
+            </div>
+
+            <!-- Products List -->
+            <product-list 
+                :products="{{ json_encode($getProducts->items()) }}"
+                :pagination="{{ json_encode([
+                    'current_page' => $getProducts->currentPage(),
+                    'last_page' => $getProducts->lastPage(),
+                    'per_page' => $getProducts->perPage(),
+                    'total' => $getProducts->total(),
+                    'from' => $getProducts->firstItem(),
+                    'to' => $getProducts->lastItem(),
+                ]) }}"
+            ></product-list>
+
+            <!-- Pagination -->
+            @if($getProducts->hasPages())
+            <div class="mt-12">
+                <div class="flex items-center justify-center space-x-2">
+                    {{-- Previous Page Link --}}
+                    @if ($getProducts->onFirstPage())
+                        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded-lg cursor-not-allowed">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                    @else
+                        <a href="{{ $getProducts->previousPageUrl() }}" 
+                           class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:border-emerald-500 hover:text-emerald-600 transition-all">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    @endif
+
+                    {{-- Pagination Elements --}}
+                    @foreach ($getProducts->getUrlRange(1, $getProducts->lastPage()) as $page => $url)
+                        @if ($page == $getProducts->currentPage())
+                            <span class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg font-bold shadow-lg">
+                                {{ $page }}
+                            </span>
+                        @else
+                            <a href="{{ $url }}" 
+                               class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:border-emerald-500 hover:text-emerald-600 transition-all">
+                                {{ $page }}
+                            </a>
+                        @endif
+                    @endforeach
+
+                    {{-- Next Page Link --}}
+                    @if ($getProducts->hasMorePages())
+                        <a href="{{ $getProducts->nextPageUrl() }}" 
+                           class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:border-emerald-500 hover:text-emerald-600 transition-all">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    @else
+                        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded-lg cursor-not-allowed">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                    @endif
+                </div>
+
+                <!-- Pagination Info -->
+                <div class="text-center mt-4 text-sm text-gray-600">
+                    Показано {{ $getProducts->firstItem() }}-{{ $getProducts->lastItem() }} з {{ $getProducts->total() }} товарів
+                </div>
+            </div>
+            @endif
+        @endif
     </div>
-</div>
+</section>
 @endsection

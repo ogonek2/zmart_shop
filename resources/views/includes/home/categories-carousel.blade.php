@@ -17,24 +17,55 @@
                 
                 @foreach ($categories as $category)
                     @php
-                        // Получаем последний товар из категории для изображения
+                        // Получаем изображение для категории
+                        $categoryImage = null;
+                        
+                        // 1. Сначала проверяем, есть ли товары в самой категории
                         $latestProduct = $category->products()->latest()->first();
-                        $categoryImage = $latestProduct && $latestProduct->image_path 
-                            ? $latestProduct->image_path 
-                            : 'https://via.placeholder.com/150/e2e8f0/64748b?text=' . mb_substr($category->name, 0, 1);
-                        $productCount = $category->products()->count();
+                        if ($latestProduct && $latestProduct->image_path) {
+                            $categoryImage = $latestProduct->image_path;
+                        }
+                        
+                        // 2. Если в категории нет товаров, ищем в дочерних категориях
+                        if (!$categoryImage) {
+                            $childCategories = $category->childCategories()->where('is_active', true)->get();
+                            foreach ($childCategories as $childCategory) {
+                                $childProduct = $childCategory->products()->latest()->first();
+                                if ($childProduct && $childProduct->image_path) {
+                                    $categoryImage = $childProduct->image_path;
+                                    break; // Нашли изображение, выходим из цикла
+                                }
+                            }
+                        }
+                        
+                        // 3. Если все еще нет изображения, используем placeholder
+                        if (!$categoryImage) {
+                            $categoryImage = 'https://via.placeholder.com/150/e2e8f0/64748b?text=' . mb_substr($category->name, 0, 1);
+                        }
+                        
+                        // Подсчитываем общее количество товаров (включая дочерние категории)
+                        $totalProductCount = $category->products()->count();
+                        foreach ($category->childCategories()->where('is_active', true)->get() as $childCategory) {
+                            $totalProductCount += $childCategory->products()->count();
+                        }
                     @endphp
                     
                     <a href="{{ route('catalog_category_page', $category->url) }}" class="category-carousel-item">
                         <div class="category-image-wrapper">
-                            <img src="{{ $categoryImage }}" 
+                            @if($categoryImage && !str_contains($categoryImage, 'placeholder'))
+                                <img src="{{ $categoryImage }}" 
                                  alt="{{ $category->name }}" 
                                  class="category-image"
                                  loading="lazy">
+                            @else
+                                <div class="category-image-placeholder">
+                                    <i class="fas fa-folder-open fa-2x text-muted"></i>
+                                </div>
+                            @endif
                         </div>
                         <div class="category-name">{{ $category->name }}</div>
-                        @if($productCount > 0)
-                            <div class="category-count">{{ $productCount }} товаров</div>
+                        @if($totalProductCount > 0)
+                            <div class="category-count">{{ $totalProductCount }} {{ $totalProductCount == 1 ? 'товар' : 'товаров' }}</div>
                         @endif
                     </a>
                 @endforeach

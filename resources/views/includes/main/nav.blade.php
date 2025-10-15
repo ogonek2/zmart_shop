@@ -1,344 +1,257 @@
-<header class="sticky-top">
-    <!-- Верхняя панель -->
-    <div class="bg-dark text-white py-2 d-none d-md-block">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="d-flex align-items-center gap-4">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="fas fa-map-marker-alt text-warning"></i>
-                            <span class="small">Одесса</span>
-                        </div>
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="fas fa-phone text-warning"></i>
-                            <span class="small">+38 073-077-75-72</span>
-                        </div>
+<header class="bg-white shadow-sm sticky top-0 z-50">
+    <!-- Top Bar -->
+    <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-2 hidden md:block">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center text-sm">
+                <!-- Left side -->
+                <div class="flex items-center space-x-6">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-map-marker-alt text-yellow-300"></i>
+                        <span>Одесса</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-phone text-yellow-300"></i>
+                        <span>+38 073-077-75-72</span>
                     </div>
                 </div>
-                <div class="col-md-6 text-end">
-                    <div class="d-flex align-items-center justify-content-end gap-4">
-                        <a href="{{ route('oplata_i_dostavka') }}" class="text-white-50 small text-decoration-none">
-                            <i class="fas fa-truck me-1"></i>Доставка
-                        </a>
-                        <a href="{{ route('obmin_ta_povernennia') }}" class="text-white-50 small text-decoration-none">
-                            <i class="fas fa-shield-alt me-1"></i>Гарантия
-                        </a>
-                        <a href="{{ route('kontaktna_informatsiia') }}" class="text-white-50 small text-decoration-none">
-                            <i class="fas fa-headset me-1"></i>Поддержка
-                        </a>
-                    </div>
+                
+                <!-- Right side -->
+                <div class="flex items-center space-x-6">
+                    <a href="{{ route('oplata_i_dostavka') }}" class="hover:text-yellow-300 transition-colors">
+                        <i class="fas fa-truck mr-1"></i>Доставка
+                    </a>
+                    <a href="{{ route('obmin_ta_povernennia') }}" class="hover:text-yellow-300 transition-colors">
+                        <i class="fas fa-shield-alt mr-1"></i>Гарантия
+                    </a>
+                    <a href="{{ route('kontaktna_informatsiia') }}" class="hover:text-yellow-300 transition-colors">
+                        <i class="fas fa-headset mr-1"></i>Поддержка
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Основная навигация -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-        <div class="container">
-            <!-- Логотип -->
-            <a class="navbar-brand fw-bold text-primary fs-3" href="{{ url('/') }}">
-                <i class="fas fa-bolt text-warning me-2"></i>ZMART
-            </a>
-
-            <!-- Поиск (десктоп) -->
-            <div class="d-none d-lg-block flex-grow-1 mx-4">
-                <div class="position-relative">
-                    <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-                    <search></search>
-                </div>
-            </div>
-
-            <!-- Правая часть навигации -->
-            <div class="d-flex align-items-center gap-3">
-                <!-- Избранное -->
-                <div class="position-relative">
-                    <wishlist-button></wishlist-button>
-                </div>
-
-                <!-- Корзина -->
-                <div class="position-relative">
-                    <open-cart-button></open-cart-button>
-                </div>
-
-                <!-- Бургер меню -->
-                <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Меню категорий -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary d-none d-lg-block">
-        <div class="container">
-            <ul class="navbar-nav me-auto">
-                <!-- Каталог -->
-                <li class="nav-item">
-                    <a class="nav-link fw-semibold" href="#" data-bs-toggle="offcanvas" data-bs-target="#catalogMenu" aria-controls="catalogMenu">
-                        <i class="fas fa-th-large me-2"></i>
-                        <span>Каталог</span>
-                    </a>
-                </li>
-
-                <!-- О нас -->
-                <li class="nav-item">
-                    <a class="nav-link fw-semibold" href="{{ route('pro_kompaniiu') }}">
-                        <i class="fas fa-info-circle me-2"></i>О нас
-                    </a>
-                </li>
-            </ul>
-
-            <!-- Дополнительные ссылки -->
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link fw-semibold" href="{{ route('kontaktna_informatsiia') }}">
-                        <i class="fas fa-phone me-2"></i>Заказать звонок
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Боковое мобильное меню -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
-        <div class="offcanvas-header bg-primary text-white">
-            <h5 class="offcanvas-title" id="mobileMenuLabel">
-                <i class="fas fa-bars me-2"></i>Меню
-            </h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body p-0">
-            <!-- Мобильный поиск -->
-            <div class="p-3 bg-light border-bottom">
-                <div class="position-relative">
-                    <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-                    <search></search>
-                </div>
-            </div>
-
-            <!-- Навигационные ссылки -->
-            <div class="list-group list-group-flush">
-                <!-- Каталог -->
-                <div class="list-group-item p-0">
-                    <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between" 
-                       data-bs-toggle="collapse" href="#catalogCollapse" role="button" aria-expanded="false" aria-controls="catalogCollapse">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-th-large me-3 text-primary"></i>
-                            <span class="fw-semibold">Каталог</span>
-                        </div>
-                        <i class="fas fa-chevron-down"></i>
-                    </a>
-                    <div class="collapse" id="catalogCollapse">
-                        <div class="list-group list-group-flush">
-                            @foreach (get_all_category() as $item)
-                                <a href="{{ route('catalog_category_page', $item->url) }}" class="list-group-item list-group-item-action ps-5">
-                                    <i class="fas fa-tv me-2 text-muted"></i>
-                                    {{ $item->name }}
-                                    @php
-                                        $productCount = $item->products ? $item->products->count() : 0;
-                                    @endphp
-                                    <span class="badge bg-primary-subtle text-primary ms-2">{{ $productCount }}</span>
-                                </a>
-                            @endforeach
-                        </div>
+    <!-- Main Navigation -->
+    <nav class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="{{ url('/') }}" class="flex items-center space-x-3 group">
+                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg">
+                        <i class="fas fa-bolt text-white text-xl"></i>
                     </div>
-                </div>
-
-                <!-- Заказать звонок -->
-                <a href="{{ route('kontaktna_informatsiia') }}" class="list-group-item list-group-item-action d-flex align-items-center">
-                    <i class="fas fa-phone me-3 text-primary"></i>
-                    <span class="fw-semibold">Заказать звонок</span>
+                    <span class="text-2xl font-bold text-gray-900">ZMART</span>
                 </a>
-            </div>
 
-            <!-- Дополнительная информация -->
-            <div class="p-3 bg-light border-top">
-                <div class="row g-3">
-                    <div class="col-6">
-                        <a href="{{ route('oplata_i_dostavka') }}" class="text-decoration-none d-block text-center">
-                            <div class="p-3 bg-white rounded">
-                                <i class="fas fa-truck text-primary mb-2"></i>
-                                <div class="small fw-semibold">Доставка</div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-6">
-                        <a href="{{ route('obmin_ta_povernennia') }}" class="text-decoration-none d-block text-center">
-                            <div class="p-3 bg-white rounded">
-                                <i class="fas fa-shield-alt text-primary mb-2"></i>
-                                <div class="small fw-semibold">Гарантия</div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Боковое меню каталога (десктоп) -->
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="catalogMenu" aria-labelledby="catalogMenuLabel">
-        <div class="offcanvas-header bg-primary text-white">
-            <h5 class="offcanvas-title" id="catalogMenuLabel">
-                <i class="fas fa-th-large me-2"></i>Каталог товаров
-            </h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body p-0">
-
-            <!-- Список категорий -->
-            <div class="list-group list-group-flush" id="catalogList">
-                @foreach (get_all_category() as $item)
-                    <a href="{{ route('catalog_category_page', $item->url) }}" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between catalog-item">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-tv me-3 text-primary"></i>
-                            <span class="fw-semibold">{{ $item->name }}</span>
+                <!-- Desktop Search -->
+                <div class="hidden lg:block flex-1 max-w-2xl mx-8">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
                         </div>
-                        @php
-                            $productCount = $item->products ? $item->products->count() : 0;
-                        @endphp
-                        <span class="badge bg-primary-subtle text-primary">{{ $productCount }}</span>
-                    </a>
-                @endforeach
-            </div>
-
-            <!-- Дополнительная информация -->
-            {{-- <div class="p-3 bg-light border-top">
-                <div class="row g-2">
-                    <div class="col-6">
-                        <a href="{{ route('search.index') }}?promo=1" class="text-decoration-none d-block text-center">
-                            <div class="p-2 bg-white rounded">
-                                <i class="fas fa-tag text-primary mb-1"></i>
-                                <div class="small fw-semibold">Акции</div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-6">
-                        <a href="{{ route('search.index') }}?new=1" class="text-decoration-none d-block text-center">
-                            <div class="p-2 bg-white rounded">
-                                <i class="fas fa-star text-primary mb-1"></i>
-                                <div class="small fw-semibold">Новинки</div>
-                            </div>
-                        </a>
+                        <search></search>
                     </div>
                 </div>
-            </div> --}}
-        </div>
-    </div>
 
-    <!-- Мини-корзина -->
-    <mini-cart></mini-cart>
-    
-    <!-- Панель избранного -->
-    <wishlist-panel></wishlist-panel>
+                <!-- Right side navigation -->
+                <div class="flex items-center space-x-4">
+                    <!-- Wishlist -->
+                    <div class="relative">
+                        <wishlist-button></wishlist-button>
+                    </div>
+
+                    <!-- Cart -->
+                    <div class="relative">
+                        <open-cart-button></open-cart-button>
+                    </div>
+
+                    <!-- Mobile menu button -->
+                    <button class="lg:hidden p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors" 
+                            onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Categories Navigation -->
+    <nav class="bg-gradient-to-r from-gray-900 to-gray-800 text-white hidden lg:block">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center">
+                <!-- Catalog Button -->
+                <button onclick="toggleCatalogMenu()" 
+                        class="flex items-center space-x-2 px-6 py-4 hover:bg-gray-700 transition-colors group">
+                    <i class="fas fa-th-large"></i>
+                    <span class="font-medium">Каталог</span>
+                    <i class="fas fa-chevron-down group-hover:rotate-180 transition-transform"></i>
+                </button>
+
+                <!-- Navigation Links -->
+                <div class="flex items-center space-x-8 ml-8">
+                    <a href="{{ route('pro_kompaniiu') }}" 
+                       class="flex items-center space-x-2 py-4 hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-info-circle"></i>
+                        <span class="font-medium">О нас</span>
+                    </a>
+                </div>
+
+                <!-- Right side -->
+                <div class="ml-auto">
+                    <a href="{{ route('kontaktna_informatsiia') }}" 
+                       class="flex items-center space-x-2 px-6 py-4 hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-phone"></i>
+                        <span class="font-medium">Заказать звонок</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 </header>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Поиск в каталоге
-    const catalogSearch = document.getElementById('catalogSearch');
-    const catalogList = document.getElementById('catalogList');
-    const catalogItems = catalogList.querySelectorAll('.catalog-item');
-    
-    if (catalogSearch && catalogItems.length > 0) {
-        catalogSearch.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase().trim();
+<!-- Mobile Menu Overlay -->
+<div id="mobileMenuOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden lg:hidden" onclick="closeMobileMenu()">
+</div>
+
+<!-- Mobile Menu -->
+<div id="mobileMenu" class="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 transform translate-x-full transition-transform lg:hidden">
+    <!-- Mobile Menu Header -->
+    <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-4 flex items-center justify-between">
+        <h3 class="text-lg font-bold">Меню</h3>
+        <button onclick="closeMobileMenu()" class="text-white hover:text-yellow-300">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Mobile Search -->
+    <div class="p-4 border-b border-gray-200">
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-search text-gray-400"></i>
+            </div>
+            <search></search>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="p-4 space-y-2">
+        <!-- Catalog -->
+        <div class="border-b border-gray-200 pb-4">
+            <button onclick="toggleMobileCatalog()" 
+                    class="flex items-center justify-between w-full p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-th-large text-emerald-600"></i>
+                    <span class="font-medium text-gray-900">Каталог</span>
+                </div>
+                <i class="fas fa-chevron-down transition-transform" id="mobileCatalogIcon"></i>
+            </button>
             
-            catalogItems.forEach(item => {
-                const itemText = item.textContent.toLowerCase();
-                const itemElement = item.closest('.list-group-item');
-                
-                if (searchTerm === '' || itemText.includes(searchTerm)) {
-                    itemElement.style.display = 'flex';
-                } else {
-                    itemElement.style.display = 'none';
-                }
-            });
-        });
-    }
-});
-</script>
+            <!-- Mobile Catalog Items -->
+            <div id="mobileCatalogItems" class="hidden mt-2 space-y-1">
+                @foreach (get_all_category()->whereNull('parent_id') as $category)
+                <a href="{{ route('catalog_category_page', $category->url) }}" 
+                   class="flex items-center justify-between p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-folder text-gray-400"></i>
+                        <span>{{ $category->name }}</span>
+                    </div>
+                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">{{ $category->products()->count() }}</span>
+                </a>
+                @endforeach
+            </div>
+        </div>
 
-<style>
-/* Минимальные стили для улучшения UX */
-.dropdown-item:hover {
-    background-color: var(--bs-primary-bg-subtle);
-    color: var(--bs-primary);
-}
+        <!-- Other Links -->
+        <a href="{{ route('pro_kompaniiu') }}" 
+           class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+            <i class="fas fa-info-circle text-emerald-600"></i>
+            <span class="font-medium">О нас</span>
+        </a>
 
-.list-group-item-action:hover {
-    background-color: var(--bs-primary-bg-subtle);
-    color: var(--bs-primary);
-}
+        <a href="{{ route('kontaktna_informatsiia') }}" 
+           class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+            <i class="fas fa-phone text-emerald-600"></i>
+            <span class="font-medium">Заказать звонок</span>
+        </a>
+    </div>
 
-/* Боковое меню каталога */
-#catalogMenu {
-    width: 400px !important;
-}
+    <!-- Mobile Footer Links -->
+    <div class="p-4 border-t border-gray-200">
+        <div class="grid grid-cols-2 gap-3">
+            <a href="{{ route('oplata_i_dostavka') }}" 
+               class="flex flex-col items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <i class="fas fa-truck text-emerald-600 mb-2"></i>
+                <span class="text-sm font-medium text-gray-700">Доставка</span>
+            </a>
+            <a href="{{ route('obmin_ta_povernennia') }}" 
+               class="flex flex-col items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <i class="fas fa-shield-alt text-emerald-600 mb-2"></i>
+                <span class="text-sm font-medium text-gray-700">Гарантия</span>
+            </a>
+        </div>
+    </div>
+</div>
 
-#catalogMenu .offcanvas-body {
-    max-height: calc(100vh - 60px);
-    overflow-y: auto;
-}
+<!-- Desktop Catalog Menu -->
+<div id="catalogMenu" class="fixed top-0 left-0 h-full w-96 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform hidden lg:block">
+    <!-- Catalog Menu Header -->
+    <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-4 flex items-center justify-between">
+        <h3 class="text-lg font-bold">Каталог товаров</h3>
+        <button onclick="closeCatalogMenu()" class="text-white hover:text-yellow-300">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+    </div>
 
-.catalog-item {
-    transition: all 0.2s ease;
-}
+    <!-- Catalog Search -->
+    <div class="p-4 border-b border-gray-200">
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-search text-gray-400"></i>
+            </div>
+            <input type="text" id="catalogSearch" placeholder="Поиск в каталоге..." 
+                   class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+        </div>
+    </div>
 
-.catalog-item:hover {
-    background-color: var(--bs-primary-bg-subtle) !important;
-    color: var(--bs-primary) !important;
-    transform: translateX(5px);
-}
+    <!-- Catalog Items -->
+    <div class="flex-1 overflow-y-auto max-h-96">
+        <div id="catalogList" class="p-2">
+            @foreach (get_all_category()->whereNull('parent_id') as $category)
+            <a href="{{ route('catalog_category_page', $category->url) }}" 
+               class="flex items-center justify-between p-3 text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-all duration-200 hover:translate-x-1">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-folder text-emerald-600"></i>
+                    <span class="font-medium">{{ $category->name }}</span>
+                </div>
+                <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full text-xs">{{ $category->products()->count() }}</span>
+            </a>
+            @endforeach
+        </div>
+    </div>
 
-/* Стилизация скроллбара для каталога */
-#catalogMenu .offcanvas-body::-webkit-scrollbar {
-    width: 6px;
-}
+    <!-- Catalog Menu Footer -->
+    <div class="p-4 border-t border-gray-200">
+        <div class="grid grid-cols-2 gap-3">
+            <a href="/catalog?promo=1" 
+               class="flex flex-col items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <i class="fas fa-tag text-emerald-600 mb-2"></i>
+                <span class="text-sm font-medium text-gray-700">Акции</span>
+            </a>
+            <a href="/catalog?new=1" 
+               class="flex flex-col items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <i class="fas fa-star text-emerald-600 mb-2"></i>
+                <span class="text-sm font-medium text-gray-700">Новинки</span>
+            </a>
+        </div>
+    </div>
+</div>
 
-#catalogMenu .offcanvas-body::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
+<!-- Catalog Menu Overlay -->
+<div id="catalogMenuOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="closeCatalogMenu()">
+</div>
 
-#catalogMenu .offcanvas-body::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
-}
+<!-- Mini Cart -->
+<mini-cart></mini-cart>
 
-#catalogMenu .offcanvas-body::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
-
-/* Для Firefox */
-#catalogMenu .offcanvas-body {
-    scrollbar-width: thin;
-    scrollbar-color: #c1c1c1 #f1f1f1;
-}
-
-.offcanvas {
-    width: 320px !important;
-}
-
-/* Адаптивность */
-@media (max-width: 576px) {
-    .offcanvas {
-        width: 100% !important;
-    }
-    
-    #catalogMenu {
-        width: 100% !important;
-    }
-}
-
-@media (min-width: 992px) {
-    #catalogMenu {
-        width: 450px !important;
-    }
-}
-
-@media (min-width: 1200px) {
-    #catalogMenu {
-        width: 500px !important;
-    }
-}
-</style>
+<!-- Wishlist Panel -->
+<wishlist-panel></wishlist-panel>

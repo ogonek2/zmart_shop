@@ -11,7 +11,21 @@ class indexController extends Controller
 {
     public function index()
     {
-        return view('welcome');
+        return view('home');
+    }
+
+    public function catalog()
+    {
+        $getProducts = Product::select([
+                'id', 'name', 'price', 'discount', 'image_path', 'url', 
+                'articule', 'availability', 'is_wholesale', 'wholesale_price', 'wholesale_min_quantity'
+            ])
+            ->orderBy('created_at', 'desc')
+            ->paginate(45);
+        
+        return view('welcome', [
+            'getProducts' => $getProducts
+        ]);
     }
 
     public function checkout()

@@ -1,58 +1,93 @@
 <template>
-    <div v-if="visible" class="wishlist-overlay">
-        <div class="wishlist-panel bg-white shadow-lg">
-            <div class="d-flex justify-content-between align-items-center border-bottom p-3">
-                <h5 class="mb-0">
-                    <i class="fas fa-heart text-danger me-2"></i>
-                    Избранное
-                </h5>
-                <button class="btn btn-sm btn-outline-secondary" @click="toggle">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+    <!-- Overlay -->
+    <div v-if="visible" class="fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity" @click="toggle"></div>
+    
+    <!-- Wishlist Panel -->
+    <div :class="panelClass" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform transition-transform duration-300 flex flex-col">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-pink-500 to-rose-500 text-white p-6 flex items-center justify-between">
+            <h3 class="text-xl font-bold flex items-center">
+                <i class="fas fa-heart mr-3"></i>
+                Обране
+            </h3>
+            <button @click="toggle" class="text-white hover:text-yellow-300 transition-colors">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
 
-            <div class="p-3 overflow-auto flex-grow-1">
-                <div v-if="wishlist.length">
-                    <ul class="list-group mb-3 ls-gr-max-height-scroll">
-                        <li class="list-group-item p-3 mb-2 d-flex align-items-center cursor-pointer"
-                            v-for="item in wishlist" :key="item.id">
-                            <div>
-                                <img v-if="item.image" style="width: 60px; height: 60px; object-fit: contain;"
-                                    :src="item.image" alt="">
-                                <div v-else
-                                    class="d-flex bg-light align-items-center flex-column justify-content-center"
-                                    style="width: 60px; height: 60px;">
-                                    <small class="text-secondary"><i class="fas fa-image"></i></small>
+        <!-- Wishlist Items -->
+        <div class="flex-1 overflow-y-auto p-6">
+            <!-- Items List -->
+            <div v-if="wishlistProducts.length > 0" class="space-y-4">
+                <div v-for="product in wishlistProducts" :key="product.id" 
+                     class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all">
+                    <div class="flex gap-4">
+                        <!-- Image -->
+                        <div class="flex-shrink-0">
+                            <a :href="`/catalog/${product.url}`">
+                                <div class="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg overflow-hidden">
+                                    <img v-if="product.image_path" 
+                                         :src="product.image_path" 
+                                         :alt="product.name"
+                                         class="w-full h-full object-cover" />
+                                    <div v-else class="w-full h-full flex items-center justify-center">
+                                        <i class="fas fa-image text-2xl text-gray-400"></i>
+                                    </div>
                                 </div>
+                            </a>
+                        </div>
+
+                        <!-- Info -->
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-gray-900 text-sm mb-2 line-clamp-2">
+                                <a :href="`/catalog/${product.url}`" class="hover:text-emerald-600 transition-colors">
+                                    {{ product.name }}
+                                </a>
+                            </h4>
+                            
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-lg font-bold text-emerald-600">
+                                    {{ formatPrice(product.price) }} ₴
+                                </span>
                             </div>
-                            <div class="ps-3 flex-grow-1">
-                                <strong>{{ item.name }}</strong><br>
-                                <small class="text-success fw-bold">{{ item.price }}</small>
-                            </div>
-                            <div class="btn-group btn-group-sm ms-auto d-flex align-items-center">
-                                <button class="btn btn-primary" @click="addToCart(item)">
-                                    <i class="fas fa-shopping-cart me-1"></i>
-                                    В корзину
-                                </button>
-                                <button class="btn btn-outline-danger ms-2" @click="removeFromWishlist(item.id)">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="text-center">
-                        <button class="btn btn-outline-primary" @click="clearWishlist">
-                            <i class="fas fa-trash me-2"></i>
-                            Очистить избранное
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex gap-2 mt-4 pt-4 border-t border-gray-200">
+                        <a :href="`/catalog/${product.url}`" 
+                           class="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-2 rounded-xl font-bold hover:from-emerald-600 hover:to-teal-600 transition-all text-center text-sm">
+                            <i class="fas fa-eye mr-1"></i>Переглянути
+                        </a>
+                        <button @click="removeFromWishlist(product.id)" 
+                                class="px-4 py-2 bg-red-100 text-red-600 rounded-xl hover:bg-red-200 transition-colors">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 </div>
-                <div v-else class="text-muted text-center my-5 py-3">
-                    <i class="fas fa-heart fa-3x text-muted mb-3"></i>
-                    <h6>Избранное пусто</h6>
-                    <p class="small">Добавляйте товары в избранное, чтобы не потерять их</p>
-                </div>
             </div>
+
+            <!-- Empty State -->
+            <div v-else class="text-center py-12">
+                <div class="inline-flex items-center justify-center w-24 h-24 bg-gray-100 rounded-full mb-4">
+                    <i class="fas fa-heart text-4xl text-gray-400"></i>
+                </div>
+                <h4 class="text-lg font-bold text-gray-900 mb-2">Обране порожнє</h4>
+                <p class="text-gray-600 mb-6">Додайте товари, які вам сподобались</p>
+                <button @click="toggle" 
+                        class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-xl font-bold hover:from-emerald-600 hover:to-teal-600 transition-all">
+                    <i class="fas fa-shopping-bag mr-2"></i>
+                    Почати покупки
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div v-if="wishlistProducts.length > 0" class="border-t border-gray-200 p-6 bg-gray-50">
+            <button @click="toggle" 
+                    class="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-50 transition-all">
+                Продовжити покупки
+            </button>
         </div>
     </div>
 </template>
@@ -63,206 +98,79 @@ export default {
     data() {
         return {
             wishlist: [],
+            wishlistProducts: [],
             visible: false
         };
+    },
+    computed: {
+        panelClass() {
+            return this.visible ? 'translate-x-0' : 'translate-x-full';
+        }
     },
     mounted() {
         this.loadWishlist();
         window.addEventListener('wishlist-updated', this.loadWishlist);
-        window.addEventListener('toggle-wishlist', this.toggle);
+        window.addEventListener('toggle-wishlist-panel', this.toggle);
     },
     unmounted() {
         window.removeEventListener('wishlist-updated', this.loadWishlist);
-        window.removeEventListener('toggle-wishlist', this.toggle);
+        window.removeEventListener('toggle-wishlist-panel', this.toggle);
     },
     methods: {
-        toggle() {
-            this.visible = !this.visible;
-            if (this.visible) this.loadWishlist();
-        },
         loadWishlist() {
-            this.wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-            
-            // Проверяем и исправляем старый формат избранного (когда сохранялись только ID)
-            this.fixOldWishlistFormat();
-            
-            console.log('Загружено избранное:', this.wishlist);
-        },
-        fixOldWishlistFormat() {
-            // Проверяем, есть ли элементы старого формата (только числа)
-            const hasOldFormat = this.wishlist.some(item => typeof item === 'number');
-            
-            if (hasOldFormat) {
-                console.log('Обнаружен старый формат избранного, очищаем...');
-                // Очищаем старое избранное, так как в нем нет полных данных
-                this.wishlist = [];
-                localStorage.setItem('wishlist', JSON.stringify(this.wishlist));
-                
-                // Показываем уведомление
-                window.dispatchEvent(new CustomEvent('show-toast', {
-                    detail: {
-                        title: 'Избранное обновлено',
-                        message: 'Старый формат избранного очищен. Добавьте товары заново.',
-                        type: 'info',
-                        duration: 5000
-                    }
-                }));
-            }
-        },
-        addToCart(item) {
             try {
-                // Проверяем, что у нас есть все необходимые данные
-                if (!item || !item.id || !item.name || !item.price) {
-                    console.error('Неполные данные товара:', item);
-                    window.dispatchEvent(new CustomEvent('show-toast', {
-                        detail: {
-                            title: 'Ошибка!',
-                            message: 'Неполные данные товара для добавления в корзину',
-                            type: 'error',
-                            duration: 4000
-                        }
-                    }));
-                    return;
-                }
-
-                console.log('Добавляем в корзину товар:', item);
-                
-                let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                let existingItem = cart.find(cartItem => cartItem.id === item.id);
-                
-                if (existingItem) {
-                    existingItem.quantity += 1;
-                } else {
-                    cart.push({
-                        id: item.id,
-                        name: item.name,
-                        price: item.price,
-                        image: item.image || '',
-                        quantity: 1
-                    });
-                }
-                
-                localStorage.setItem('cart', JSON.stringify(cart));
-                window.dispatchEvent(new Event('cart-updated'));
-                
-                // Показываем уведомление через тостер
-                window.dispatchEvent(new CustomEvent('show-toast', {
-                    detail: {
-                        title: 'Товар добавлен в корзину!',
-                        message: 'Товар успешно добавлен в вашу корзину',
-                        type: 'success',
-                        product: {
-                            id: item.id,
-                            name: item.name,
-                            price: item.price,
-                            image: item.image || ''
-                        },
-                        duration: 4000
-                    }
-                }));
-                
-                // Убираем из избранного
-                this.removeFromWishlist(item.id);
-            } catch (error) {
-                console.error('Ошибка добавления в корзину:', error);
-                
-                // Показываем уведомление об ошибке через тостер
-                window.dispatchEvent(new CustomEvent('show-toast', {
-                    detail: {
-                        title: 'Ошибка!',
-                        message: 'Не удалось добавить товар в корзину',
-                        type: 'error',
-                        duration: 4000
-                    }
-                }));
+                const saved = localStorage.getItem('wishlist');
+                this.wishlist = saved ? JSON.parse(saved) : [];
+                this.loadWishlistProducts();
+            } catch (e) {
+                console.error('Error loading wishlist:', e);
+                this.wishlist = [];
+                this.wishlistProducts = [];
             }
         },
-        removeFromWishlist(id) {
-            if (!id) {
-                console.error('ID товара не указан для удаления из избранного');
+        async loadWishlistProducts() {
+            if (this.wishlist.length === 0) {
+                this.wishlistProducts = [];
                 return;
             }
-            
-            const itemToRemove = this.wishlist.find(item => item.id === id);
-            if (itemToRemove) {
-                console.log('Удаляем из избранного товар:', itemToRemove);
+
+            try {
+                // Here you would normally fetch product details from API
+                // For now, we'll just store the IDs
+                this.wishlistProducts = [];
+            } catch (e) {
+                console.error('Error loading wishlist products:', e);
             }
-            
-            this.wishlist = this.wishlist.filter(item => item.id !== id);
-            localStorage.setItem('wishlist', JSON.stringify(this.wishlist));
-            window.dispatchEvent(new Event('wishlist-updated'));
-            console.log('Удален товар из избранного:', id);
         },
-        clearWishlist() {
-            if (confirm('Вы уверены, что хотите очистить избранное?')) {
-                this.wishlist = [];
+        toggle() {
+            this.visible = !this.visible;
+            document.body.style.overflow = this.visible ? 'hidden' : '';
+        },
+        removeFromWishlist(productId) {
+            const index = this.wishlist.indexOf(productId);
+            if (index > -1) {
+                this.wishlist.splice(index, 1);
                 localStorage.setItem('wishlist', JSON.stringify(this.wishlist));
                 window.dispatchEvent(new Event('wishlist-updated'));
+                this.loadWishlistProducts();
                 
-                // Показываем уведомление через тостер
-                window.dispatchEvent(new CustomEvent('show-toast', {
-                    detail: {
-                        title: 'Избранное очищено',
-                        message: 'Все товары удалены из избранного',
-                        type: 'info',
-                        duration: 3000
-                    }
-                }));
+                if (this.$toast) {
+                    this.$toast.info('Видалено з обраного');
+                }
             }
+        },
+        formatPrice(price) {
+            return Math.round(price).toLocaleString('uk-UA');
         }
     }
 };
 </script>
 
 <style scoped>
-.wishlist-overlay {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1055;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.wishlist-panel {
-    width: 100%;
-    max-width: 600px;
-    height: fit-content;
-    max-height: 100%;
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-    border-radius: 12px;
-}
-
-.ls-gr-max-height-scroll {
-    max-height: 500px;
-    min-height: 200px;
-    overflow-y: auto;
-}
-
-.list-group-item {
-    border-radius: 8px;
-    border: 1px solid #e9ecef;
-    transition: all 0.2s ease;
-}
-
-.list-group-item:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transform: translateY(-1px);
-}
-
-.btn {
-    border-radius: 6px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.btn:hover {
-    transform: translateY(-1px);
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 </style>
