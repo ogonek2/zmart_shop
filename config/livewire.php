@@ -11,15 +11,15 @@ return [
     */
 
     'temporary_file_upload' => [
-        'disk' => env('LIVEWIRE_TEMPORARY_FILE_UPLOAD_DISK', 'local'),
-        'rules' => null, // ['file', 'max:12288'], // 12MB Max
+        'disk' => env('LIVEWIRE_TEMPORARY_FILE_UPLOAD_DISK', 'public'),
+        'rules' => ['file', 'max:5120'], // 5MB Max
         'directory' => 'livewire-tmp',
         'middleware' => null,
         'preview_mimes' => [
             'png', 'gif', 'bmp', 'svg', 'wav', 'mp4',
             'mov', 'avi', 'wmv', 'mp3', 'm4a', 'jpg', 'jpeg'
         ],
-        'max_upload_time' => 5, // Max time (in minutes) before an upload is invalidated.
+        'max_upload_time' => 10, // Max time (in minutes) before an upload is invalidated.
     ],
 
     /*

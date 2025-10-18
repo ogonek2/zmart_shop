@@ -147,7 +147,8 @@ class ProductResource extends Resource
                             ->helperText('Загрузите главное изображение товара')
                             ->hiddenOn('edit')
                             ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
-                            ->maxSize(5120), // 5MB
+                            ->maxSize(5120) // 5MB
+                            ->storeFileNamesIn('original_filename'),
                         
                         Forms\Components\Repeater::make('gallery_images')
                             ->label('Галерея изображений')
@@ -162,7 +163,8 @@ class ProductResource extends Resource
                                     ->panelLayout('integrated')
                                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                                     ->maxSize(5120) // 5MB
-                                    ->required(),
+                                    ->required()
+                                    ->storeFileNamesIn('original_filename'),
                             ])
                             ->collapsible()
                             ->collapsed(false)
