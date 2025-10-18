@@ -15,6 +15,7 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Illuminate\Support\Facades\Route;
 
 class ProductResource extends Resource
 {
@@ -139,11 +140,14 @@ class ProductResource extends Resource
                             ->label('Главное изображение')
                             ->image()
                             ->directory('products')
+                            ->disk('public')
                             ->imagePreviewHeight('200')
                             ->panelAspectRatio('2:1')
                             ->panelLayout('integrated')
                             ->helperText('Загрузите главное изображение товара')
-                            ->hiddenOn('edit'),
+                            ->hiddenOn('edit')
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                            ->maxSize(5120), // 5MB
                         
                         Forms\Components\Repeater::make('gallery_images')
                             ->label('Галерея изображений')
@@ -152,9 +156,12 @@ class ProductResource extends Resource
                                     ->label('Изображение')
                                     ->image()
                                     ->directory('products/gallery')
+                                    ->disk('public')
                                     ->imagePreviewHeight('150')
                                     ->panelAspectRatio('1:1')
                                     ->panelLayout('integrated')
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                                    ->maxSize(5120) // 5MB
                                     ->required(),
                             ])
                             ->collapsible()
@@ -478,6 +485,7 @@ class ProductResource extends Resource
             'vue-tree' => Pages\VueTreeManager::route('/vue-tree'),
         ];
     }
+    
     
     public static function getGlobalSearchResultTitle($record): string
     {

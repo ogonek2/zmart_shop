@@ -206,7 +206,7 @@
             formData.append('image_id', imageId);
             formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
             
-            fetch('/admin/resources/products/{{ $record->id }}/set-main-image', {
+            fetch('/filament-admin/products/{{ $record->id }}/set-main-image', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -263,7 +263,7 @@
             formData.append('image_id', imageId);
             formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
             
-            fetch('/admin/resources/products/{{ $record->id }}/delete-gallery-image', {
+            fetch('/filament-admin/products/{{ $record->id }}/delete-gallery-image', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -313,7 +313,7 @@
             submitBtn.textContent = 'Загрузка...';
             submitBtn.disabled = true;
             
-            fetch('/admin/resources/products/{{ $record->id }}/replace-gallery-image', {
+            fetch('/filament-admin/products/{{ $record->id }}/replace-gallery-image', {
                 method: 'POST',
                 body: formData
             })

@@ -10,7 +10,7 @@
     "require": {
         "php": "^8.0",
         "barryvdh/laravel-dompdf": "^1.0",
-        "filament/filament": "^2.0",
+        "filament/filament": "^2.17",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^8.0",

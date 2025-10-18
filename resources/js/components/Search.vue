@@ -1,25 +1,28 @@
 <template>
-    <form @submit.prevent="performSearch" class="relative w-full">
-        <input type="text" 
-               v-model="searchQuery" 
-               placeholder="Пошук товарів..." 
-               class="w-full pl-10 pr-16 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
-               @focus="showSuggestions = true"
-               @blur="hideSuggestions"
-               @input="onInput">
-        
-        <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-            <i class="fas fa-search"></i>
-        </div>
-        
-        <button type="submit" 
-                class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-4 py-2 rounded-lg hover:from-emerald-600 hover:to-teal-600 transition-all">
-            <i class="fas fa-arrow-right"></i>
-        </button>
+    <div class="relative w-full">
+        <form @submit.prevent="performSearch" class="relative w-full">
+            <input type="text" 
+                   v-model="searchQuery" 
+                   placeholder="Пошук товарів..." 
+                   class="w-full pl-10 pr-16 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+                   @focus="showSuggestions = true"
+                   @blur="hideSuggestions"
+                   @input="onInput">
+            
+            <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <i class="fas fa-search"></i>
+            </div>
+            
+            <button type="submit" 
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-4 py-2 rounded-lg hover:from-emerald-600 hover:to-teal-600 transition-all">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </form>
 
-        <!-- Search Suggestions -->
+        <!-- Search Suggestions - Outside form -->
         <div v-if="showSuggestions && suggestions.length > 0" 
-             class="search-suggestions absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-[9999] max-h-96 overflow-y-auto">
+             class="search-suggestions absolute left-0 right-0 bg-white border border-gray-200 rounded-xl shadow-xl max-h-96 overflow-y-auto"
+             :style="getSuggestionsStyle()">
             <div v-for="suggestion in suggestions" 
                  :key="suggestion.id" 
                  class="p-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0"
@@ -56,14 +59,15 @@
             </div>
         </div>
 
-        <!-- No Results -->
+        <!-- No Results - Outside form -->
         <div v-if="showSuggestions && searchQuery.length >= 2 && suggestions.length === 0 && !loading" 
-             class="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-[9999] p-6 text-center">
+             class="absolute left-0 right-0 bg-white border border-gray-200 rounded-xl shadow-xl p-6 text-center"
+             :style="getSuggestionsStyle()">
             <i class="fas fa-search text-gray-300 text-3xl mb-3"></i>
             <p class="text-gray-600">Нічого не знайдено</p>
             <p class="text-sm text-gray-400 mt-1">Спробуйте інший запит</p>
         </div>
-    </form>
+    </div>
 </template>
 
 <script>
@@ -75,8 +79,25 @@ export default {
             suggestions: [],
             showSuggestions: false,
             searchTimeout: null,
-            loading: false
+            loading: false,
+            resizeHandler: null
         };
+    },
+    mounted() {
+        // Добавляем обработчик изменения размера окна для навбара
+        this.resizeHandler = () => {
+            if (this.showSuggestions && this.$el && this.$el.closest('.navbar-search')) {
+                this.$forceUpdate();
+            }
+        };
+        window.addEventListener('scroll', this.resizeHandler);
+        window.addEventListener('resize', this.resizeHandler);
+    },
+    beforeUnmount() {
+        if (this.resizeHandler) {
+            window.removeEventListener('scroll', this.resizeHandler);
+            window.removeEventListener('resize', this.resizeHandler);
+        }
     },
     methods: {
         onInput() {
@@ -127,6 +148,37 @@ export default {
         },
         formatPrice(price) {
             return Math.round(price).toLocaleString('uk-UA');
+        },
+        getSuggestionsStyle() {
+            // Проверяем, находится ли компонент в навбаре
+            const isInNavbar = this.$el && this.$el.closest('.navbar-search');
+            const isInMobileSearch = this.$el && this.$el.closest('.mobile-search');
+            
+            if (isInMobileSearch) {
+                // Для мобильного поиска используем абсолютное позиционирование относительно контейнера
+                return {
+                    position: 'absolute',
+                    top: 'calc(100% + 8px)',
+                    left: '0',
+                    right: '0',
+                    zIndex: '99999'
+                };
+            } else if (isInNavbar) {
+                // Для навбара используем фиксированное позиционирование
+                const inputRect = this.$el.querySelector('input').getBoundingClientRect();
+                return {
+                    position: 'fixed',
+                    top: `${inputRect.bottom + 10}px`,
+                    left: `${inputRect.left}px`,
+                    width: `${inputRect.width}px`,
+                    zIndex: '99999'
+                };
+            } else {
+                return {
+                    top: 'calc(100% + 8px)',
+                    zIndex: '9999'
+                };
+            }
         }
     }
 };
@@ -148,5 +200,21 @@ export default {
 form {
     position: relative;
     z-index: 1;
+}
+
+/* Special positioning for navbar search - handled by JavaScript */
+
+/* Mobile search positioning */
+.mobile-search {
+    position: relative !important;
+    overflow: visible !important;
+}
+
+.mobile-search .search-suggestions {
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 99999 !important;
 }
 </style>

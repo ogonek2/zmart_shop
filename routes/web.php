@@ -12,6 +12,7 @@ use App\Http\Controllers\admin\AdminProductsController;
 use App\Http\Controllers\admin\AdminCategoryController;
 use App\Http\Controllers\admin\AdminCatalogController;
 use App\Http\Controllers\admin\AdminOrdersController;
+use App\Filament\Resources\ProductResource\Pages\ManageGallery;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,6 +115,13 @@ Route::prefix('admin/resources/products')->middleware(['auth'])->group(function 
 // Маршруты для генерации PDF инвойсов
 Route::get('/invoice/{orderId}/download', [App\Http\Controllers\InvoiceController::class, 'generateInvoice'])->name('invoice.download');
 Route::get('/invoice/{orderId}/view', [App\Http\Controllers\InvoiceController::class, 'viewInvoice'])->name('invoice.view');
+
+// AJAX маршруты для управления галереей товаров в Filament
+Route::middleware(['web', 'auth'])->prefix('filament-admin/products')->group(function () {
+    Route::post('/{record}/set-main-image', [ManageGallery::class, 'setAsMainImage'])->name('filament.products.set-main-image');
+    Route::post('/{record}/delete-gallery-image', [ManageGallery::class, 'deleteImage'])->name('filament.products.delete-gallery-image');
+    Route::post('/{record}/replace-gallery-image', [ManageGallery::class, 'replaceImage'])->name('filament.products.replace-gallery-image');
+});
 
 Auth::routes();
 
