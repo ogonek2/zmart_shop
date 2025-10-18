@@ -2,122 +2,179 @@
 
 @section('seo')
     <title>Оформлення замовлення - ZMART</title>
+    <meta name="description" content="Оформлення замовлення в інтернет-магазині ZMART. Швидка доставка по всій Україні.">
+@endsection
+
+@section('styles')
+    <style>
+        .delivery-option.active,
+        .payment-option.active {
+            border-color: #10b981 !important;
+            background-color: rgba(16, 185, 129, 0.05) !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .delivery-option.active .group,
+        .payment-option.active .group {
+            transform: scale(1.02);
+        }
+        
+        .search-result-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #e5e7eb;
+            transition: background-color 0.2s ease;
+        }
+        
+        .search-result-item:hover {
+            background-color: #f9fafb;
+        }
+        
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Анимации для появления элементов */
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 @endsection
 
 @section('content')
-    <div id="preloader" class="position-fixed top-0 start-0 w-100 h-100 bg-white d-flex align-items-center justify-content-center" style="z-index: 9999; display: none !important">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Завантаження...</span>
+    <!-- Preloader -->
+    <div id="preloader" class="fixed inset-0 bg-white z-50 flex items-center justify-center hidden">
+        <div class="flex flex-col items-center">
+            <div class="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
+            <p class="mt-4 text-gray-600 font-medium">Завантаження...</p>
         </div>
     </div>
     
-    <div class="bg-light min-vh-100 py-4">
-        <div class="container">
-            <!-- Заголовок -->
-            <div class="text-center mb-5">
-                <h1 class="display-5 fw-bold text-dark mb-3">Оформлення замовлення</h1>
-                <p class="lead text-muted">Заповніть форму для завершення покупки</p>
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex items-center space-x-2 text-sm">
+                <a href="{{ url('/') }}" class="text-gray-600 hover:text-emerald-600 transition-colors">
+                    <i class="fas fa-home"></i>
+                </a>
+                <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                <span class="text-gray-900 font-medium">Оформлення замовлення</span>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Header -->
+    <section class="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Оформлення замовлення</h1>
+                <p class="text-xl text-emerald-100">Заповніть форму для завершення покупки</p>
             </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="bg-gray-50 min-h-screen py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <div class="row g-4">
+            <div class="grid lg:grid-cols-3 gap-8">
                 <!-- Основная форма -->
-                <div class="col-lg-8">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body p-4">
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <div class="p-8">
                             <form id="order-form">
                                 <!-- Спосіб доставки -->
-                                <div class="mb-5">
-                                    <h2 class="h4 fw-bold text-dark mb-4 d-flex align-items-center">
-                                        <i class="fas fa-truck text-primary me-2"></i>
+                                <div class="mb-8">
+                                    <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                                        <div class="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center mr-3">
+                                            <i class="fas fa-truck text-white"></i>
+                                        </div>
                                         Спосіб доставки
                                     </h2>
                                     
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <div class="delivery-option card h-100 border-2 border-light hover-shadow position-relative">
-                                                <div class="card-body p-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="bg-primary bg-opacity-10 rounded-3 p-3 me-3">
-                                                            <i class="fas fa-truck text-primary fs-5"></i>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="delivery-option group cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-emerald-400 hover:shadow-lg transition-all duration-300 relative">
+                                            <div class="flex items-center">
+                                                <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center mr-4">
+                                                    <i class="fas fa-truck text-white text-lg"></i>
                                                         </div>
-                                                        <div class="flex-grow-1">
-                                                            <h5 class="card-title mb-1">Нова Пошта</h5>
-                                                            <p class="card-text text-muted small mb-0">Доставка до відділення або поштомату</p>
-                                                        </div>
-                                                        <span class="badge bg-success position-absolute top-0 end-0 m-2">Популярно</span>
-                                                    </div>
-                                                    <input type="radio" name="delivery_service" value="novaposhta" class="form-check-input position-absolute top-0 end-0 m-2" style="opacity: 0;">
+                                                <div class="flex-1">
+                                                    <h5 class="font-bold text-gray-900 mb-1">Нова Пошта</h5>
+                                                    <p class="text-sm text-gray-600">Доставка до відділення або поштомату</p>
                                                 </div>
+                                                <span class="absolute top-3 right-3 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded-full">Популярно</span>
                                             </div>
+                                            <input type="radio" name="delivery_service" value="novaposhta" class="absolute top-3 right-3 w-5 h-5 opacity-0">
                                         </div>
                                         
-                                        
-                                        
-                                        <div class="col-md-6">
-                                            <div class="delivery-option card h-100 border-2 border-light hover-shadow position-relative">
-                                                <div class="card-body p-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="bg-primary bg-opacity-10 rounded-3 p-3 me-3">
-                                                            <i class="fas fa-motorcycle text-primary fs-5"></i>
+                                        <div class="delivery-option group cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-emerald-400 hover:shadow-lg transition-all duration-300 relative">
+                                            <div class="flex items-center">
+                                                <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-xl flex items-center justify-center mr-4">
+                                                    <i class="fas fa-motorcycle text-white text-lg"></i>
                                                         </div>
-                                                        <div class="flex-grow-1">
-                                                            <h5 class="card-title mb-1">Кур'єрська доставка</h5>
-                                                            <p class="card-text text-muted small mb-0">Доставка додому або в офіс</p>
-                                                        </div>
-                                                    </div>
-                                                    <input type="radio" name="delivery_service" value="courier" class="form-check-input position-absolute top-0 end-0 m-2" style="opacity: 0;">
+                                                <div class="flex-1">
+                                                    <h5 class="font-bold text-gray-900 mb-1">Кур'єрська доставка</h5>
+                                                    <p class="text-sm text-gray-600">Доставка додому або в офіс</p>
                                                 </div>
                                             </div>
+                                            <input type="radio" name="delivery_service" value="courier" class="absolute top-3 right-3 w-5 h-5 opacity-0">
                                         </div>
                                         
-                                        <div class="col-md-6">
-                                            <div class="delivery-option card h-100 border-2 border-light hover-shadow position-relative">
-                                                <div class="card-body p-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="bg-primary bg-opacity-10 rounded-3 p-3 me-3">
-                                                            <i class="fas fa-store text-primary fs-5"></i>
+                                        <div class="delivery-option group cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-emerald-400 hover:shadow-lg transition-all duration-300 relative">
+                                            <div class="flex items-center">
+                                                <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-xl flex items-center justify-center mr-4">
+                                                    <i class="fas fa-store text-white text-lg"></i>
                                                         </div>
-                                                        <div class="flex-grow-1">
-                                                            <h5 class="card-title mb-1">Самовивіз</h5>
-                                                            <p class="card-text text-muted small mb-0">Забрати замовлення самостійно</p>
-                                                        </div>
-                                                    </div>
-                                                    <input type="radio" name="delivery_service" value="pickup" class="form-check-input position-absolute top-0 end-0 m-2" style="opacity: 0;">
+                                                <div class="flex-1">
+                                                    <h5 class="font-bold text-gray-900 mb-1">Самовивіз</h5>
+                                                    <p class="text-sm text-gray-600">Забрати замовлення самостійно</p>
                                                 </div>
                                             </div>
+                                            <input type="radio" name="delivery_service" value="pickup" class="absolute top-3 right-3 w-5 h-5 opacity-0">
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Деталі доставки -->
-                                <div id="delivery-details" class="mb-5 d-none">
+                                <div id="delivery-details" class="mb-8 hidden">
                                     <!-- Нова Пошта -->
-                                    <div id="novaposhta-details" class="d-none">
-                                        <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold">
-                                                Місто <span class="text-danger">*</span>
+                                    <div id="novaposhta-details" class="hidden">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label class="block text-sm font-bold text-gray-700 mb-2">
+                                                    Місто <span class="text-red-500">*</span>
                                             </label>
-                                            <div class="position-relative">
-                                                <select id="city-select" class="form-select">
+                                                <div class="relative">
+                                                    <select id="city-select" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors">
                                                     <option value="">Оберіть місто</option>
                                                 </select>
-                                                <div id="city-loader" class="position-absolute top-50 end-0 translate-middle-y me-3 d-none">
-                                                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-                                                </div>
+                                                    <div id="city-loader" class="absolute top-1/2 right-3 -translate-y-1/2 hidden">
+                                                        <div class="w-5 h-5 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
+                                                    </div>
                                             </div>
                                         </div>
 
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">
-                                                    Відділення <span class="text-danger">*</span>
+                                            <div>
+                                                <label class="block text-sm font-bold text-gray-700 mb-2">
+                                                    Відділення <span class="text-red-500">*</span>
                                                 </label>
-                                                <div class="position-relative">
-                                                    <select id="warehouse-select" class="form-select">
+                                                <div class="relative">
+                                                    <select id="warehouse-select" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors">
                                                         <option value="">Оберіть відділення</option>
                                                     </select>
-                                                    <div id="warehouse-loader" class="position-absolute top-50 end-0 translate-middle-y me-3 d-none">
-                                                        <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                                    <div id="warehouse-loader" class="absolute top-1/2 right-3 -translate-y-1/2 hidden">
+                                                        <div class="w-5 h-5 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -125,166 +182,174 @@
                                     </div>
 
                                     <!-- Ручний ввод адреси -->
-                                    <div id="manual-address-details" class="d-none">
-                                        <div class="col-12">
-                                            <label for="manual-address" class="form-label fw-semibold">
-                                                Адреса доставки <span class="text-danger">*</span>
+                                    <div id="manual-address-details" class="hidden">
+                                        <div>
+                                            <label for="manual-address" class="block text-sm font-bold text-gray-700 mb-2">
+                                                Адреса доставки <span class="text-red-500">*</span>
                                             </label>
-                                            <textarea id="manual-address" class="form-control" rows="3" placeholder="Введіть повну адресу доставки"></textarea>
+                                            <textarea id="manual-address" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" rows="3" placeholder="Введіть повну адресу доставки"></textarea>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Дані отримувача -->
-                                <div class="mb-5">
-                                    <h2 class="h4 fw-bold text-dark mb-4 d-flex align-items-center">
-                                        <i class="fas fa-user text-primary me-2"></i>
+                                <div class="mb-8">
+                                    <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                                        <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-xl flex items-center justify-center mr-3">
+                                            <i class="fas fa-user text-white"></i>
+                                        </div>
                                         Дані отримувача
                                     </h2>
                                     
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <label for="name" class="form-label fw-semibold">
-                                                Ім'я <span class="text-danger">*</span>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label for="name" class="block text-sm font-bold text-gray-700 mb-2">
+                                                Ім'я <span class="text-red-500">*</span>
                                             </label>
-                                            <input type="text" id="name" name="name" class="form-control" placeholder="Ваше ім'я">
+                                            <input type="text" id="name" name="name" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="Ваше ім'я">
                                         </div>
                                         
-                                        <div class="col-md-6">
-                                            <label for="lastname" class="form-label fw-semibold">
-                                                Прізвище <span class="text-danger">*</span>
+                                        <div>
+                                            <label for="lastname" class="block text-sm font-bold text-gray-700 mb-2">
+                                                Прізвище <span class="text-red-500">*</span>
                                             </label>
-                                            <input type="text" id="lastname" name="lastname" class="form-control" placeholder="Ваше прізвище">
+                                            <input type="text" id="lastname" name="lastname" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="Ваше прізвище">
                                         </div>
                                         
-                                        <div class="col-md-6">
-                                            <label for="fathername" class="form-label fw-semibold">
+                                        <div>
+                                            <label for="fathername" class="block text-sm font-bold text-gray-700 mb-2">
                                                 По батькові
                                             </label>
-                                            <input type="text" id="fathername" name="fathername" class="form-control" placeholder="По батькові (необов'язково)">
+                                            <input type="text" id="fathername" name="fathername" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="По батькові (необов'язково)">
                                         </div>
                                         
-                                        <div class="col-md-6">
-                                            <label for="phone" class="form-label fw-semibold">
-                                                Телефон <span class="text-danger">*</span>
+                                        <div>
+                                            <label for="phone" class="block text-sm font-bold text-gray-700 mb-2">
+                                                Телефон <span class="text-red-500">*</span>
                                             </label>
-                                            <input type="tel" id="phone" name="phone" class="form-control" placeholder="+380XXXXXXXXX">
+                                            <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="+380XXXXXXXXX">
                                         </div>
                                         
-                                        <div class="col-12">
-                                            <label for="comment" class="form-label fw-semibold">
+                                        <div class="md:col-span-2">
+                                            <label for="comment" class="block text-sm font-bold text-gray-700 mb-2">
                                                 Коментар до замовлення
                                             </label>
-                                            <textarea id="comment" name="comment" class="form-control" rows="3" placeholder="Додаткові побажання або коментарі (необов'язково)"></textarea>
+                                            <textarea id="comment" name="comment" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" rows="3" placeholder="Додаткові побажання або коментарі (необов'язково)"></textarea>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Спосіб оплати -->
-                                <div class="mb-5">
-                                    <h2 class="h4 fw-bold text-dark mb-4 d-flex align-items-center">
-                                        <i class="fas fa-credit-card text-primary me-2"></i>
+                                <div class="mb-8">
+                                    <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                                        <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mr-3">
+                                            <i class="fas fa-credit-card text-white"></i>
+                                        </div>
                                         Спосіб оплати
                                     </h2>
                                     
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <div class="payment-option card h-100 border-2 border-light hover-shadow position-relative">
-                                                <div class="card-body p-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="bg-success bg-opacity-10 rounded-3 p-3 me-3">
-                                                            <i class="fas fa-money-bill-wave text-success fs-5"></i>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="payment-option group cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-green-400 hover:shadow-lg transition-all duration-300 relative">
+                                            <div class="flex items-center">
+                                                <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mr-4">
+                                                    <i class="fas fa-money-bill-wave text-white text-lg"></i>
                                                         </div>
-                                                        <div class="flex-grow-1">
-                                                            <h5 class="card-title mb-1">Накладений платіж</h5>
-                                                            <p class="card-text text-muted small mb-0">Оплата готівкою при отриманні</p>
-                                                        </div>
-                                                    </div>
-                                                    <input type="radio" name="payment_method" value="cash" class="form-check-input position-absolute top-0 end-0 m-2" style="opacity: 0;">
+                                                <div class="flex-1">
+                                                    <h5 class="font-bold text-gray-900 mb-1">Накладений платіж</h5>
+                                                    <p class="text-sm text-gray-600">Оплата готівкою при отриманні</p>
                                                 </div>
                                             </div>
+                                            <input type="radio" name="payment_method" value="cash" class="absolute top-3 right-3 w-5 h-5 opacity-0">
                                         </div>
                                         
-                                        <div class="col-md-6">
-                                            <div class="payment-option card h-100 border-2 border-light hover-shadow position-relative">
-                                                <div class="card-body p-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="bg-success bg-opacity-10 rounded-3 p-3 me-3">
-                                                            <i class="fas fa-university text-success fs-5"></i>
+                                        <div class="payment-option group cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-green-400 hover:shadow-lg transition-all duration-300 relative">
+                                            <div class="flex items-center">
+                                                <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl flex items-center justify-center mr-4">
+                                                    <i class="fas fa-university text-white text-lg"></i>
                                                         </div>
-                                                        <div class="flex-grow-1">
-                                                            <h5 class="card-title mb-1">Банківський переказ</h5>
-                                                            <p class="card-text text-muted small mb-0">Оплата на карту банку</p>
-                                                        </div>
-                                                    </div>
-                                                    <input type="radio" name="payment_method" value="bank_transfer" class="form-check-input position-absolute top-0 end-0 m-2" style="opacity: 0;">
+                                                <div class="flex-1">
+                                                    <h5 class="font-bold text-gray-900 mb-1">Банківський переказ</h5>
+                                                    <p class="text-sm text-gray-600">Оплата на карту банку</p>
                                                 </div>
                                             </div>
+                                            <input type="radio" name="payment_method" value="bank_transfer" class="absolute top-3 right-3 w-5 h-5 opacity-0">
                                         </div>
                                         
-                                        <div class="col-md-6">
-                                            <div class="payment-option card h-100 border-2 border-light hover-shadow position-relative">
-                                                <div class="card-body p-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="bg-success bg-opacity-10 rounded-3 p-3 me-3">
-                                                            <i class="fas fa-credit-card text-success fs-5"></i>
+                                        <div class="payment-option group cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-green-400 hover:shadow-lg transition-all duration-300 relative">
+                                            <div class="flex items-center">
+                                                <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-500 rounded-xl flex items-center justify-center mr-4">
+                                                    <i class="fas fa-credit-card text-white text-lg"></i>
                                                         </div>
-                                                        <div class="flex-grow-1">
-                                                            <h5 class="card-title mb-1">Оплата картою при отриманні</h5>
-                                                            <p class="card-text text-muted small mb-0">Оплата картою при доставці</p>
-                                                        </div>
-                                                    </div>
-                                                    <input type="radio" name="payment_method" value="card_payment" class="form-check-input position-absolute top-0 end-0 m-2" style="opacity: 0;">
+                                                <div class="flex-1">
+                                                    <h5 class="font-bold text-gray-900 mb-1">Оплата картою при отриманні</h5>
+                                                    <p class="text-sm text-gray-600">Оплата картою при доставці</p>
                                                 </div>
                                             </div>
+                                            <input type="radio" name="payment_method" value="card_payment" class="absolute top-3 right-3 w-5 h-5 opacity-0">
                                         </div>
                                         
-                                        <div class="col-md-6">
-                                            <div class="payment-option card h-100 border-2 border-light hover-shadow position-relative">
-                                                <div class="card-body p-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="bg-success bg-opacity-10 rounded-3 p-3 me-3">
-                                                            <i class="fas fa-store text-success fs-5"></i>
+                                        <div class="payment-option group cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-green-400 hover:shadow-lg transition-all duration-300 relative">
+                                            <div class="flex items-center">
+                                                <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-red-500 rounded-xl flex items-center justify-center mr-4">
+                                                    <i class="fas fa-store text-white text-lg"></i>
                                                         </div>
-                                                        <div class="flex-grow-1">
-                                                            <h5 class="card-title mb-1">Оплата при самовивозі</h5>
-                                                            <p class="card-text text-muted small mb-0">Оплата при отриманні в магазині</p>
-                                                        </div>
-                                                    </div>
-                                                    <input type="radio" name="payment_method" value="pickup_payment" class="form-check-input position-absolute top-0 end-0 m-2" style="opacity: 0;">
+                                                <div class="flex-1">
+                                                    <h5 class="font-bold text-gray-900 mb-1">Оплата при самовивозі</h5>
+                                                    <p class="text-sm text-gray-600">Оплата при отриманні в магазині</p>
                                                 </div>
                                             </div>
+                                            <input type="radio" name="payment_method" value="pickup_payment" class="absolute top-3 right-3 w-5 h-5 opacity-0">
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Інформація про способи оплати -->
-                                <div id="payment-info" class="mb-4 d-none">
-                                    <div id="payment-info-cash" class="alert alert-info d-none">
-                                        <i class="fas fa-info-circle me-2"></i>
-                                        <strong>Накладений платіж:</strong> Оплата готівкою при отриманні замовлення. Кур'єр матиме з собою чек та квитанцію.
+                                <div id="payment-info" class="mb-6 hidden">
+                                    <div id="payment-info-cash" class="bg-blue-50 border border-blue-200 rounded-xl p-4 hidden">
+                                        <div class="flex items-start">
+                                            <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
+                                            <div>
+                                                <strong class="text-blue-900">Накладений платіж:</strong> 
+                                                <span class="text-blue-800">Оплата готівкою при отриманні замовлення. Кур'єр матиме з собою чек та квитанцію.</span>
+                                            </div>
+                                        </div>
                                     </div>
                                     
-                                    <div id="payment-info-bank_transfer" class="alert alert-success d-none">
-                                        <i class="fas fa-info-circle me-2"></i>
-                                        <strong>Банківський переказ:</strong> Після підтвердження замовлення ми надішлемо вам реквізити для оплати на email.
+                                    <div id="payment-info-bank_transfer" class="bg-green-50 border border-green-200 rounded-xl p-4 hidden">
+                                        <div class="flex items-start">
+                                            <i class="fas fa-info-circle text-green-500 mt-1 mr-3"></i>
+                                            <div>
+                                                <strong class="text-green-900">Банківський переказ:</strong> 
+                                                <span class="text-green-800">Після підтвердження замовлення ми надішлемо вам реквізити для оплати на email.</span>
+                                            </div>
+                                        </div>
                                     </div>
                                     
-                                    <div id="payment-info-card_payment" class="alert alert-warning d-none">
-                                        <i class="fas fa-info-circle me-2"></i>
-                                        <strong>Оплата картою при отриманні:</strong> Кур'єр матиме з собою термінал для оплати картою. Підтримуються всі основні платіжні системи.
+                                    <div id="payment-info-card_payment" class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 hidden">
+                                        <div class="flex items-start">
+                                            <i class="fas fa-info-circle text-yellow-500 mt-1 mr-3"></i>
+                                            <div>
+                                                <strong class="text-yellow-900">Оплата картою при отриманні:</strong> 
+                                                <span class="text-yellow-800">Кур'єр матиме з собою термінал для оплати картою. Підтримуються всі основні платіжні системи.</span>
+                                            </div>
+                                        </div>
                                     </div>
                                     
-                                    <div id="payment-info-pickup_payment" class="alert alert-info d-none">
-                                        <i class="fas fa-info-circle me-2"></i>
-                                        <strong>Оплата при самовивозі:</strong> Оплата готівкою або картою при отриманні замовлення в нашому магазині.
+                                    <div id="payment-info-pickup_payment" class="bg-blue-50 border border-blue-200 rounded-xl p-4 hidden">
+                                        <div class="flex items-start">
+                                            <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
+                                            <div>
+                                                <strong class="text-blue-900">Оплата при самовивозі:</strong> 
+                                                <span class="text-blue-800">Оплата готівкою або картою при отриманні замовлення в нашому магазині.</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Кнопка отправки -->
-                                <div class="pt-4 border-top">
-                                    <button type="submit" id="submit-order" class="btn btn-success btn-lg w-100 py-3">
-                                        <i class="fas fa-check me-2"></i>
+                                <div class="pt-6 border-t border-gray-200">
+                                    <button type="submit" id="submit-order" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                                        <i class="fas fa-check mr-2"></i>
                                         Оформити замовлення
                                     </button>
                                 </div>
@@ -297,11 +362,13 @@
                 </div>
                 
                 <!-- Боковая панель с корзиной -->
-                <div class="col-lg-4">
-                    <div class="card shadow-sm border-0 ">
-                        <div class="card-body p-4">
-                            <h3 class="h5 fw-bold text-dark mb-4 d-flex align-items-center">
-                                <i class="fas fa-shopping-cart text-primary me-2"></i>
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden sticky top-8">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                                <div class="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-shopping-cart text-white text-sm"></i>
+                                </div>
                                 Ваше замовлення
                             </h3>
                             <cart-list></cart-list>
@@ -311,48 +378,6 @@
             </div>
         </div>
     </div>
-
-    <style>
-        .hover-shadow {
-            transition: all 0.3s ease;
-        }
-        
-        .hover-shadow:hover {
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-            transform: translateY(-2px);
-        }
-        
-        .delivery-option,
-        .payment-option {
-            cursor: pointer;
-        }
-        
-        .delivery-option:hover,
-        .payment-option:hover {
-            border-color: #0d6efd !important;
-        }
-        
-        .delivery-option.active,
-        .payment-option.active {
-            border-color: #0d6efd !important;
-            background-color: rgba(13, 110, 253, 0.05) !important;
-        }
-        
-        .search-result-item {
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            border-bottom: 1px solid #dee2e6;
-            transition: background-color 0.2s ease;
-        }
-        
-        .search-result-item:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .search-result-item:last-child {
-            border-bottom: none;
-        }
-    </style>
 @endsection
 
 @section('scripts')
@@ -374,10 +399,10 @@
                 const service = $(this).val();
                 
                 // Убираем активный класс со всех опций
-                $('.delivery-option').removeClass('active border-primary').addClass('border-light');
+                $('.delivery-option').removeClass('active');
                 
                 // Добавляем активный класс к выбранной опции
-                $(this).closest('.delivery-option').removeClass('border-light').addClass('active border-primary');
+                $(this).closest('.delivery-option').addClass('active');
                 
                 // Показываем соответствующие детали доставки
                 showDeliveryDetails(service);
@@ -394,10 +419,10 @@
                 const method = $(this).val();
                 
                 // Убираем активный класс со всех опций
-                $('.payment-option').removeClass('active border-success').addClass('border-light');
+                $('.payment-option').removeClass('active');
                 
                 // Добавляем активный класс к выбранной опции
-                $(this).closest('.payment-option').removeClass('border-light').addClass('active border-success');
+                $(this).closest('.payment-option').addClass('active');
                 
                 // Показываем информацию о способе оплаты
                 showPaymentInfo(method);
@@ -449,31 +474,31 @@
 
             // Функция показа деталей доставки
             function showDeliveryDetails(service) {
-                $('#delivery-details').removeClass('d-none');
-                $('#novaposhta-details').addClass('d-none');
-                $('#manual-address-details').addClass('d-none');
+                $('#delivery-details').removeClass('hidden');
+                $('#novaposhta-details').addClass('hidden');
+                $('#manual-address-details').addClass('hidden');
                 
                 if (service === 'novaposhta') {
-                    $('#novaposhta-details').removeClass('d-none');
+                    $('#novaposhta-details').removeClass('hidden');
                     loadCities();
                 } else if (service === 'pickup') {
                     // Для самовывоза не показываем детали
-                    $('#delivery-details').addClass('d-none');
+                    $('#delivery-details').addClass('hidden');
                 } else {
-                    $('#manual-address-details').removeClass('d-none');
+                    $('#manual-address-details').removeClass('hidden');
                 }
             }
 
             // Функция показа информации о способе оплаты
             function showPaymentInfo(method) {
-                $('#payment-info').removeClass('d-none');
-                $('.alert').addClass('d-none');
-                $(`#payment-info-${method}`).removeClass('d-none');
+                $('#payment-info').removeClass('hidden');
+                $('#payment-info > div').addClass('hidden');
+                $(`#payment-info-${method}`).removeClass('hidden');
             }
 
             // Загрузка городов
             function loadCities() {
-                $('#city-loader').removeClass('d-none');
+                $('#city-loader').removeClass('hidden');
                 
                 $.get('/cities')
                     .done(function(data) {
@@ -484,7 +509,7 @@
                         console.error('Ошибка загрузки городов');
                     })
                     .always(function() {
-                        $('#city-loader').addClass('d-none');
+                        $('#city-loader').addClass('hidden');
                     });
             }
 
@@ -514,7 +539,7 @@
 
             // Загрузка отделений
             function loadWarehouses(cityRef) {
-                $('#warehouse-loader').removeClass('d-none');
+                $('#warehouse-loader').removeClass('hidden');
                 
                 $.ajax({
                     method: 'POST',
@@ -532,7 +557,7 @@
                         console.error('Ошибка загрузки отделений');
                     },
                     complete: function() {
-                        $('#warehouse-loader').addClass('d-none');
+                        $('#warehouse-loader').addClass('hidden');
                     }
                 });
             }
@@ -645,7 +670,7 @@
                 }
                 
                 // Показать прелоадер
-                $('#preloader').show();
+                $('#preloader').removeClass('hidden');
                 
                 // Получаем общую сумму из скрытого поля
                 const totalPrice = $('#total_price_stream').val();
@@ -673,12 +698,12 @@
                     url: '/order-submit',
                     data: formData,
                     success: function(response) {
-                        $('#preloader').hide();
+                        $('#preloader').addClass('hidden');
                         localStorage.removeItem('cart');
                         window.location.href = '/thank-you';
                     },
                     error: function(xhr) {
-                        $('#preloader').hide();
+                        $('#preloader').addClass('hidden');
                         let errorMessage = 'Ошибка при отправке заказа. Попробуйте еще раз.';
                         
                         try {

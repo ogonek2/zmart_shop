@@ -1,29 +1,47 @@
 @extends('layouts.app')
 
-@section('styles')
-@endsection
-
 @section('seo')
-    <title>Магазин Zmart - Угода користувача</title>
+    <title>Угода користувача - ZMART</title>
+    <meta name="description" content="Угода користувача інтернет-магазину ZMART. Положення про обробку та захист персональних даних.">
 @endsection
 
 @section('content')
-    <div class="container">
-        <div class="row mt-4">
-            <div class="col-md-3">
-                @include('includes.main.information_bar')
+    <!-- Breadcrumbs -->
+    <section class="bg-gray-50 py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex items-center space-x-2 text-sm">
+                <a href="{{ url('/') }}" class="text-gray-600 hover:text-emerald-600 transition-colors">
+                    <i class="fas fa-home"></i>
+                </a>
+                <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                <span class="text-gray-900 font-medium">Угода користувача</span>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Header -->
+    <section class="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Угода користувача</h1>
+                <p class="text-xl text-emerald-100">Положення про обробку та захист персональних даних</p>
             </div>
-            <div class="col-md-9">
-                <nav class="breadcrumbs" itemscope="" itemtype="https://schema.org/BreadcrumbList">
-                    <div class="breadcrumbs-i" itemprop="itemListElement" itemscope=""
-                        itemtype="https://schema.org/ListItem">
-                        <span itemprop="item" content="https://uasignal.com.ua/uhoda-korystuvacha/"><span
-                                itemprop="name">Угода
-                                користувача</span></span>
-                        <meta itemprop="position" content="2">
-                    </div>
-                </nav>
-                <h1 class="main-h">Угода користувача</h1>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="bg-gray-50 min-h-screen py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-4 gap-8">
+                <!-- Sidebar -->
+                <div class="lg:col-span-1">
+                    @include('includes.main.information_bar')
+                </div>
+                
+                <!-- Main Content -->
+                <div class="lg:col-span-3">
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <div class="p-8">
                 <div class="page-content">
                     <div class="article-text __fullWidth text">
                         <h2>Положення про обробку і&nbsp;захист персональних даних у&nbsp;базах персональних даних,
@@ -467,6 +485,7 @@
                         </p>
 
                         <p>&nbsp;</p>
+                        </div>
                     </div>
                 </div>
             </div>

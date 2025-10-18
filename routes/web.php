@@ -59,14 +59,14 @@ Route::get('/api/products', function () {
 Route::post('/order-submit', [OrderController::class, 'submit'])->name('order_submit');
 Route::post('/save-abandoned-cart', [OrderController::class, 'saveAbandoned']);
 
-Route::get('/catalog', [indexController::class, 'catalog'])->name('catalog');
+Route::match(['get', 'post'], '/catalog', [indexController::class, 'catalog'])->name('catalog');
 Route::get('/checkout', [indexController::class, 'checkout'])->name('checkout');
 Route::get('/cities', [indexController::class, 'getCities']);
 Route::post('/warehouses', [indexController::class, 'getWarehouses']);
 
 Route::group(['prefix' => 'catalog'], function () {
     Route::get('search', [CatalogController::class, 'search'])->name('catalog.search');
-    Route::get('categoriya/{url}', [CatalogController::class, 'category_page'])->name('catalog_category_page');
+    Route::match(['get', 'post'], 'categoriya/{url}', [CatalogController::class, 'category_page'])->name('catalog_category_page');
     Route::get('{url}', [CatalogController::class, 'product_page'])->name('product_page');
     Route::get('{url}', [CatalogController::class, 'product_page'])->name('catalog_product_page');
 });

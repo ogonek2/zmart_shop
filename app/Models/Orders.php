@@ -101,9 +101,33 @@ class Orders extends Model
         $cart = $this->cart;
         
         if (is_string($cart)) {
-            $cart = json_decode($cart, true);
+            // Попробуем сначала декодировать как JSON
+            $decoded = json_decode($cart, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                return $decoded;
+            }
+            
+            // Если не получилось, попробуем расшифровать
+            try {
+                $decrypted = Crypt::decryptString($cart);
+                $decoded = json_decode($decrypted, true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                    return $decoded;
+                }
+                
+                // Если расшифровка дала строку, попробуем расшифровать еще раз
+                if (is_string($decrypted)) {
+                    $doubleDecrypted = Crypt::decryptString($decrypted);
+                    $decoded = json_decode($doubleDecrypted, true);
+                    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                        return $decoded;
+                    }
+                }
+            } catch (\Exception $e) {
+                // Если расшифровка не удалась, возвращаем пустой массив
+            }
         }
         
-        return is_array($cart) ? $cart : [];
+        return [];
     }
 }

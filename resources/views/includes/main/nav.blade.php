@@ -201,18 +201,6 @@
             <i class="fas fa-times text-xl"></i>
         </button>
     </div>
-
-    <!-- Catalog Search -->
-    <div class="p-4 border-b border-gray-200">
-        <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i class="fas fa-search text-gray-400"></i>
-            </div>
-            <input type="text" id="catalogSearch" placeholder="Поиск в каталоге..." 
-                   class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
-        </div>
-    </div>
-
     <!-- Catalog Items -->
     <div class="flex-1 overflow-y-auto max-h-96">
         <div id="catalogList" class="p-2">

@@ -19,7 +19,7 @@
 
         <!-- Search Suggestions -->
         <div v-if="showSuggestions && suggestions.length > 0" 
-             class="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-[60] max-h-96 overflow-y-auto">
+             class="search-suggestions absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-[9999] max-h-96 overflow-y-auto">
             <div v-for="suggestion in suggestions" 
                  :key="suggestion.id" 
                  class="p-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0"
@@ -58,7 +58,7 @@
 
         <!-- No Results -->
         <div v-if="showSuggestions && searchQuery.length >= 2 && suggestions.length === 0 && !loading" 
-             class="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-[60] p-6 text-center">
+             class="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-[9999] p-6 text-center">
             <i class="fas fa-search text-gray-300 text-3xl mb-3"></i>
             <p class="text-gray-600">Нічого не знайдено</p>
             <p class="text-sm text-gray-400 mt-1">Спробуйте інший запит</p>
@@ -134,7 +134,19 @@ export default {
 
 <style scoped>
 /* Ensure proper z-index layering */
-.z-\[60\] {
-    z-index: 60;
+.z-\[9999\] {
+    z-index: 9999 !important;
+}
+
+/* Additional styles for search suggestions */
+.search-suggestions {
+    position: relative;
+    z-index: 9999 !important;
+}
+
+/* Ensure the form container has proper positioning context */
+form {
+    position: relative;
+    z-index: 1;
 }
 </style>

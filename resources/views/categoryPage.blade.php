@@ -110,7 +110,7 @@
                         </h3>
                     </div>
                     
-                    <div class="p-4 space-y-4">
+                    <form id="filterForm" class="p-4 space-y-4">
                         <!-- Price Range -->
                         <div>
                             <h4 class="font-semibold text-gray-900 mb-3 flex items-center">
@@ -118,9 +118,9 @@
                                 Ціна
                             </h4>
                             <div class="flex flex-col gap-3">
-                                <input type="number" placeholder="Від" 
+                                <input type="number" name="price_min" placeholder="Від" 
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm">
-                                <input type="number" placeholder="До" 
+                                <input type="number" name="price_max" placeholder="До" 
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-sm">
                             </div>
                         </div>
@@ -132,7 +132,7 @@
                                 Наявність
                             </h4>
                             <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="checkbox" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                                <input type="checkbox" name="availability" value="1" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
                                 <span class="text-gray-700">В наявності</span>
                             </label>
                         </div>
@@ -144,7 +144,7 @@
                                 Знижки
                             </h4>
                             <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="checkbox" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                                <input type="checkbox" name="discount" value="1" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
                                 <span class="text-gray-700">Зі знижкою</span>
                             </label>
                         </div>
@@ -156,23 +156,23 @@
                                 Опт
                             </h4>
                             <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="checkbox" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                                <input type="checkbox" name="wholesale" value="1" class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
                                 <span class="text-gray-700">Оптові ціни</span>
                             </label>
                         </div>
 
                         <!-- Apply Filters Button -->
-                        <button class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-3 rounded-xl font-bold hover:from-emerald-600 hover:to-teal-600 transition-all duration-200 shadow-lg">
+                        <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-3 rounded-xl font-bold hover:from-emerald-600 hover:to-teal-600 transition-all duration-200 shadow-lg">
                             <i class="fas fa-filter mr-2"></i>
                             Застосувати
                         </button>
 
                         <!-- Reset Filters -->
-                        <button class="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-50 transition-all duration-200">
+                        <button type="button" id="resetFilters" class="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-50 transition-all duration-200">
                             <i class="fas fa-times mr-2"></i>
-                            Скинути
+                            Скинути фільтри
                         </button>
-                    </div>
+                    </form>
                 </div>
             </aside>
 
@@ -204,17 +204,19 @@
                 </div>
 
                 <!-- Products Grid -->
-                <product-list 
-                    :products="{{ json_encode($products->items()) }}"
-                    :pagination="{{ json_encode([
-                        'current_page' => $products->currentPage(),
-                        'last_page' => $products->lastPage(),
-                        'per_page' => $products->perPage(),
-                        'total' => $products->total(),
-                        'from' => $products->firstItem(),
-                        'to' => $products->lastItem(),
-                    ]) }}"
-                ></product-list>
+                <div id="productsContainer">
+                    <product-list 
+                        :products="{{ json_encode($products->items()) }}"
+                        :pagination="{{ json_encode([
+                            'current_page' => $products->currentPage(),
+                            'last_page' => $products->lastPage(),
+                            'per_page' => $products->perPage(),
+                            'total' => $products->total(),
+                            'from' => $products->firstItem(),
+                            'to' => $products->lastItem(),
+                        ]) }}"
+                    ></product-list>
+                </div>
 
                 <!-- Pagination -->
                 @if($products->hasPages())
@@ -261,7 +263,7 @@
 
                     <!-- Pagination Info -->
                     <div class="text-center mt-4 text-sm text-gray-600">
-                        Показано {{ $products->firstItem() }}-{{ $products->lastItem() }} з {{ $products->total() }} товарів
+                        Показано {{ $products->firstItem() }}-{{ $products->lastItem() }} з <span id="productsCount">{{ $products->total() }}</span> товарів
                     </div>
                 </div>
                 @endif
@@ -283,15 +285,13 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Sorting functionality
+    // Filter form elements
+    const filterForm = document.getElementById('filterForm');
+    const resetFilters = document.getElementById('resetFilters');
     const sortSelect = document.getElementById('sortSelect');
-    if (sortSelect) {
-        sortSelect.addEventListener('change', function() {
-            const sortValue = this.value;
-            // Implement sorting logic
-            console.log('Sort by:', sortValue);
-        });
-    }
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const productsContainer = document.getElementById('productsContainer');
+    const productsCount = document.getElementById('productsCount');
     
     // View toggle
     const viewButtons = document.querySelectorAll('.flex.items-center.space-x-2 button');
@@ -305,6 +305,137 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.remove('border-gray-300', 'text-gray-600');
         });
     });
+
+    // Filter form submission
+    if (filterForm) {
+        filterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            applyFilters();
+        });
+    }
+
+    // Reset filters
+    if (resetFilters) {
+        resetFilters.addEventListener('click', function() {
+            filterForm.reset();
+            applyFilters();
+        });
+    }
+
+    // Sort change
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+            applyFilters();
+        });
+    }
+
+    // Apply filters function
+    function applyFilters() {
+        showLoading();
+        
+        const formData = new FormData(filterForm);
+        const sortValue = sortSelect ? sortSelect.value : 'default';
+        
+        // Build URL parameters
+        const params = new URLSearchParams();
+        
+        // Add form data
+        for (let [key, value] of formData.entries()) {
+            if (value) {
+                params.append(key, value);
+            }
+        }
+        
+        // Add sort parameter
+        if (sortValue && sortValue !== 'default') {
+            params.append('sort', sortValue);
+        }
+        
+        // Reload page with filters
+        window.location.href = '{{ route("catalog_category_page", $category->url) }}?' + params.toString();
+    }
+
+    // Show loading spinner
+    function showLoading() {
+        if (loadingSpinner) {
+            loadingSpinner.classList.remove('hidden');
+        }
+        if (productsContainer) {
+            productsContainer.style.opacity = '0.5';
+        }
+    }
+
+    // Hide loading spinner
+    function hideLoading() {
+        if (loadingSpinner) {
+            loadingSpinner.classList.add('hidden');
+        }
+        if (productsContainer) {
+            productsContainer.style.opacity = '1';
+        }
+    }
+
+    // Initialize filters from URL parameters
+    function initializeFiltersFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        if (filterForm) {
+            // Set price filters
+            if (urlParams.get('price_min')) {
+                const priceMinInput = filterForm.querySelector('input[name="price_min"]');
+                if (priceMinInput) priceMinInput.value = urlParams.get('price_min');
+            }
+            if (urlParams.get('price_max')) {
+                const priceMaxInput = filterForm.querySelector('input[name="price_max"]');
+                if (priceMaxInput) priceMaxInput.value = urlParams.get('price_max');
+            }
+            
+            // Set checkboxes
+            if (urlParams.get('availability')) {
+                const availabilityInput = filterForm.querySelector('input[name="availability"]');
+                if (availabilityInput) availabilityInput.checked = true;
+            }
+            if (urlParams.get('discount')) {
+                const discountInput = filterForm.querySelector('input[name="discount"]');
+                if (discountInput) discountInput.checked = true;
+            }
+            if (urlParams.get('wholesale')) {
+                const wholesaleInput = filterForm.querySelector('input[name="wholesale"]');
+                if (wholesaleInput) wholesaleInput.checked = true;
+            }
+        }
+        
+        // Set sort
+        if (sortSelect && urlParams.get('sort')) {
+            sortSelect.value = urlParams.get('sort');
+        }
+    }
+
+    // Update pagination links to preserve filters
+    function updatePaginationLinks() {
+        const paginationLinks = document.querySelectorAll('a[href*="page"]');
+        paginationLinks.forEach(link => {
+            const url = new URL(link.href);
+            const currentParams = new URLSearchParams(window.location.search);
+            
+            // Add current filter parameters to pagination links
+            currentParams.forEach((value, key) => {
+                if (key !== 'page') {
+                    url.searchParams.set(key, value);
+                }
+            });
+            
+            link.href = url.toString();
+        });
+    }
+
+    // Initialize filters on page load
+    initializeFiltersFromURL();
+    
+    // Update pagination links after page load
+    setTimeout(() => {
+        updatePaginationLinks();
+    }, 100);
 });
 </script>
 @endsection

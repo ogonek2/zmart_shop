@@ -39,6 +39,30 @@ document.addEventListener('DOMContentLoaded', function() {
             app.component('search', Search);
             app.component('product-card', ProductCard);
 
+            // Добавляем глобальные свойства
+            app.config.globalProperties.$toast = {
+                success: (message, product = null) => {
+                    window.dispatchEvent(new CustomEvent('show-toast', {
+                        detail: { title: 'Успіх', message, type: 'success', product }
+                    }));
+                },
+                error: (message, product = null) => {
+                    window.dispatchEvent(new CustomEvent('show-toast', {
+                        detail: { title: 'Помилка', message, type: 'error', product }
+                    }));
+                },
+                info: (message, product = null) => {
+                    window.dispatchEvent(new CustomEvent('show-toast', {
+                        detail: { title: 'Інформація', message, type: 'info', product }
+                    }));
+                },
+                warning: (message, product = null) => {
+                    window.dispatchEvent(new CustomEvent('show-toast', {
+                        detail: { title: 'Попередження', message, type: 'warning', product }
+                    }));
+                }
+            };
+
             // Монтируем приложение
             app.mount('#app');
             

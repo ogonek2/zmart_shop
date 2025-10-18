@@ -258,6 +258,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         
         <!-- Компонент уведомлений -->
         <toast-notification></toast-notification>
+        
     </div>
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
