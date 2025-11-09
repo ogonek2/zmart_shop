@@ -352,6 +352,7 @@
                                         <i class="fas fa-check mr-2"></i>
                                         Оформити замовлення
                                     </button>
+                                    <p id="checkout-minimum-message" class="mt-3 text-sm text-center hidden"></p>
                                 </div>
 
                                 <!-- CSRF -->
@@ -389,10 +390,51 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
     <script>
+        const MIN_ORDER_TOTAL = 1000;
+
         $(document).ready(function() {
             let cities = [];
             let warehouses = [];
             let selectedCityRef = '';
+            const submitButton = document.getElementById('submit-order');
+            const minOrderMessage = document.getElementById('checkout-minimum-message');
+
+            const updateSubmitState = () => {
+                if (!submitButton) {
+                    return;
+                }
+
+                const totalInput = document.getElementById('total_price_stream');
+                const rawValue = totalInput ? parseFloat(totalInput.value) : 0;
+                const total = isNaN(rawValue) ? 0 : rawValue;
+
+                if (minOrderMessage) {
+                    minOrderMessage.classList.remove('text-red-600', 'text-emerald-600');
+                }
+
+                if (total < MIN_ORDER_TOTAL) {
+                    submitButton.disabled = true;
+                    submitButton.classList.add('cursor-not-allowed', 'opacity-60', 'pointer-events-none');
+                    if (minOrderMessage) {
+                        const difference = Math.ceil(MIN_ORDER_TOTAL - total);
+                        minOrderMessage.textContent = `Мінімальна сума замовлення — 1000 ₴. Додайте товарів ще на ${difference.toLocaleString('uk-UA')} ₴.`;
+                        minOrderMessage.classList.add('text-red-600');
+                        minOrderMessage.classList.remove('hidden');
+                    }
+                } else {
+                    submitButton.disabled = false;
+                    submitButton.classList.remove('cursor-not-allowed', 'opacity-60', 'pointer-events-none');
+                    if (minOrderMessage) {
+                        minOrderMessage.textContent = 'Мінімальна сума замовлення виконана. Можна оформлювати!';
+                        minOrderMessage.classList.add('text-emerald-600');
+                        minOrderMessage.classList.remove('hidden');
+                    }
+                }
+            };
+
+            updateSubmitState();
+            setTimeout(updateSubmitState, 400);
+            window.addEventListener('cart-updated', updateSubmitState);
 
             // Обработчики для опций доставки
             $('input[name="delivery_service"]').on('change', function() {
@@ -665,7 +707,7 @@
                 // Проверка корзины
                 const cart = localStorage.getItem('cart');
                 if (!cart || cart === '[]' || cart === '{}' || cart === 'null') {
-                    alert('Корзина пуста. Пожалуйста, добавьте товары в корзину.');
+                    alert('Кошик порожній. Будь ласка, додайте товари до кошика.');
                     return;
                 }
                 
@@ -704,7 +746,7 @@
                     },
                     error: function(xhr) {
                         $('#preloader').addClass('hidden');
-                        let errorMessage = 'Ошибка при отправке заказа. Попробуйте еще раз.';
+                        let errorMessage = 'Помилка під час надсилання замовлення. Спробуйте ще раз.';
                         
                         try {
                             const response = JSON.parse(xhr.responseText);

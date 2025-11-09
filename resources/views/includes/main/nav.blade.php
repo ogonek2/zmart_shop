@@ -7,11 +7,11 @@
                 <div class="flex items-center space-x-6">
                     <div class="flex items-center space-x-2">
                         <i class="fas fa-map-marker-alt text-yellow-300"></i>
-                        <span>Одесса</span>
+                        <span>Одеса</span>
                     </div>
                     <div class="flex items-center space-x-2">
                         <i class="fas fa-phone text-yellow-300"></i>
-                        <span>+38 073-077-75-72</span>
+                        <span>+380730777572</span>
                     </div>
                 </div>
                 
@@ -21,10 +21,10 @@
                         <i class="fas fa-truck mr-1"></i>Доставка
                     </a>
                     <a href="{{ route('obmin_ta_povernennia') }}" class="hover:text-yellow-300 transition-colors">
-                        <i class="fas fa-shield-alt mr-1"></i>Гарантия
+                        <i class="fas fa-shield-alt mr-1"></i>Гарантія
                     </a>
                     <a href="{{ route('kontaktna_informatsiia') }}" class="hover:text-yellow-300 transition-colors">
-                        <i class="fas fa-headset mr-1"></i>Поддержка
+                        <i class="fas fa-headset mr-1"></i>Підтримка
                     </a>
                 </div>
             </div>
@@ -92,16 +92,7 @@
                     <a href="{{ route('pro_kompaniiu') }}" 
                        class="flex items-center space-x-2 py-4 hover:bg-gray-700 transition-colors">
                         <i class="fas fa-info-circle"></i>
-                        <span class="font-medium">О нас</span>
-                    </a>
-                </div>
-
-                <!-- Right side -->
-                <div class="ml-auto">
-                    <a href="{{ route('kontaktna_informatsiia') }}" 
-                       class="flex items-center space-x-2 px-6 py-4 hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-phone"></i>
-                        <span class="font-medium">Заказать звонок</span>
+                        <span class="font-medium">Про нас</span>
                     </a>
                 </div>
             </div>
@@ -114,7 +105,7 @@
 </div>
 
 <!-- Mobile Menu -->
-<div id="mobileMenu" class="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 transform translate-x-full transition-transform lg:hidden">
+<div id="mobileMenu" class="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 transform translate-x-full transition-transform lg:hidden overflow-y-auto">
     <!-- Mobile Menu Header -->
     <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-4 flex items-center justify-between">
         <h3 class="text-lg font-bold">Меню</h3>
@@ -147,7 +138,7 @@
             </button>
             
             <!-- Mobile Catalog Items -->
-            <div id="mobileCatalogItems" class="hidden mt-2 space-y-1">
+            <div id="mobileCatalogItems" class="hidden mt-2 space-y-1 max-h-80 overflow-y-auto pr-1">
                 @foreach (get_all_category()->whereNull('parent_id') as $category)
                 <a href="{{ route('catalog_category_page', $category->url) }}" 
                    class="flex items-center justify-between p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
@@ -155,7 +146,7 @@
                         <i class="fas fa-folder text-gray-400"></i>
                         <span>{{ $category->name }}</span>
                     </div>
-                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">{{ $category->products()->count() }}</span>
+                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">{{ get_category_total_products($category) }}</span>
                 </a>
                 @endforeach
             </div>
@@ -165,14 +156,15 @@
         <a href="{{ route('pro_kompaniiu') }}" 
            class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
             <i class="fas fa-info-circle text-emerald-600"></i>
-            <span class="font-medium">О нас</span>
+            <span class="font-medium">Про нас</span>
         </a>
 
-        <a href="{{ route('kontaktna_informatsiia') }}" 
-           class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+        <button type="button"
+           data-callback-open
+           class="w-full flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
             <i class="fas fa-phone text-emerald-600"></i>
-            <span class="font-medium">Заказать звонок</span>
-        </a>
+            <span class="font-medium">Замовити дзвінок</span>
+        </button>
     </div>
 
     <!-- Mobile Footer Links -->
@@ -186,7 +178,7 @@
             <a href="{{ route('obmin_ta_povernennia') }}" 
                class="flex flex-col items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                 <i class="fas fa-shield-alt text-emerald-600 mb-2"></i>
-                <span class="text-sm font-medium text-gray-700">Гарантия</span>
+                <span class="text-sm font-medium text-gray-700">Гарантія</span>
             </a>
         </div>
     </div>
@@ -196,7 +188,7 @@
 <div id="catalogMenu" class="fixed top-0 left-0 h-full w-96 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform hidden lg:block">
     <!-- Catalog Menu Header -->
     <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-4 flex items-center justify-between">
-        <h3 class="text-lg font-bold">Каталог товаров</h3>
+        <h3 class="text-lg font-bold">Каталог товарів</h3>
         <button onclick="closeCatalogMenu()" class="text-white hover:text-yellow-300">
             <i class="fas fa-times text-xl"></i>
         </button>
@@ -211,7 +203,7 @@
                     <i class="fas fa-folder text-emerald-600"></i>
                     <span class="font-medium">{{ $category->name }}</span>
                 </div>
-                <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full text-xs">{{ $category->products()->count() }}</span>
+                <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full text-xs">{{ get_category_total_products($category) }}</span>
             </a>
             @endforeach
         </div>
@@ -223,7 +215,7 @@
             <a href="/catalog?promo=1" 
                class="flex flex-col items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                 <i class="fas fa-tag text-emerald-600 mb-2"></i>
-                <span class="text-sm font-medium text-gray-700">Акции</span>
+                <span class="text-sm font-medium text-gray-700">Акції</span>
             </a>
             <a href="/catalog?new=1" 
                class="flex flex-col items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">

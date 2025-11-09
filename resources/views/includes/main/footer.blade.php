@@ -129,16 +129,16 @@
                 </h4>
                 <ul class="space-y-3 mb-6">
                     <li class="flex justify-between text-sm">
-                        <span class="text-gray-400">Пн - Пт:</span>
-                        <span class="text-gray-300 font-medium">9:00 - 18:00</span>
+                        <span class="text-gray-400">Пн - Чт:</span>
+                        <span class="text-gray-300 font-medium">06:00 - 14:00</span>
                     </li>
                     <li class="flex justify-between text-sm">
-                        <span class="text-gray-400">Субота:</span>
-                        <span class="text-gray-300 font-medium">10:00 - 16:00</span>
-                    </li>
-                    <li class="flex justify-between text-sm">
-                        <span class="text-gray-400">Неділя:</span>
+                        <span class="text-gray-400">П’ятниця:</span>
                         <span class="text-red-400 font-medium">Вихідний</span>
+                    </li>
+                    <li class="flex justify-between text-sm">
+                        <span class="text-gray-400">Сб - Нд:</span>
+                        <span class="text-gray-300 font-medium">06:00 - 14:00</span>
                     </li>
                 </ul>
 

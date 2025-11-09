@@ -108,7 +108,7 @@
             </div>
             <div class="info-item">
                 <i class="fas fa-shield-alt text-success me-2"></i>
-                <small class="text-muted">Гарантия 2 года</small>
+                <small class="text-muted">Гарантія 2 роки</small>
             </div>
         </div>
     </div>
@@ -466,6 +466,7 @@ export default {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    line-clamp: 2;
 }
 
 .product-title a {

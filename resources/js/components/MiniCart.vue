@@ -98,10 +98,19 @@
             </div>
             
             <button @click="goToCheckout" 
-                    class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-4 rounded-xl font-bold hover:from-emerald-600 hover:to-teal-600 transition-all shadow-lg">
+                    :disabled="isBelowMinimum"
+                    :class="[
+                        'w-full text-white py-4 rounded-xl font-bold transition-all shadow-lg',
+                        isBelowMinimum 
+                            ? 'bg-gray-300 cursor-not-allowed opacity-80' 
+                            : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600'
+                    ]">
                 <i class="fas fa-credit-card mr-2"></i>
                 Оформити замовлення
             </button>
+            <p v-if="isBelowMinimum" class="mt-3 text-sm text-red-600 text-center">
+                Мінімальна сума замовлення — 1000 ₴. Додайте товарів ще на {{ formatPrice(amountToReachMinimum) }} ₴.
+            </p>
             
             <button @click="toggle" 
                     class="w-full mt-3 border-2 border-gray-300 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-50 transition-all">
@@ -112,6 +121,8 @@
 </template>
 
 <script>
+const MIN_ORDER_TOTAL = 1000;
+
 export default {
     name: "MiniCart",
     data() {
@@ -131,6 +142,13 @@ export default {
                 return sum + (price * quantity);
             }, 0);
             return Number(total.toFixed(2));
+        },
+        isBelowMinimum() {
+            return this.totalPrice < MIN_ORDER_TOTAL;
+        },
+        amountToReachMinimum() {
+            const difference = MIN_ORDER_TOTAL - this.totalPrice;
+            return difference > 0 ? Math.ceil(difference) : 0;
         }
     },
     mounted() {
@@ -211,6 +229,12 @@ export default {
             return Math.round(price).toLocaleString('uk-UA');
         },
         goToCheckout() {
+            if (this.isBelowMinimum) {
+                if (this.$toast) {
+                    this.$toast.warning('Мінімальна сума замовлення — 1000 ₴');
+                }
+                return;
+            }
             window.location.href = '/checkout';
         }
     }
@@ -222,6 +246,7 @@ export default {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    line-clamp: 2;
     overflow: hidden;
 }
 </style>

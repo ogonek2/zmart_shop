@@ -61,12 +61,23 @@
             </a>
         </div>
 
+        <div v-if="cart.length > 0" class="mt-4">
+            <div v-if="isBelowMinimum" class="p-4 rounded-xl border border-red-200 bg-red-50 text-sm text-red-700">
+                Мінімальна сума замовлення — 1000 ₴. Додайте товарів ще на {{ formatPrice(amountToReachMinimum) }} ₴.
+            </div>
+            <div v-else class="p-4 rounded-xl border border-emerald-200 bg-emerald-50 text-sm text-emerald-700">
+                Мінімальна сума замовлення — 1000 ₴. Ви можете перейти до оформлення.
+            </div>
+        </div>
+
         <!-- Hidden field for total price -->
         <input type="hidden" id="total_price_stream" :value="totalPrice">
     </div>
 </template>
 
 <script>
+const MIN_ORDER_TOTAL = 1000;
+
 export default {
     name: "CartList",
     data() {
@@ -81,6 +92,13 @@ export default {
                 return sum + (price * item.quantity);
             }, 0);
             return Number(total.toFixed(2));
+        },
+        isBelowMinimum() {
+            return this.totalPrice < MIN_ORDER_TOTAL;
+        },
+        amountToReachMinimum() {
+            const difference = MIN_ORDER_TOTAL - this.totalPrice;
+            return difference > 0 ? Math.ceil(difference) : 0;
         }
     },
     mounted() {
@@ -158,6 +176,7 @@ export default {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    line-clamp: 2;
     overflow: hidden;
 }
 

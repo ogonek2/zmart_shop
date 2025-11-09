@@ -144,7 +144,7 @@
                                         </div>
                                         <h4 class="font-bold text-gray-900 mb-2">Телефон</h4>
                                         <a href="tel:+380730777572" class="text-emerald-600 hover:text-emerald-700 transition-colors">
-                                            +38 073-077-75-72
+                                            +380730777572
                                         </a>
                                     </div>
                                     

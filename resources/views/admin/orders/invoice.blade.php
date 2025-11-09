@@ -99,7 +99,7 @@
     <div class="customer-info">
         <h3>Информация о клиенте</h3>
         <p><strong>Имя:</strong> {{ $order->name }} {{ $order->lastname }}</p>
-        <p><strong>Отчество:</strong> {{ $order->fathername ?? 'Не указано' }}</p>
+        <p><strong>По батькові:</strong> {{ $order->fathername ?? 'Не вказано' }}</p>
         <p><strong>Телефон:</strong> {{ $order->phone }}</p>
         @if($order->manual_address)
         <p><strong>Адрес:</strong> {{ $order->manual_address }}</p>
@@ -125,7 +125,7 @@
                 @forelse($order->cart_items as $item)
                 <tr>
                     <td>{{ $item['name'] ?? 'Название не указано' }}</td>
-                    <td>{{ $item['sku'] ?? 'Не указан' }}</td>
+                    <td>{{ $item['sku'] ?? 'Не вказано' }}</td>
                     <td>{{ number_format($item['price'] ?? 0, 2, ',', ' ') }} ₴</td>
                     <td>{{ $item['quantity'] ?? 1 }}</td>
                     <td>{{ number_format(($item['price'] ?? 0) * ($item['quantity'] ?? 1), 2, ',', ' ') }} ₴</td>

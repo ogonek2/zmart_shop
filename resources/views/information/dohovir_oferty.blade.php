@@ -120,12 +120,11 @@
 
                         <p style="margin:0cm; text-align:justify"><span
                                 style="font-family:&quot;Arial&quot;,sans-serif">1.4.
-                                Продавець – Фізична особа-підприємець Холкін Артем Леонідович (ідентифікаційний код <a
-                                    name="_Hlk174098352">3156321359</a>), який діє відповідно до чинного законодавства
+                                Продавець – Фізична особа-підприємець Лаканвал Мохаммад Заби (ідентифікаційний код <a
+                                    name="_Hlk174098352">3171422612</a>), який діє відповідно до чинного законодавства
                                 України,
-                                місцезнаходження якої: 49000, Дніпропетровська обл., м. Дніпро, пр. Б.Хмельницького, буд.
-                                11,
-                                кв.44</span></p>
+                                місцезнаходження якого: 65000, Одеська обл., м. Одеса, промисловий ринок «7&nbsp;км», вул.
+                                Фабрична, магазин №2178.</span></p>
 
                         <p align="center" style="margin:0cm; text-align:center"><br>
                             <b><span style="font-family:&quot;Arial&quot;,sans-serif">2.</span></b> <b><span
@@ -620,39 +619,27 @@
 
                         <p style="margin:0cm">&nbsp;</p>
 
-                        <p style="margin:0cm"><b><span style="font-family:&quot;Arial&quot;,sans-serif">ФОП Холкін
-                                    А.Л.</span></b></p>
+                        <p style="margin:0cm"><b><span style="font-family:&quot;Arial&quot;,sans-serif">ФОП Лаканвал
+                                    Мохаммад Заби</span></b></p>
 
-                        <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">ІН: 3156321359</span>
+                        <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">ІН: 3171422612</span>
                         </p>
 
-                        <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">49000,
-                                Дніпропетровська
-                                обл., м. Дніпро, </span></p>
-
-                        <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">просп. </span><span
-                                lang="RU" style="font-family:&quot;Arial&quot;,sans-serif">Б.Хмельницького,</span>
-                            <span lang="RU" style="font-family:&quot;Arial&quot;,sans-serif">буд.11, кв. 44</span>
+                        <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">65000,
+                                Одеська обл., м. Одеса, промисловий ринок «7&nbsp;км», вул. Фабрична, магазин №2178</span>
                         </p>
 
-                        <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">р/р: </span><span
-                                lang="RU" style="font-family:&quot;Arial&quot;,sans-serif">UA</span><span
-                                style="font-family:&quot;Arial&quot;,sans-serif">153052990000026004050308654 у ПАТ КБ
-                                ПриватБанк, </span></p>
+                        <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">IBAN (р/р):
+                                UA873052990000026004014926317</span></p>
 
-                        <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">МФО: 3052299 </span>
+                        <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">МФО: 305299</span>
                         </p>
 
-                        <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">код: 3156321350
-                            </span>
-                        </p>
+                        <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">ІПН/ЄДРПОУ:
+                                3171422612</span></p>
 
-                        <p style="margin:0cm"><span lang="RU" style="font-family:&quot;Arial&quot;,sans-serif">Не є
-                                платником ПДВ</span></p>
-
-                        <p style="margin:0cm"><span lang="RU"
-                                style="font-family:&quot;Arial&quot;,sans-serif">Телефон:
-                                +380631938179 </span></p>
+                        <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">Телефон:
+                                +380730777572</span></p>
                         </div>
                     </div>
                 </div>

@@ -1,10 +1,10 @@
 <div class="categories-sidebar">
-    <!-- Список категорий -->
+    <!-- Список категорій -->
     <div class="categories-list">
         @foreach (get_all_category()->whereNull('parent_id') as $categoryItem)
             @php
                 $isActive = isset($currentCategory) && $currentCategory->id == $categoryItem->id;
-                $productCount = $categoryItem->products()->count();
+                $productCount = get_category_total_products($categoryItem);
             @endphp
             
             <a href="{{ route('catalog_category_page', $categoryItem->url) }}" 
@@ -17,27 +17,27 @@
         @endforeach
     </div>
 
-    <!-- Быстрые ссылки -->
+    <!-- Швидкі посилання -->
     <div class="quick-links">
         <h6 class="quick-links-title">
-            <i class="fas fa-star me-2"></i>Популярное
+            <i class="fas fa-star me-2"></i>Популярне
         </h6>
         <div class="quick-links-list">
             <a href="{{ route('home') }}" class="quick-link">
-                <i class="fas fa-home me-2"></i>Все товары
+                <i class="fas fa-home me-2"></i>Усі товари
             </a>
             <a href="{{ route('home') }}?sort=new" class="quick-link">
                 <i class="fas fa-fire me-2"></i>Новинки
             </a>
             <a href="{{ route('home') }}?sort=discount" class="quick-link">
-                <i class="fas fa-tag me-2"></i>Со скидкой
+                <i class="fas fa-tag me-2"></i>Зі знижкою
             </a>
         </div>
     </div>
 </div>
 
 <style>
-    /* Компактный сайдбар категорий */
+    /* Компактний сайдбар категорій */
     .categories-sidebar {
         background: white;
         border-radius: 12px;
@@ -61,7 +61,7 @@
         padding: 0.5rem 0;
     }
     
-    /* Простая ссылка категории */
+    /* Проста посилання категорії */
     .category-link {
         display: flex;
         align-items: center;
@@ -107,7 +107,7 @@
         color: #2563eb;
     }
     
-    /* Быстрые ссылки */
+    /* Швидкі посилання */
     .quick-links {
         padding: 0.75rem 0;
         border-top: 1px solid #f1f5f9;

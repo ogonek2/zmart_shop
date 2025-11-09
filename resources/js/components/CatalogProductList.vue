@@ -96,7 +96,7 @@
                                    :name="product.name" 
                                    :price="finalPrice(product)"
                                    :image="product.image_path"
-                                   :articule="product.articule || 'Не указан'"
+                                   :articule="product.articule || 'Не вказано'"
                                    :availability="product.availability" />
                     </div>
                 </div>
@@ -431,6 +431,7 @@ export default {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    line-clamp: 2;
     overflow: hidden;
     font-size: 1rem;
 }

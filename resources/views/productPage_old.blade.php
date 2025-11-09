@@ -751,7 +751,7 @@
                         <div class="product-info">
                             <div class="product-header">
                                 <h1 class="product-title">{{ $product->name }}</h1>
-                                <p class="product-articule">Артикул: {{ $product->articule ?? 'Не указан' }}</p>
+                                <p class="product-articule">Артикул: {{ $product->articule ?? 'Не вказано' }}</p>
                                 @if ($product->availability === 2)
                                     <div class="availability-badge-page">
                                         <i class="fas fa-times-circle me-2"></i>Нет в наличии
@@ -939,7 +939,7 @@
                             // Проверяем характеристики из продукта
                             if (!empty($product->characteristics) && is_array($product->characteristics)) {
                                 foreach ($product->characteristics as $charKey => $charValue) {
-                                    if (!is_null($charValue) && $charValue !== '' && $charValue !== 'Не указано') {
+                                    if (!is_null($charValue) && $charValue !== '' && $charValue !== 'Не вказано') {
                                         $hasValidCharacteristics = true;
                                         $validCharacteristics[] = [
                                             'name' => is_string($charKey) ? ucwords(str_replace(['_', '-'], ' ', $charKey)) : 'Параметр ' . count($validCharacteristics) + 1,
@@ -953,10 +953,10 @@
                             if (!$hasValidCharacteristics && !empty($characteristics) && count($characteristics) > 0) {
                                 foreach ($characteristics as $char) {
                                     $value = (is_array($product->characteristics) ? $product->characteristics[$char['key']] : null) ?? $char['default_value'] ?? '-';
-                                    if ($value !== '-' && $value !== '' && $value !== 'Не указано') {
+                                    if ($value !== '-' && $value !== '' && $value !== 'Не вказано') {
                                         $hasValidCharacteristics = true;
                                         $validCharacteristics[] = [
-                                            'name' => $char['name'] ?? 'Не указано',
+                                            'name' => $char['name'] ?? 'Не вказано',
                                             'value' => $value
                                         ];
                                     }
@@ -966,7 +966,7 @@
                             // Если все еще нет валидных характеристик, проверяем старую систему
                             if (!$hasValidCharacteristics && isset($product->package) && count($product->package) > 0) {
                                 foreach ($product->package as $item) {
-                                    if (!empty($item->value) && $item->value !== 'Не указано') {
+                                    if (!empty($item->value) && $item->value !== 'Не вказано') {
                                         $hasValidCharacteristics = true;
                                         $validCharacteristics[] = [
                                             'name' => $item->name,
@@ -995,7 +995,7 @@
                                 <ul class="specs-list">
                                     @foreach ($modifications as $mod)
                                         <li>
-                                            <span class="spec-name">{{ $mod['name'] ?? 'Не указано' }}</span>
+                                            <span class="spec-name">{{ $mod['name'] ?? 'Не вказано' }}</span>
                                             <span class="spec-value">{{ $product->modifications[$mod['key']] ?? $mod['default_value'] ?? '-' }}</span>
                                         </li>
                                     @endforeach
@@ -1009,7 +1009,7 @@
                                 <ul class="specs-list">
                                     @foreach ($additionalFields as $field)
                                         <li>
-                                            <span class="spec-name">{{ $field['name'] ?? 'Не указано' }}</span>
+                                            <span class="spec-name">{{ $field['name'] ?? 'Не вказано' }}</span>
                                             <span class="spec-value">{{ $product->additional_fields[$field['key']] ?? $field['default_value'] ?? '-' }}</span>
                                         </li>
                                     @endforeach
@@ -1133,7 +1133,7 @@
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $recProduct->name }}</h5>
-                                    <p class="card-articule">Артикул: {{ $recProduct->articule ?? 'Не указан' }}</p>
+                                    <p class="card-articule">Артикул: {{ $recProduct->articule ?? 'Не вказано' }}</p>
                                     <div class="card-price">
                                         <span class="current-price">{{ number_format($recProduct->price, 0, ',', ' ') }}
                                             ₴</span>

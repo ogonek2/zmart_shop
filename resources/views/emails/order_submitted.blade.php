@@ -109,7 +109,7 @@
                     @endphp
                     <tr>
                         <td>{{ $itemName }}</td>
-                        <td>{{ $item['articule'] ?? 'Не указан' }}</td>
+                        <td>{{ $item['articule'] ?? 'Не вказано' }}</td>
                         <td>{{ $itemQuantity }}</td>
                         <td>{{ number_format($itemPrice, 2, ',', ' ') }} грн</td>
                         <td>{{ number_format($sum, 2, ',', ' ') }} грн</td>

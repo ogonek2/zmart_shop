@@ -10,6 +10,69 @@ function get_all_category() {
         ->get();
 }
 
+if (!function_exists('get_category_total_products')) {
+    /**
+     * Подсчитывает количество товаров для категории с учетом всех дочерних категорий.
+     *
+     * Использует кеширование в рамках одного запроса, чтобы избежать лишних SQL-запросов.
+     */
+    function get_category_total_products(Category $category): int
+    {
+        static $categoryChildrenMap = null;
+        static $categoryDirectCounts = null;
+        static $calculatedTotals = [];
+
+        if ($categoryChildrenMap === null || $categoryDirectCounts === null) {
+            $categories = Category::where('is_active', true)
+                ->select(['id', 'parent_id'])
+                ->withCount('products')
+                ->get();
+
+            $categoryChildrenMap = $categories->groupBy('parent_id');
+            $categoryDirectCounts = $categories->pluck('products_count', 'id')->toArray();
+            $calculatedTotals = [];
+        }
+
+        return calculate_total_products_for_category($category->id, $categoryChildrenMap, $categoryDirectCounts, $calculatedTotals);
+    }
+}
+
+if (!function_exists('calculate_total_products_for_category')) {
+    /**
+     * Рекурсивно подсчитывает количество товаров для категории и всех ее потомков.
+     *
+     * @param int $categoryId
+     * @param \Illuminate\Support\Collection $childrenMap
+     * @param array<int,int> $directCounts
+     * @param array<int,int> $cache
+     */
+    function calculate_total_products_for_category(
+        int $categoryId,
+        $childrenMap,
+        array $directCounts,
+        array &$cache
+    ): int {
+        if (isset($cache[$categoryId])) {
+            return $cache[$categoryId];
+        }
+
+        $total = $directCounts[$categoryId] ?? 0;
+
+        if ($childrenMap->has($categoryId)) {
+            foreach ($childrenMap->get($categoryId) as $childCategory) {
+                $total += calculate_total_products_for_category(
+                    $childCategory->id,
+                    $childrenMap,
+                    $directCounts,
+                    $cache
+                );
+            }
+        }
+
+        return $cache[$categoryId] = $total;
+    }
+}
+
 function uploadToBunnyCDN($localFilePath, $destinationPath)
 {
     $storageName = env('BUNNY_STORAGE_NAME');

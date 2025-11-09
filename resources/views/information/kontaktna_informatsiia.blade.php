@@ -51,7 +51,7 @@
                                     </div>
                                     <h3 class="text-xl font-bold text-gray-900 mb-4">Телефон</h3>
                                     <a href="tel:+380730777572" class="text-emerald-600 hover:text-emerald-700 transition-colors text-lg font-semibold block mb-4">
-                                        +38 073-077-75-72
+                                        +380730777572
                                     </a>
                                     <button class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl">
                                         Замовити дзвінок
@@ -90,14 +90,18 @@
                                     </div>
                                     Графік роботи
                                 </h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div class="text-center">
-                                        <h4 class="font-bold text-gray-900 mb-2">Пн - Пт</h4>
-                                        <p class="text-gray-700">09:00 - 18:00</p>
+                                        <h4 class="font-bold text-gray-900 mb-2">Пн - Чт</h4>
+                                        <p class="text-gray-700">06:00 - 14:00</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <h4 class="font-bold text-gray-900 mb-2">П’ятниця</h4>
+                                        <p class="text-red-500 font-semibold">Вихідний</p>
                                     </div>
                                     <div class="text-center">
                                         <h4 class="font-bold text-gray-900 mb-2">Сб - Нд</h4>
-                                        <p class="text-gray-700">10:00 - 16:00</p>
+                                        <p class="text-gray-700">06:00 - 14:00</p>
                                     </div>
                                 </div>
                             </div>
@@ -105,27 +109,53 @@
                             <!-- Contact Form -->
                             <div class="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl p-8">
                                 <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Написати нам</h3>
-                                <form class="space-y-6">
+                                @if (session('contact_success'))
+                                    <div class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 px-4 py-3 text-sm text-center">
+                                        {{ session('contact_success') }}
+                                    </div>
+                                @elseif (session('contact_error'))
+                                    <div class="mb-6 rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm text-center">
+                                        {{ session('contact_error') }}
+                                    </div>
+                                @endif
+
+                                @if ($errors->any())
+                                    <div class="mb-6 rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm">
+                                        <ul class="list-disc list-inside space-y-1 text-left">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+
+                                <form class="space-y-6" method="POST" action="{{ route('contact_request') }}">
+                                    @csrf
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
-                                            <label class="block text-sm font-bold text-gray-700 mb-2">Ім'я</label>
-                                            <input type="text" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="Ваше ім'я">
+                                            <label for="contact-name" class="block text-sm font-bold text-gray-700 mb-2">Ім'я *</label>
+                                            <input id="contact-name" name="name" type="text" value="{{ old('name') }}" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="Ваше ім'я">
+                                            @error('name')
+                                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                            @enderror
                                         </div>
                                         <div>
-                                            <label class="block text-sm font-bold text-gray-700 mb-2">Email</label>
-                                            <input type="email" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="your@email.com">
+                                            <label for="contact-phone" class="block text-sm font-bold text-gray-700 mb-2">Номер телефону *</label>
+                                            <input id="contact-phone" name="phone" type="text" value="{{ old('phone') }}" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="+380...">
+                                            @error('phone')
+                                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-bold text-gray-700 mb-2">Тема</label>
-                                        <input type="text" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="Тема повідомлення">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-bold text-gray-700 mb-2">Повідомлення</label>
-                                        <textarea rows="4" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="Ваше повідомлення"></textarea>
+                                        <label for="contact-message" class="block text-sm font-bold text-gray-700 mb-2">Повідомлення <span class="text-gray-500 font-normal">(необов'язково)</span></label>
+                                        <textarea id="contact-message" name="message" rows="4" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="Ваше повідомлення">{{ old('message') }}</textarea>
+                                        @error('message')
+                                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                     <div class="text-center">
-                                        <button type="submit" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-8 py-4 rounded-xl font-bold transition-all duration-200 shadow-lg hover:shadow-xl">
+                                        <button type="submit" class="inline-flex items-center justify-center bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-8 py-4 rounded-xl font-bold transition-all duration-200 shadow-lg hover:shadow-xl">
                                             <i class="fas fa-paper-plane mr-2"></i>
                                             Відправити повідомлення
                                         </button>
@@ -142,3 +172,4 @@
 
 @section('scripts')
 @endsection
+

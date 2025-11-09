@@ -4,6 +4,7 @@ use App\Http\Controllers\ProductImportController;
 use App\Http\Controllers\indexController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ContactController;
 
 use App\Http\Controllers\AdminProductsUploadController;
 use App\Http\Controllers\admin\AdminMainController;
@@ -51,6 +52,7 @@ Route::get('/kontaktna-informatsiia', function() {
 Route::get('/pro-kompaniiu', function() {
     return view('information.about');
 })->name('pro_kompaniiu');
+Route::post('/contact-request', [ContactController::class, 'submit'])->name('contact_request');
 
 Route::get('/api/products', function () {
     return \App\Models\Product::select('id', 'name', 'articule', 'price', 'discount', 'image_path', 'availability', 'url')

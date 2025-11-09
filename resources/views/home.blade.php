@@ -74,7 +74,7 @@
         <div class="bg-white rounded-3xl shadow-xl p-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div class="text-center">
-                <div class="text-4xl font-bold text-emerald-600 mb-2">500+</div>
+                <div class="text-4xl font-bold text-emerald-600 mb-2">+5000</div>
                     <div class="text-gray-600 font-medium">Товарів в каталозі</div>
             </div>
             <div class="text-center">
@@ -125,10 +125,7 @@
                 }
                 
                 // Подсчитываем общее количество товаров
-                $totalProductCount = $category->products()->count();
-                foreach ($category->childCategories()->where('is_active', true)->get() as $childCategory) {
-                    $totalProductCount += $childCategory->products()->count();
-                }
+                $totalProductCount = get_category_total_products($category);
                 
                 // Цветовые градиенты для карточек
                 $gradients = [
@@ -274,10 +271,10 @@
                         <div class="flex gap-2">
                             <a href="/catalog/{{ $product->url }}" 
                                class="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-2 px-4 rounded-xl transition-all duration-200 text-center text-sm">
-                                <i class="fas fa-eye mr-1"></i>Подробнее
+                                <i class="fas fa-eye mr-1"></i>Детальніше
                             </a>
                             <button class="w-10 h-10 bg-gray-100 hover:bg-emerald-500 hover:text-white text-gray-600 rounded-xl flex items-center justify-center transition-all duration-200" 
-                                    onclick="addToCart({{ $product->id }}, '{{ addslashes($product->name) }}', {{ $finalPrice }}, '{{ $product->image_path ?: '' }}', '{{ $product->articule ?: 'Не указан' }}', {{ $product->availability ?: 1 }}{{ $product->is_wholesale ? ', true, ' . $product->wholesale_price . ', ' . $product->wholesale_min_quantity : '' }})">
+                                    onclick="addToCart({{ $product->id }}, '{{ addslashes($product->name) }}', {{ $finalPrice }}, '{{ $product->image_path ?: '' }}', '{{ $product->articule ?: 'Не вказано' }}', {{ $product->availability ?: 1 }}{{ $product->is_wholesale ? ', true, ' . $product->wholesale_price . ', ' . $product->wholesale_min_quantity : '' }})">
                                 <i class="fas fa-shopping-cart"></i>
                             </button>
                         </div>

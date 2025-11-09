@@ -196,6 +196,18 @@
                     </div>
                     @endif
                 </div>
+                
+                <div class="mt-4 bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-start gap-3">
+                    <div class="flex-shrink-0">
+                        <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-info text-emerald-600"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-900">Мінімальна сума замовлення — 1000 ₴</p>
+                        <p class="text-xs text-gray-600 mt-1">Додайте товари до кошика на цю суму, щоб перейти до оформлення.</p>
+                    </div>
+                </div>
 
                 <!-- Add to Cart -->
                 <div class="mt-8">

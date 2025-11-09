@@ -77,10 +77,10 @@
                         <div class="flex gap-2">
                             <a href="/catalog/{{ $product->url }}" 
                                class="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-2 px-4 rounded-xl transition-all duration-200 text-center text-sm">
-                                <i class="fas fa-eye mr-1"></i>Подробнее
+                                <i class="fas fa-eye mr-1"></i>Детальніше
                             </a>
                             <button class="w-10 h-10 bg-gray-100 hover:bg-emerald-500 hover:text-white text-gray-600 rounded-xl flex items-center justify-center transition-all duration-200" 
-                                    onclick="addToCart({{ $product->id }}, '{{ addslashes($product->name) }}', {{ $finalPrice }}, '{{ $product->image_path ?: '' }}', '{{ $product->articule ?: 'Не указан' }}', {{ $product->availability ?: 1 }}{{ $product->is_wholesale ? ', true, ' . $product->wholesale_price . ', ' . $product->wholesale_min_quantity : '' }})">
+                                    onclick="addToCart({{ $product->id }}, '{{ addslashes($product->name) }}', {{ $finalPrice }}, '{{ $product->image_path ?: '' }}', '{{ $product->articule ?: 'Не вказано' }}', {{ $product->availability ?: 1 }}{{ $product->is_wholesale ? ', true, ' . $product->wholesale_price . ', ' . $product->wholesale_min_quantity : '' }})">
                                 <i class="fas fa-shopping-cart"></i>
                             </button>
                         </div>
@@ -94,11 +94,11 @@
             <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-2xl mb-4">
                 <i class="fas fa-box-open text-3xl text-gray-400"></i>
             </div>
-            <h4 class="text-lg font-bold text-gray-900 mb-2">Нет похожих товаров</h4>
-            <p class="text-gray-600 mb-4">В данной категории пока нет других товаров</p>
+            <h4 class="text-lg font-bold text-gray-900 mb-2">Немає схожих товарів</h4>
+            <p class="text-gray-600 mb-4">У цій категорії поки немає інших товарів</p>
             <a href="{{ route('catalog') }}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl font-bold hover:from-emerald-600 hover:to-teal-600 transition-all duration-200">
                 <i class="fas fa-arrow-left mr-2"></i>
-                Перейти в каталог
+                Перейти до каталогу
             </a>
         </div>
     @endif

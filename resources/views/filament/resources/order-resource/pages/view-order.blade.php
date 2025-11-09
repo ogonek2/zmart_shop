@@ -14,7 +14,7 @@
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-500">Отчество</label>
-                    <p class="text-sm text-gray-900">{{ $record->fathername ?? 'Не указано' }}</p>
+                    <p class="text-sm text-gray-900">{{ $record->fathername ?? 'Не вказано' }}</p>
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-500">Телефон</label>
@@ -58,15 +58,15 @@
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-500">Город</label>
-                    <p class="text-sm text-gray-900">{{ $record->city ?? 'Не указано' }}</p>
+                    <p class="text-sm text-gray-900">{{ $record->city ?? 'Не вказано' }}</p>
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-500">Отделение</label>
-                    <p class="text-sm text-gray-900">{{ $record->warehouse ?? 'Не указано' }}</p>
+                    <p class="text-sm text-gray-900">{{ $record->warehouse ?? 'Не вказано' }}</p>
                 </div>
                 <div>
                     <label class="text-sm font-medium text-gray-500">Адрес доставки</label>
-                    <p class="text-sm text-gray-900">{{ $record->manual_address ?? 'Не указано' }}</p>
+                    <p class="text-sm text-gray-900">{{ $record->manual_address ?? 'Не вказано' }}</p>
                 </div>
             </div>
         </div>

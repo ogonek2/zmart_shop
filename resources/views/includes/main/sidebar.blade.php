@@ -10,7 +10,7 @@
                             {{ $item->name }}
                         </span>
                         <span>
-                            <b>{{ $item->products()->count() }}</b>
+                            <b>{{ get_category_total_products($item) }}</b>
                         </span>
                     </a>
                 </li>

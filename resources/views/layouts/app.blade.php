@@ -232,6 +232,17 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--primary-hover);
         }
+
+        .callback-modal {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .callback-modal.is-visible {
+            display: flex;
+        }
     </style>
 
     <!-- Bootstrap Select CSS -->
@@ -255,6 +266,48 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             @yield('content')
         </div>
         @include('includes.main.footer')
+
+        <!-- Callback Modal -->
+        <div id="callbackModal" class="fixed inset-0 z-50 callback-modal">
+            <div class="absolute inset-0 bg-black bg-opacity-60" data-callback-close></div>
+            <div class="relative z-10 max-w-md mx-auto mt-20 bg-white rounded-3xl shadow-2xl overflow-hidden">
+                <div class="p-6 border-b border-gray-200 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Замовити консультацію</h3>
+                        <p class="text-sm text-gray-500 mt-1">Заповніть форму, і ми передзвонимо протягом робочого часу</p>
+                    </div>
+                    <button type="button" data-callback-close class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div id="callbackSuccess" class="hidden mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-700 px-4 py-3 text-sm"></div>
+                    <div id="callbackError" class="hidden mb-4 rounded-2xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm"></div>
+                    <form id="callbackForm" class="space-y-4" method="POST" action="{{ route('contact_request') }}">
+                        @csrf
+                        <div>
+                            <label for="callback-name" class="block text-sm font-semibold text-gray-700 mb-2">Ім'я *</label>
+                            <input id="callback-name" name="name" type="text" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="Ваше ім'я">
+                        </div>
+                        <div>
+                            <label for="callback-phone" class="block text-sm font-semibold text-gray-700 mb-2">Номер телефону *</label>
+                            <input id="callback-phone" name="phone" type="text" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="+380...">
+                        </div>
+                        <div>
+                            <label for="callback-message" class="block text-sm font-semibold text-gray-700 mb-2">Повідомлення <span class="text-gray-500 font-normal">(необов'язково)</span></label>
+                            <textarea id="callback-message" name="message" rows="3" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="Коротко опишіть питання"></textarea>
+                        </div>
+                        <button id="callbackSubmit" type="submit" class="w-full inline-flex items-center justify-center bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-200 shadow-lg hover:shadow-xl">
+                            <span id="callbackSubmitText">Відправити</span>
+                            <svg id="callbackSpinner" class="hidden ml-2 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
         
         <!-- Компонент уведомлений -->
         <toast-notification></toast-notification>
@@ -381,62 +434,162 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const overlay = document.getElementById('catalogMenuOverlay');
         
         if (menu && overlay) {
-            menu.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
+            menu.classList.remove('-translate-x-full');
+            menu.classList.add('translate-x-0');
+            overlay.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
         }
     }
-
+    
     function closeCatalogMenu() {
         const menu = document.getElementById('catalogMenu');
         const overlay = document.getElementById('catalogMenuOverlay');
         
         if (menu && overlay) {
+            menu.classList.remove('translate-x-0');
             menu.classList.add('-translate-x-full');
             overlay.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
         }
     }
 
-    // Navigation initialization
-    document.addEventListener('DOMContentLoaded', function() {
-        // Catalog Search
-        const catalogSearch = document.getElementById('catalogSearch');
-        const catalogList = document.getElementById('catalogList');
-        
-        if (catalogSearch && catalogList) {
-            const catalogItems = catalogList.querySelectorAll('.catalog-item');
-            
-            if (catalogItems.length > 0) {
-                catalogSearch.addEventListener('input', function() {
-                    const searchTerm = this.value.toLowerCase().trim();
-                    
-                    catalogItems.forEach(item => {
-                        const itemText = item.textContent.toLowerCase();
-                        
-                        if (searchTerm === '' || itemText.includes(searchTerm)) {
-                            item.style.display = 'flex';
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
-                });
-            }
+    (function () {
+        const modal = document.getElementById('callbackModal');
+        if (!modal) {
+            return;
         }
-        
-        // Close mobile menu on escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeMobileMenu();
-                closeCatalogMenu();
+
+        const successBox = modal.querySelector('#callbackSuccess');
+        const errorBox = modal.querySelector('#callbackError');
+        const form = modal.querySelector('#callbackForm');
+        const submitButton = modal.querySelector('#callbackSubmit');
+        const submitText = modal.querySelector('#callbackSubmitText');
+        const spinner = modal.querySelector('#callbackSpinner');
+        const closeElements = modal.querySelectorAll('[data-callback-close]');
+        const openElements = document.querySelectorAll('[data-callback-open]');
+        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : null;
+
+        const toggleBodyScroll = (disable) => {
+            document.body.style.overflow = disable ? 'hidden' : '';
+        };
+
+        const resetFeedback = () => {
+            if (successBox) {
+                successBox.classList.add('hidden');
+                successBox.textContent = '';
+            }
+            if (errorBox) {
+                errorBox.classList.add('hidden');
+                errorBox.textContent = '';
+            }
+        };
+
+        const setLoadingState = (isLoading) => {
+            if (!submitButton || !submitText) {
+                return;
+            }
+            submitButton.disabled = isLoading;
+            submitText.textContent = isLoading ? 'Відправлення...' : 'Відправити';
+            if (spinner) {
+                spinner.classList.toggle('hidden', !isLoading);
+            }
+        };
+
+        window.openCallbackModal = function () {
+            resetFeedback();
+            if (form) {
+                form.reset();
+            }
+            modal.classList.add('is-visible');
+            toggleBodyScroll(true);
+        };
+
+        window.closeCallbackModal = function () {
+            modal.classList.remove('is-visible');
+            toggleBodyScroll(false);
+        };
+
+        closeElements.forEach((el) => {
+            el.addEventListener('click', () => {
+                closeCallbackModal();
+            });
+        });
+
+        openElements.forEach((el) => {
+            el.addEventListener('click', (event) => {
+                event.preventDefault();
+                openCallbackModal();
+            });
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeCallbackModal();
             }
         });
-        
-        // Close mobile menu on window resize to desktop
-        window.addEventListener('resize', function() {
-            if (window.innerWidth >= 1024) {
-                closeMobileMenu();
-            }
-        });
-    });
+
+        if (form) {
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                resetFeedback();
+
+                const formData = new FormData(form);
+                setLoadingState(true);
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            ...(csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : {}),
+                        },
+                        body: formData,
+                    });
+
+                    let responseData = {};
+                    try {
+                        responseData = await response.json();
+                    } catch (parseError) {
+                        responseData = {};
+                    }
+
+                    if (response.ok && responseData.success) {
+                        if (successBox) {
+                            successBox.textContent = responseData.message || 'Запит успішно відправлено.';
+                            successBox.classList.remove('hidden');
+                        }
+                        form.reset();
+                    } else {
+                        let errorMessage = responseData.message || null;
+                        if (!errorMessage && responseData.errors) {
+                            const aggregated = Object.values(responseData.errors)
+                                .reduce((acc, item) => acc.concat(item), []);
+                            if (aggregated.length > 0) {
+                                errorMessage = aggregated.join('\n');
+                            }
+                        }
+                        if (!errorMessage) {
+                            errorMessage = 'Сталася помилка. Спробуйте, будь ласка, пізніше.';
+                        }
+                        if (errorBox) {
+                            errorBox.textContent = errorMessage;
+                            errorBox.classList.remove('hidden');
+                        }
+                    }
+                } catch (error) {
+                    if (errorBox) {
+                        errorBox.textContent = 'Сталася помилка. Спробуйте, будь ласка, пізніше.';
+                        errorBox.classList.remove('hidden');
+                    }
+                    console.error('Callback form error:', error);
+                } finally {
+                    setLoadingState(false);
+                }
+            });
+        }
+    })();
     </script>
 </body>
 

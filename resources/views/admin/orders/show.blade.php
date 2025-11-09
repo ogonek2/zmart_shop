@@ -155,7 +155,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td>{{ $item['articule'] ?? 'Не указан' }}</td>
+                                                <td>{{ $item['articule'] ?? 'Не вказано' }}</td>
                                                 <td>{{ number_format($item['price'] ?? 0, 2, ',', ' ') }} ₴</td>
                                                 <td>{{ $item['quantity'] ?? 1 }}</td>
                                                 <td>{{ number_format(($item['price'] ?? 0) * ($item['quantity'] ?? 1), 2, ',', ' ') }}
@@ -183,7 +183,7 @@
                         <div class="card-body">
                             <p><strong>Имя:</strong> {{ $order->name }}</p>
                             <p><strong>Фамилия:</strong> {{ $order->lastname }}</p>
-                            <p><strong>Отчество:</strong> {{ $order->fathername ?? 'Не указано' }}</p>
+                            <p><strong>По батькові:</strong> {{ $order->fathername ?? 'Не вказано' }}</p>
                             <p><strong>Телефон:</strong> {{ $order->phone }}</p>
                             <p><strong>Город:</strong> {{ $order->city }}</p>
                             <p><strong>Отделение:</strong> {{ $order->warehouse }}</p>

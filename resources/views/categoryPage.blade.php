@@ -55,7 +55,7 @@
             @php
                 $latestProduct = $subcategory->products()->latest()->first();
                 $subcategoryImage = $latestProduct ? $latestProduct->image_path : null;
-                $productCount = $subcategory->products()->count();
+                $productCount = get_category_total_products($subcategory);
                 
                 $gradients = [
                     'from-pink-400 to-rose-500',
