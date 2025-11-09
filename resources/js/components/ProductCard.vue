@@ -6,7 +6,7 @@
         </div>
         
         <!-- Индикатор наличия -->
-        <div v-if="product.availability === 2" class="availability-badge">
+        <div v-if="product.availability === 'out_of_stock'" class="availability-badge">
             <i class="fas fa-times-circle me-1"></i>Нет в наличии
         </div>
         

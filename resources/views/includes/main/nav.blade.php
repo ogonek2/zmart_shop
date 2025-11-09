@@ -211,7 +211,6 @@
                     <i class="fas fa-folder text-emerald-600"></i>
                     <span class="font-medium">{{ $category->name }}</span>
                 </div>
-                <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full text-xs">{{ $category->products()->count() }}</span>
             </a>
             @endforeach
         </div>

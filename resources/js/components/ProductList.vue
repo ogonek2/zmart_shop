@@ -34,7 +34,7 @@
           </div>
           
           <!-- Availability Badge -->
-          <div v-if="product.availability === 2" class="absolute top-12 left-3">
+          <div v-if="product.availability === 'out_of_stock'" class="absolute top-12 left-3">
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
               <i class="fas fa-times-circle mr-1"></i>Немає
             </span>

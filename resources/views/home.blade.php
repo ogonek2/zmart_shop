@@ -149,8 +149,8 @@
             @endphp
             
             <a href="{{ route('catalog_category_page', $category->url) }}" 
-               class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 p-6 text-center transform hover:-translate-y-2">
-                <div class="aspect-square bg-gradient-to-br {{ $gradient }} rounded-2xl mb-4 overflow-hidden relative">
+               class="group rounded-2xl transition-all duration-300 p-6 text-center transform hover:-translate-y-2">
+                <div class="aspect-square bg-gradient-to-br {{ $gradient }} rounded-full mb-4 overflow-hidden relative">
                     @if($categoryImage)
                         <img src="{{ $categoryImage }}" 
                              alt="{{ $category->name }}"
@@ -163,7 +163,6 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
                 <h3 class="font-bold text-gray-900 text-sm mb-2 group-hover:text-emerald-600 transition-colors">{{ $category->name }}</h3>
-                <p class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full inline-block">{{ $totalProductCount }} товарів</p>
             </a>
             @endforeach
         </div>

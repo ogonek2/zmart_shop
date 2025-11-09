@@ -182,7 +182,7 @@ class OrderController extends Controller
 
         // Отправляем письмо с данными заказа
         try {
-            Mail::to('ytlemon290@gmail.com')->send(new OrderSubmitted($orderData));
+            Mail::to('zmartcomua@gmail.com')->send(new OrderSubmitted($orderData));
             \Log::info('Order email sent successfully');
         } catch (\Exception $e) {
             \Log::error('Failed to send order email: ' . $e->getMessage());

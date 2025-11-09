@@ -129,7 +129,7 @@
                     <p class="text-sm text-gray-500">
                         Артикул: <span class="font-medium text-gray-900">{{ $product->articule ?? 'Не вказано' }}</span>
                     </p>
-                    @if ($product->availability == 1)
+                    @if ($product->availability == 'in_stock')
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
                             <i class="fas fa-check-circle mr-1"></i>В наявності
                         </span>
