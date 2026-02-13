@@ -90,8 +90,19 @@
                         </div>
                         <div>
                             <div class="text-xs text-gray-500 mb-1">Телефон</div>
-                            <a href="tel:+380730777572" class="text-gray-300 hover:text-emerald-500 transition-colors font-medium">
+                            <a href="tel:0730777572" class="text-gray-300 hover:text-emerald-500 transition-colors font-medium">
                                 +38 073-077-75-72
+                            </a>
+                        </div>
+                    </li>
+                    <li class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fas fa-phone text-emerald-500 text-sm"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs text-gray-500 mb-1">Телефон</div>
+                            <a href="tel:0770777582" class="text-gray-300 hover:text-emerald-500 transition-colors font-medium">
+                                +38 077-077-75-82
                             </a>
                         </div>
                     </li>
@@ -114,7 +125,7 @@
                             <div class="text-xs text-gray-500 mb-1">Адреса</div>
                             <span class="text-gray-300">
                                 Одеса, пром ринок "7 км",<br>
-                                вул. Фабрична, маг. №2178
+                                вул. Фабрична, маг. №2523
                             </span>
                         </div>
                     </li>

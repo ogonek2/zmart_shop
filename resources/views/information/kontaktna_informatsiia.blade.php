@@ -66,7 +66,7 @@
                                     <h3 class="text-xl font-bold text-gray-900 mb-4">Адреса</h3>
                                     <p class="text-gray-700 leading-relaxed">
                                         Одеса, пром ринок "7 км",<br>
-                                        вул.Фабрична, маг. №2178
+                                        вул.Фабрична, маг. №2523
                                     </p>
                                 </div>
 

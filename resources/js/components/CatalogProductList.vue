@@ -38,8 +38,8 @@
                 </div>
                 
                 <!-- Индикатор наличия -->
-                <div v-if="product.availability === 2" class="availability-badge">
-                    <i class="fas fa-times-circle me-1"></i>Нет в наличии
+                <div v-if="product.availability ==" class="availability-badge">
+                    <i class="fas fa-times-circle me-1"></i>Немає в наявності
                 </div>
 
                 <!-- Кнопка избранного -->
