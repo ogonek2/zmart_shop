@@ -37,8 +37,8 @@
                     <i class="fas fa-tag me-1"></i>-{{ product.discount }}%
                 </div>
                 
-                <!-- Индикатор наличия -->
-                <div v-if="product.availability ==" class="availability-badge">
+                <!-- Индикатор отсутствия товара -->
+                <div v-if="!product.availability" class="availability-badge">
                     <i class="fas fa-times-circle me-1"></i>Немає в наявності
                 </div>
 
