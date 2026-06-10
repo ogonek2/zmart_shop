@@ -235,18 +235,50 @@
                         @endif
 
                         {{-- Pagination Elements --}}
-                        @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
-                            @if ($page == $products->currentPage())
+                        @php
+                            $currentPage = $products->currentPage();
+                            $lastPage = $products->lastPage();
+                            $onEachSide = 2; // Количество страниц с каждой стороны от текущей
+                            
+                            $startPage = max(1, $currentPage - $onEachSide);
+                            $endPage = min($lastPage, $currentPage + $onEachSide);
+                        @endphp
+                        
+                        {{-- Первая страница --}}
+                        @if ($startPage > 1)
+                            <a href="{{ $products->url(1) }}" 
+                               class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:border-emerald-500 hover:text-emerald-600 transition-all">
+                                1
+                            </a>
+                            @if ($startPage > 2)
+                                <span class="px-2 py-2 text-gray-500">...</span>
+                            @endif
+                        @endif
+                        
+                        {{-- Страницы вокруг текущей --}}
+                        @for ($page = $startPage; $page <= $endPage; $page++)
+                            @if ($page == $currentPage)
                                 <span class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg font-bold shadow-lg">
                                     {{ $page }}
                                 </span>
                             @else
-                                <a href="{{ $url }}" 
+                                <a href="{{ $products->url($page) }}" 
                                    class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:border-emerald-500 hover:text-emerald-600 transition-all">
                                     {{ $page }}
                                 </a>
                             @endif
-                        @endforeach
+                        @endfor
+                        
+                        {{-- Последняя страница --}}
+                        @if ($endPage < $lastPage)
+                            @if ($endPage < $lastPage - 1)
+                                <span class="px-2 py-2 text-gray-500">...</span>
+                            @endif
+                            <a href="{{ $products->url($lastPage) }}" 
+                               class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:border-emerald-500 hover:text-emerald-600 transition-all">
+                                {{ $lastPage }}
+                            </a>
+                        @endif
 
                         {{-- Next Page Link --}}
                         @if ($products->hasMorePages())
