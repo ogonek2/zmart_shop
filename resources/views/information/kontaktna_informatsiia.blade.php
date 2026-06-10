@@ -50,8 +50,11 @@
                                         <i class="fas fa-phone text-white text-xl"></i>
                                     </div>
                                     <h3 class="text-xl font-bold text-gray-900 mb-4">Телефон</h3>
-                                    <a href="tel:+380730777572" class="text-emerald-600 hover:text-emerald-700 transition-colors text-lg font-semibold block mb-4">
-                                        +380730777572
+                                    <a href="tel:0730777572" class="text-emerald-600 hover:text-emerald-700 transition-colors text-lg font-semibold block mb-2">
+                                        +38 073-077-75-72
+                                    </a>
+                                    <a href="tel:0770777582" class="text-emerald-600 hover:text-emerald-700 transition-colors text-lg font-semibold block mb-4">
+                                        +38 077-077-75-82
                                     </a>
                                     <button class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl">
                                         Замовити дзвінок

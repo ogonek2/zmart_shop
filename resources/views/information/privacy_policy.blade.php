@@ -162,8 +162,8 @@
                             <p class="text-gray-700 mb-4">Якщо у вас виникли питання щодо Політики конфіденційності, звертайтесь:</p>
                             <ul class="list-disc list-inside space-y-2 text-gray-700 mb-8">
                                 <li><strong>Email:</strong> zmartcomua@gmail.com</li>
-                                <li><strong>Телефон:</strong> +380730777572</li>
-                                <li><strong>Адреса:</strong> Одеса, промисловий ринок «7 км», вул. Фабрична, маг. №2178</li>
+                                <li><strong>Телефон:</strong> +38 073-077-75-72, +38 077-077-75-82</li>
+                                <li><strong>Адреса:</strong> Одеса, промисловий ринок «7 км», вул. Фабрична, маг. №2523</li>
                             </ul>
 
                             <div class="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl p-6 text-center">

@@ -124,7 +124,7 @@
                                     name="_Hlk174098352">3171422612</a>), який діє відповідно до чинного законодавства
                                 України,
                                 місцезнаходження якого: 65000, Одеська обл., м. Одеса, промисловий ринок «7&nbsp;км», вул.
-                                Фабрична, магазин №2178.</span></p>
+                                Фабрична, магазин №2523.</span></p>
 
                         <p align="center" style="margin:0cm; text-align:center"><br>
                             <b><span style="font-family:&quot;Arial&quot;,sans-serif">2.</span></b> <b><span
@@ -626,7 +626,7 @@
                         </p>
 
                         <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">65000,
-                                Одеська обл., м. Одеса, промисловий ринок «7&nbsp;км», вул. Фабрична, магазин №2178</span>
+                                Одеська обл., м. Одеса, промисловий ринок «7&nbsp;км», вул. Фабрична, магазин №2523</span>
                         </p>
 
                         <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">IBAN (р/р):
@@ -639,7 +639,7 @@
                                 3171422612</span></p>
 
                         <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">Телефон:
-                                +380730777572</span></p>
+                                +38 073-077-75-72, +38 077-077-75-82</span></p>
                         </div>
                     </div>
                 </div>

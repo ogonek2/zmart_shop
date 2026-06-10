@@ -9,9 +9,15 @@
                         <i class="fas fa-map-marker-alt text-yellow-300"></i>
                         <span>Одеса</span>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-phone text-yellow-300"></i>
-                        <span>+380730777572</span>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-phone text-yellow-300"></i>
+                            <a href="tel:0730777572" class="hover:text-yellow-300 transition-colors">+38 073-077-75-72</a>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-phone text-yellow-300"></i>
+                            <a href="tel:0770777582" class="hover:text-yellow-300 transition-colors">+38 077-077-75-82</a>
+                        </div>
                     </div>
                 </div>
                 
