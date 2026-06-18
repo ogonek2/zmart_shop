@@ -15,12 +15,18 @@ class GenerateProductFeed extends Command
     {
         $fileName = $this->argument('filename') ?? 'product_feed.xml';
 
-        ProductFeedService::generate($fileName);
+        $stats = ProductFeedService::generate($fileName);
 
         $this->info(sprintf(
-            'Google product feed generated: %s',
-            storage_path('app/public/' . ltrim($fileName, '/'))
+            'Google product feed generated: %d exported, %d skipped of %d products.',
+            $stats['exported'],
+            $stats['skipped'],
+            $stats['total']
         ));
+
+        foreach ($stats['paths'] as $path) {
+            $this->line(' - ' . $path);
+        }
 
         return self::SUCCESS;
     }

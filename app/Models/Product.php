@@ -186,11 +186,7 @@ class Product extends Model
             }
         });
 
-        static::saved(function ($product) {
-            ProductFeedService::generate();
-        });
-
-        static::deleted(function ($product) {
+        static::deleted(function () {
             ProductFeedService::generate();
         });
     }
