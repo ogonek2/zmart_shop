@@ -186,6 +186,10 @@ class Product extends Model
             }
         });
 
+        static::saved(function () {
+            ProductFeedService::generate();
+        });
+
         static::deleted(function () {
             ProductFeedService::generate();
         });
