@@ -1,252 +1,240 @@
-<template>
-    <!-- Overlay -->
-    <div v-if="visible" class="fixed inset-0 bg-black bg-opacity-50 z-50 transition-opacity" @click="toggle"></div>
-    
-    <!-- Mini Cart Panel -->
-    <div :class="panelClass" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 transform transition-transform duration-300 flex flex-col">
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-6 flex items-center justify-between">
-            <h3 class="text-xl font-bold flex items-center">
-                <i class="fas fa-shopping-cart mr-3"></i>
-                Кошик
-            </h3>
-            <button @click="toggle" class="text-white hover:text-yellow-300 transition-colors">
-                <i class="fas fa-times text-2xl"></i>
-            </button>
+﻿<template>
+  <div class="zcart" :hidden="!visible">
+    <div class="zcart__backdrop" @click="toggle"></div>
+
+    <div class="zcart__modal" role="dialog" aria-modal="true" aria-label="Кошик">
+      <div class="zcart__head">
+        <h3>Кошик</h3>
+        <button type="button" class="zcart__icon" @click="toggle" aria-label="Закрити">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <template v-if="cart.length">
+        <div class="zcart__toolbar">
+          <label class="zcart__check">
+            <input type="checkbox" :checked="allSelected" @change="toggleAll">
+            <span>Вибрано {{ selectedIds.length }} з {{ cart.length }}</span>
+          </label>
+          <button
+            type="button"
+            class="zcart__icon"
+            :disabled="!selectedIds.length"
+            @click="removeSelected"
+            aria-label="Видалити вибрані"
+          >
+            <i class="fas fa-trash"></i>
+          </button>
         </div>
 
-        <!-- Cart Items -->
-        <div class="flex-1 overflow-y-auto p-6">
-            <!-- Items List -->
-            <div v-if="cart.length > 0" class="space-y-4">
-                <div v-for="item in cart" :key="item.id" 
-                     class="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all">
-                    <div class="flex gap-4">
-                        <!-- Image -->
-                        <div class="flex-shrink-0">
-                            <div class="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg overflow-hidden">
-                                <img v-if="item.image" 
-                                     :src="item.image" 
-                                     :alt="item.name"
-                                     class="w-full h-full object-cover" />
-                                <div v-else class="w-full h-full flex items-center justify-center">
-                                    <i class="fas fa-image text-2xl text-gray-400"></i>
-                                </div>
-                            </div>
-                        </div>
+        <div class="zcart__list">
+          <article v-for="item in cart" :key="item.id" class="zcart__item">
+            <label class="zcart__check zcart__check--solo">
+              <input
+                type="checkbox"
+                :checked="selectedIds.includes(String(item.id))"
+                @change="toggleSelect(item.id)"
+              >
+            </label>
 
-                        <!-- Info -->
-                        <div class="flex-1 min-w-0">
-                            <h4 class="font-bold text-gray-900 text-sm mb-2 line-clamp-2">{{ item.name }}</h4>
-                            
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="text-lg font-bold text-emerald-600">
-                                    {{ formatPrice(getItemPrice(item)) }} ₴
-                                </span>
-                            </div>
-                            
-                            <!-- Wholesale Badge -->
-                            <div v-if="isWholesaleActive(item)" 
-                                 class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-teal-100 text-teal-800">
-                                <i class="fas fa-boxes mr-1"></i>Оптова ціна
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Quantity Controls -->
-                    <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
-                        <div class="flex items-center gap-3">
-                            <button @click="decrease(item.id)" 
-                                    class="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-center transition-colors">
-                                <i class="fas fa-minus text-gray-600"></i>
-                            </button>
-                            <span class="font-bold text-gray-900 min-w-[2rem] text-center">{{ item.quantity }}</span>
-                            <button @click="increase(item.id)" 
-                                    class="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-center transition-colors">
-                                <i class="fas fa-plus text-gray-600"></i>
-                            </button>
-                        </div>
-                        
-                        <button @click="remove(item.id)" 
-                                class="text-red-500 hover:text-red-700 transition-colors">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
+            <div class="zcart__img">
+              <img v-if="item.image" :src="item.image" :alt="item.name">
+              <i v-else class="fas fa-image"></i>
             </div>
 
-            <!-- Empty State -->
-            <div v-else class="text-center py-12">
-                <div class="inline-flex items-center justify-center w-24 h-24 bg-gray-100 rounded-full mb-4">
-                    <i class="fas fa-shopping-cart text-4xl text-gray-400"></i>
-                </div>
-                <h4 class="text-lg font-bold text-gray-900 mb-2">Кошик порожній</h4>
-                <p class="text-gray-600 mb-6">Додайте товари для оформлення замовлення</p>
-                <button @click="toggle" 
-                        class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-xl font-bold hover:from-emerald-600 hover:to-teal-600 transition-all">
-                    <i class="fas fa-shopping-bag mr-2"></i>
-                    Почати покупки
-                </button>
+            <div class="zcart__main">
+              <h4>{{ item.name }}</h4>
+              <p v-if="item.articule" class="zcart__art">Артикул: {{ item.articule }}</p>
+              <p v-if="isWholesaleActive(item)" class="zcart__badge">Оптова ціна</p>
             </div>
+
+            <div class="zcart__side">
+              <div class="zcart__qty" role="group" aria-label="Кількість">
+                <button type="button" @click="decrease(item.id)" aria-label="Менше">−</button>
+                <input
+                  type="number"
+                  min="1"
+                  :value="item.quantity"
+                  @change="setQty(item.id, $event)"
+                >
+                <button type="button" @click="increase(item.id)" aria-label="Більше">+</button>
+              </div>
+
+              <div class="zcart__price">
+                <strong>{{ formatPrice(lineTotal(item)) }} ₴</strong>
+                <small>{{ formatPrice(getItemPrice(item)) }} ₴ / шт</small>
+              </div>
+
+              <button type="button" class="zcart__icon" @click="remove(item.id)" aria-label="Видалити">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </article>
         </div>
 
-        <!-- Footer with Total and Checkout -->
-        <div v-if="cart.length > 0" class="border-t border-gray-200 p-6 bg-gray-50">
-            <div class="flex items-center justify-between mb-4">
-                <span class="text-gray-600 font-medium">Всього:</span>
-                <span class="text-3xl font-bold text-gray-900">{{ formatPrice(totalPrice) }} ₴</span>
+        <div class="zcart__foot">
+          <button type="button" class="zcart__link" @click="toggle">Продовжити покупки</button>
+
+          <div class="zcart__checkout">
+            <div class="zcart__sum">
+              <span>Разом</span>
+              <strong>{{ formatPrice(selectedTotal) }} ₴</strong>
             </div>
-            
-            <button @click="goToCheckout" 
-                    :disabled="isBelowMinimum"
-                    :class="[
-                        'w-full text-white py-4 rounded-xl font-bold transition-all shadow-lg',
-                        isBelowMinimum 
-                            ? 'bg-gray-300 cursor-not-allowed opacity-80' 
-                            : 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600'
-                    ]">
-                <i class="fas fa-credit-card mr-2"></i>
-                Оформити замовлення
-            </button>
-            <p v-if="isBelowMinimum" class="mt-3 text-sm text-red-600 text-center">
-                Мінімальна сума замовлення — 1000 ₴. Додайте товарів ще на {{ formatPrice(amountToReachMinimum) }} ₴.
+            <p v-if="isBelowMinimum" class="zcart__hint">
+              Мінімум 1000 ₴. Ще {{ formatPrice(amountToReachMinimum) }} ₴
             </p>
-            
-            <button @click="toggle" 
-                    class="w-full mt-3 border-2 border-gray-300 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-50 transition-all">
-                Продовжити покупки
+            <button
+              type="button"
+              class="zcart__btn"
+              :disabled="isBelowMinimum || !selectedIds.length"
+              @click="goToCheckout"
+            >
+              Оформити замовлення
             </button>
+          </div>
         </div>
+      </template>
+
+      <div v-else class="zcart__empty">
+        <i class="fas fa-shopping-bag"></i>
+        <p>Кошик порожній</p>
+        <button type="button" class="zcart__btn" @click="toggle">Продовжити покупки</button>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
 const MIN_ORDER_TOTAL = 1000;
 
 export default {
-    name: "MiniCart",
-    data() {
-        return {
-            cart: [],
-            visible: false
-        };
+  name: 'MiniCart',
+  data() {
+    return {
+      cart: [],
+      visible: false,
+      selectedIds: [],
+    };
+  },
+  computed: {
+    allSelected() {
+      return this.cart.length > 0 && this.selectedIds.length === this.cart.length;
     },
-    computed: {
-        panelClass() {
-            return this.visible ? 'translate-x-0' : 'translate-x-full';
-        },
-        totalPrice() {
-            const total = this.cart.reduce((sum, item) => {
-                const price = this.getItemPrice(item);
-                const quantity = parseInt(item.quantity) || 1;
-                return sum + (price * quantity);
-            }, 0);
-            return Number(total.toFixed(2));
-        },
-        isBelowMinimum() {
-            return this.totalPrice < MIN_ORDER_TOTAL;
-        },
-        amountToReachMinimum() {
-            const difference = MIN_ORDER_TOTAL - this.totalPrice;
-            return difference > 0 ? Math.ceil(difference) : 0;
-        }
+    selectedItems() {
+      return this.cart.filter((item) => this.selectedIds.includes(String(item.id)));
     },
-    mounted() {
-        this.loadCart();
-        window.addEventListener('cart-updated', this.loadCart);
-        window.addEventListener('toggle-mini-cart', this.toggle);
+    selectedTotal() {
+      return Number(this.selectedItems.reduce((sum, item) => {
+        return sum + this.lineTotal(item);
+      }, 0).toFixed(2));
     },
-    unmounted() {
-        window.removeEventListener('cart-updated', this.loadCart);
-        window.removeEventListener('toggle-mini-cart', this.toggle);
+    isBelowMinimum() {
+      return this.selectedTotal < MIN_ORDER_TOTAL;
     },
-    methods: {
-        loadCart() {
-            try {
-                const saved = localStorage.getItem('cart');
-                this.cart = saved ? JSON.parse(saved) : [];
-            } catch (e) {
-                console.error('Error loading cart:', e);
-                this.cart = [];
-            }
-        },
-        saveCart() {
-            localStorage.setItem('cart', JSON.stringify(this.cart));
-            window.dispatchEvent(new Event('cart-updated'));
-        },
-        toggle() {
-            this.visible = !this.visible;
-            document.body.style.overflow = this.visible ? 'hidden' : '';
-        },
-        increase(itemId) {
-            const item = this.cart.find(item => item.id == itemId);
-            if (item) {
-                item.quantity++;
-                this.saveCart();
-            }
-        },
-        decrease(itemId) {
-            const item = this.cart.find(item => item.id == itemId);
-            if (item && item.quantity > 1) {
-                item.quantity--;
-                this.saveCart();
-            }
-        },
-        remove(itemId) {
-            const index = this.cart.findIndex(item => item.id == itemId);
-            if (index > -1) {
-                this.cart.splice(index, 1);
-                this.saveCart();
-                
-                if (this.$toast) {
-                    this.$toast.info('Видалено з кошика');
-                }
-            }
-        },
-        getItemPrice(item) {
-            if (item.isWholesale && item.wholesalePrice && item.wholesaleMinQuantity) {
-                if (item.quantity >= item.wholesaleMinQuantity) {
-                    return parseFloat(item.wholesalePrice);
-                }
-            }
-            
-            let price = item.price;
-            if (typeof price === 'string') {
-                price = parseFloat(price.replace(/[^\d.,]/g, '').replace(',', '.'));
-            }
-            if (isNaN(price) || typeof price !== 'number') {
-                price = 0;
-            }
-            return price;
-        },
-        isWholesaleActive(item) {
-            return item.isWholesale && 
-                   item.wholesalePrice && 
-                   item.wholesaleMinQuantity && 
-                   item.quantity >= item.wholesaleMinQuantity;
-        },
-        formatPrice(price) {
-            return Math.round(price).toLocaleString('uk-UA');
-        },
-        goToCheckout() {
-            if (this.isBelowMinimum) {
-                if (this.$toast) {
-                    this.$toast.warning('Мінімальна сума замовлення — 1000 ₴');
-                }
-                return;
-            }
-            window.location.href = '/checkout';
-        }
-    }
+    amountToReachMinimum() {
+      return Math.max(0, Math.ceil(MIN_ORDER_TOTAL - this.selectedTotal));
+    },
+  },
+  mounted() {
+    this.loadCart();
+    window.addEventListener('cart-updated', this.loadCart);
+    window.addEventListener('toggle-mini-cart', this.toggle);
+  },
+  unmounted() {
+    window.removeEventListener('cart-updated', this.loadCart);
+    window.removeEventListener('toggle-mini-cart', this.toggle);
+  },
+  methods: {
+    loadCart() {
+      try {
+        this.cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      } catch (e) {
+        this.cart = [];
+      }
+      const ids = this.cart.map((item) => String(item.id));
+      this.selectedIds = this.selectedIds.filter((id) => ids.includes(id));
+      if (!this.selectedIds.length) this.selectedIds = [...ids];
+    },
+    saveCart() {
+      localStorage.setItem('cart', JSON.stringify(this.cart));
+      window.dispatchEvent(new Event('cart-updated'));
+    },
+    toggle() {
+      this.visible = !this.visible;
+      document.body.style.overflow = this.visible ? 'hidden' : '';
+      if (this.visible) this.loadCart();
+    },
+    toggleSelect(id) {
+      const key = String(id);
+      if (this.selectedIds.includes(key)) {
+        this.selectedIds = this.selectedIds.filter((row) => row !== key);
+      } else {
+        this.selectedIds = [...this.selectedIds, key];
+      }
+    },
+    toggleAll(event) {
+      this.selectedIds = event.target.checked
+        ? this.cart.map((item) => String(item.id))
+        : [];
+    },
+    increase(id) {
+      const item = this.cart.find((row) => row.id == id);
+      if (item) {
+        item.quantity = (item.quantity || 1) + 1;
+        this.saveCart();
+      }
+    },
+    decrease(id) {
+      const item = this.cart.find((row) => row.id == id);
+      if (item && item.quantity > 1) {
+        item.quantity -= 1;
+        this.saveCart();
+      }
+    },
+    setQty(id, event) {
+      const item = this.cart.find((row) => row.id == id);
+      if (!item) return;
+      const value = parseInt(event.target.value, 10);
+      item.quantity = Number.isFinite(value) && value > 0 ? value : 1;
+      event.target.value = item.quantity;
+      this.saveCart();
+    },
+    remove(id) {
+      this.cart = this.cart.filter((row) => row.id != id);
+      this.selectedIds = this.selectedIds.filter((row) => row !== String(id));
+      this.saveCart();
+    },
+    removeSelected() {
+      if (!this.selectedIds.length) return;
+      this.cart = this.cart.filter((row) => !this.selectedIds.includes(String(row.id)));
+      this.selectedIds = [];
+      this.saveCart();
+    },
+    getItemPrice(item) {
+      if (item.isWholesale && item.wholesalePrice && item.wholesaleMinQuantity
+        && item.quantity >= item.wholesaleMinQuantity) {
+        return parseFloat(item.wholesalePrice) || 0;
+      }
+      let price = item.price;
+      if (typeof price === 'string') {
+        price = parseFloat(price.replace(/[^\d.,]/g, '').replace(',', '.'));
+      }
+      return Number.isFinite(price) ? price : 0;
+    },
+    isWholesaleActive(item) {
+      return !!(item.isWholesale && item.wholesalePrice && item.wholesaleMinQuantity
+        && item.quantity >= item.wholesaleMinQuantity);
+    },
+    lineTotal(item) {
+      return this.getItemPrice(item) * (parseInt(item.quantity, 10) || 1);
+    },
+    formatPrice(price) {
+      return Math.round(price || 0).toLocaleString('uk-UA');
+    },
+    goToCheckout() {
+      if (this.isBelowMinimum || !this.selectedIds.length) return;
+      window.location.href = '/checkout';
+    },
+  },
 };
 </script>
-
-<style scoped>
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    line-clamp: 2;
-    overflow: hidden;
-}
-</style>

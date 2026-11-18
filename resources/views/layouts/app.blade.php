@@ -12,225 +12,16 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Onest:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ time() }}" onload="console.log('App CSS загружен')" onerror="console.error('Ошибка загрузки App CSS')">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" onload="console.log('Swiper CSS загружен')" onerror="console.error('Ошибка загрузки Swiper CSS')" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onload="console.log('Font Awesome CSS загружен')" onerror="console.error('Ошибка загрузки Font Awesome CSS')">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ time() }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root {
-            --primary-color: #2563eb;
-            --primary-hover: #1d4ed8;
-            --secondary-color: #f59e0b;
-            --secondary-hover: #d97706;
-            --success-color: #10b981;
-            --danger-color: #ef4444;
-            --warning-color: #f59e0b;
-            --info-color: #3b82f6;
-            --light-color: #f8fafc;
-            --dark-color: #1e293b;
-            --gray-color: #64748b;
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: var(--dark-color);
-            background-color: #ffffff;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            line-height: 1.3;
-        }
-
-        .btn {
-            font-weight: 500;
-            border-radius: 8px;
-            padding: 0.75rem 1.5rem;
-            transition: all 0.2s ease-in-out;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-secondary {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--secondary-hover);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-outline-primary {
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            background-color: transparent;
-        }
-
-        .btn-outline-primary:hover {
-            background-color: var(--primary-color);
-            color: white;
-            transform: translateY(-1px);
-        }
-
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .navbar {
-            box-shadow: var(--shadow-sm);
-        }
-
-        .navbar-brand h1 {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 2rem;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .swiper-button-next::after,
-        .swiper-button-prev::after {
-            font-size: 14px;
-        }
-
-        .swiper-button-next,
-        .swiper-button-prev {
-            cursor: pointer;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            width: 40px;
-            height: 40px;
-            padding: 15px;
-            border-radius: 50%;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .swiper-button-next:hover,
-        .swiper-button-prev:hover {
-            transform: scale(1.1);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .form-control {
-            border-radius: 8px;
-            border: 2px solid var(--border-color);
-            padding: 0.75rem 1rem;
-            transition: all 0.2s ease;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
-        }
-
-        .badge {
-            border-radius: 6px;
-            font-weight: 500;
-            padding: 0.5rem 0.75rem;
-        }
-
-        .text-gradient {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .bg-gradient-primary {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        }
-
-        .shadow-custom {
-            box-shadow: var(--shadow-lg);
-        }
-
-        .rounded-custom {
-            border-radius: 16px;
-        }
-
-        .transition-all {
-            transition: all 0.3s ease;
-        }
-
-        .hover-lift:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
-        }
-        #submit_cart_ch_form{
+        #submit_cart_ch_form {
             display: none !important;
-        }
-
-        /* Анимации */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        /* Кастомные скроллбары */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-hover);
         }
 
         .callback-modal {
@@ -242,6 +33,16 @@
 
         .callback-modal.is-visible {
             display: flex;
+        }
+
+        .navbar-brand-mark {
+            font-family: 'Onest', 'Golos Text', sans-serif;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .navbar-brand-mark .accent {
+            color: #F5C400;
         }
     </style>
 
@@ -259,7 +60,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     @yield('styles')
 </head>
 
-<body class="bg-light">
+<body class="bg-white">
     <div id="app" class="wrapper">
         @include('includes.main.nav')
         <div class="content-wrapper">
@@ -287,17 +88,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         @csrf
                         <div>
                             <label for="callback-name" class="block text-sm font-semibold text-gray-700 mb-2">Ім'я *</label>
-                            <input id="callback-name" name="name" type="text" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="Ваше ім'я">
+                            <input id="callback-name" name="name" type="text" required class="w-full px-4 py-3 border-2 border-brand-line rounded-brand focus:border-brand-yellow focus:ring-0 transition-colors" placeholder="Ваше ім'я">
                         </div>
                         <div>
                             <label for="callback-phone" class="block text-sm font-semibold text-gray-700 mb-2">Номер телефону *</label>
-                            <input id="callback-phone" name="phone" type="text" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="+380...">
+                            <input id="callback-phone" name="phone" type="text" required class="w-full px-4 py-3 border-2 border-brand-line rounded-brand focus:border-brand-yellow focus:ring-0 transition-colors" placeholder="+380...">
                         </div>
                         <div>
                             <label for="callback-message" class="block text-sm font-semibold text-gray-700 mb-2">Повідомлення <span class="text-gray-500 font-normal">(необов'язково)</span></label>
-                            <textarea id="callback-message" name="message" rows="3" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="Коротко опишіть питання"></textarea>
+                            <textarea id="callback-message" name="message" rows="3" class="w-full px-4 py-3 border-2 border-brand-line rounded-brand focus:border-brand-yellow focus:ring-0 transition-colors" placeholder="Коротко опишіть питання"></textarea>
                         </div>
-                        <button id="callbackSubmit" type="submit" class="w-full inline-flex items-center justify-center bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-200 shadow-lg hover:shadow-xl">
+                        <button id="callbackSubmit" type="submit" class="w-full btn-primary">
                             <span id="callbackSubmitText">Відправити</span>
                             <svg id="callbackSpinner" class="hidden ml-2 h-5 w-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -329,6 +130,110 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     {{-- Vue --}}
     <script src="{{ mix('js/app.js') }}" onload="console.log('Vue app.js загружен')" onerror="console.error('Ошибка загрузки Vue app.js')"></script>
+
+    <script>
+        window.toggleWishlist = window.toggleWishlist || function(productId) {
+            try {
+                const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+                const index = wishlist.findIndex((item) => item.id == productId);
+                if (index > -1) {
+                    wishlist.splice(index, 1);
+                } else {
+                    wishlist.push({ id: productId });
+                }
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                window.dispatchEvent(new Event('wishlist-updated'));
+            } catch (e) {
+                console.error(e);
+            }
+        };
+
+        window.addToCart = window.addToCart || function(productId, name, price, image, articule, availability, quantity = 1,
+            isWholesale = false, wholesalePrice = 0, wholesaleMinQuantity = 0) {
+            try {
+                const qty = Math.max(1, parseInt(quantity, 10) || 1);
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const existing = cart.find((item) => item.id == productId);
+                if (existing) {
+                    existing.quantity = (existing.quantity || 1) + qty;
+                } else {
+                    const item = {
+                        id: productId,
+                        name,
+                        price,
+                        image,
+                        articule,
+                        availability,
+                        quantity: qty,
+                    };
+                    if (isWholesale) {
+                        item.isWholesale = true;
+                        item.wholesalePrice = wholesalePrice;
+                        item.wholesaleMinQuantity = wholesaleMinQuantity;
+                    }
+                    cart.push(item);
+                }
+                localStorage.setItem('cart', JSON.stringify(cart));
+                window.dispatchEvent(new Event('cart-updated'));
+                window.dispatchEvent(new CustomEvent('show-toast', {
+                    detail: {
+                        title: 'Додано в кошик',
+                        message: name || 'Товар додано',
+                        type: 'success',
+                        product: {
+                            name: name || 'Товар',
+                            price: price,
+                            image: image || '',
+                        },
+                        duration: 3200,
+                    },
+                }));
+            } catch (e) {
+                console.error(e);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('[data-pcard-qty]').forEach((wrap) => {
+                if (wrap.dataset.bound === '1') return;
+                wrap.dataset.bound = '1';
+                const input = wrap.querySelector('[data-qty-input]');
+                if (!input) return;
+                wrap.querySelector('[data-qty-minus]')?.addEventListener('click', () => {
+                    input.value = Math.max(1, (parseInt(input.value, 10) || 1) - 1);
+                });
+                wrap.querySelector('[data-qty-plus]')?.addEventListener('click', () => {
+                    input.value = Math.max(1, (parseInt(input.value, 10) || 1) + 1);
+                });
+                input.addEventListener('change', () => {
+                    const value = parseInt(input.value, 10);
+                    input.value = Number.isFinite(value) && value > 0 ? value : 1;
+                });
+            });
+
+            document.querySelectorAll('[data-add-cart]').forEach((btn) => {
+                if (btn.dataset.bound === '1') return;
+                btn.dataset.bound = '1';
+                btn.addEventListener('click', () => {
+                    const card = btn.closest('.pcard');
+                    const qtyInput = card?.querySelector('[data-qty-input]');
+                    const qty = Math.max(1, parseInt(qtyInput?.value || '1', 10) || 1);
+                    window.addToCart(
+                        btn.dataset.id,
+                        btn.dataset.name,
+                        parseFloat(btn.dataset.price || '0'),
+                        btn.dataset.image || '',
+                        btn.dataset.articule || 'Не вказано',
+                        btn.dataset.availability || 'in_stock',
+                        qty,
+                        btn.dataset.wholesale === '1',
+                        parseFloat(btn.dataset.wholesalePrice || '0'),
+                        parseInt(btn.dataset.wholesaleMin || '0', 10)
+                    );
+                });
+            });
+        });
+    </script>
     
     {{-- Fallback для Vue.js компонентов --}}
     <script>
@@ -394,64 +299,179 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     @yield('scripts')
     
     <script>
-    // Mobile Menu Functions
-    function toggleMobileMenu() {
-        const menu = document.getElementById('mobileMenu');
-        const overlay = document.getElementById('mobileMenuOverlay');
-        
-        if (menu && overlay) {
-            menu.classList.toggle('translate-x-full');
-            overlay.classList.toggle('hidden');
-            document.body.classList.toggle('overflow-hidden');
-        }
-    }
+    (function () {
+        if (window.__ZH_NAV_BOUND__) return;
+        window.__ZH_NAV_BOUND__ = true;
 
-    function closeMobileMenu() {
-        const menu = document.getElementById('mobileMenu');
-        const overlay = document.getElementById('mobileMenuOverlay');
-        
-        if (menu && overlay) {
-            menu.classList.add('translate-x-full');
-            overlay.classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
-        }
-    }
+        const cats = () => window.__MEGA_CATS__ || [];
+        let activeId = null;
+        const previewCache = {};
 
-    // Mobile Catalog Functions
-    function toggleMobileCatalog() {
-        const items = document.getElementById('mobileCatalogItems');
-        const icon = document.getElementById('mobileCatalogIcon');
-        
-        if (items && icon) {
-            items.classList.toggle('hidden');
-            icon.classList.toggle('rotate-180');
-        }
-    }
+        const escapeHtml = (value) => String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
 
-    // Desktop Catalog Menu Functions
-    function toggleCatalogMenu() {
-        const menu = document.getElementById('catalogMenu');
-        const overlay = document.getElementById('catalogMenuOverlay');
-        
-        if (menu && overlay) {
-            menu.classList.remove('-translate-x-full');
-            menu.classList.add('translate-x-0');
-            overlay.classList.remove('hidden');
-            document.body.classList.add('overflow-hidden');
-        }
-    }
-    
-    function closeCatalogMenu() {
-        const menu = document.getElementById('catalogMenu');
-        const overlay = document.getElementById('catalogMenuOverlay');
-        
-        if (menu && overlay) {
-            menu.classList.remove('translate-x-0');
-            menu.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
-        }
-    }
+        const setBodyLock = (locked) => {
+            document.body.style.overflow = locked ? 'hidden' : '';
+        };
+
+        const renderFlyout = async (cat) => {
+            const flyout = document.getElementById('zh-mega-flyout');
+            if (!flyout || !cat) return;
+            const children = cat.children || [];
+            let html = `
+                <div class="cshop-mega__flyout-head">
+                    <a href="/catalog/categoriya/${encodeURIComponent(cat.url)}" class="cshop-mega__flyout-title" data-mega-close>${escapeHtml(cat.name)}</a>
+                    <a href="/catalog/categoriya/${encodeURIComponent(cat.url)}" class="cshop-mega__flyout-more" data-mega-close>
+                        Усі товари категорії <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            `;
+
+            if (children.length) {
+                html += '<div class="cshop-mega__flyout-grid">';
+                children.forEach((child) => {
+                    html += `<div class="cshop-mega__group">
+                        <a href="/catalog/categoriya/${encodeURIComponent(child.url)}" class="cshop-mega__group-title" data-mega-close>${escapeHtml(child.name)}</a>`;
+                    if ((child.children || []).length) {
+                        html += '<div class="cshop-mega__group-links">';
+                        child.children.forEach((grand) => {
+                            html += `<a href="/catalog/categoriya/${encodeURIComponent(grand.url)}" class="cshop-mega__sub" data-mega-close>${escapeHtml(grand.name)}</a>`;
+                        });
+                        html += '</div>';
+                    }
+                    html += '</div>';
+                });
+                html += '</div>';
+                flyout.innerHTML = html;
+                return;
+            }
+
+            flyout.innerHTML = html + '<div class="cshop-mega__preview-loading"><div class="cshop__spinner"></div></div>';
+            if (!Object.prototype.hasOwnProperty.call(previewCache, cat.id)) {
+                try {
+                    const response = await fetch(`/catalog/categoriya/${encodeURIComponent(cat.url)}?preview=1`, {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' },
+                    });
+                    const data = response.ok ? await response.json() : { products: [] };
+                    previewCache[cat.id] = data.products || [];
+                } catch (e) {
+                    previewCache[cat.id] = [];
+                }
+            }
+
+            const products = previewCache[cat.id] || [];
+            if (!products.length) {
+                flyout.innerHTML = html + '<p class="cshop__hint">У цій категорії поки немає товарів</p>';
+                return;
+            }
+
+            html += '<div class="cshop-mega__minis">';
+            products.forEach((item) => {
+                const price = Math.round(parseFloat(item.price) || 0).toLocaleString('uk-UA');
+                const img = item.image_path
+                    ? `<img src="${escapeHtml(item.image_path)}" alt="${escapeHtml(item.name)}" loading="lazy">`
+                    : '<i class="fas fa-image"></i>';
+                html += `<a href="/catalog/${encodeURIComponent(item.url)}" class="cshop-mini" data-mega-close>
+                    <span class="cshop-mini__img">${img}</span>
+                    <span class="cshop-mini__body">
+                        <span class="cshop-mini__name">${escapeHtml(item.name)}</span>
+                        <strong class="cshop-mini__price">${price} грн</strong>
+                    </span>
+                </a>`;
+            });
+            html += '</div>';
+            flyout.innerHTML = html;
+        };
+
+        const activateCat = (id) => {
+            activeId = id;
+            document.querySelectorAll('#zh-mega .cshop-mega__nav-item').forEach((btn) => {
+                btn.classList.toggle('is-active', Number(btn.dataset.megaCat) === Number(id));
+            });
+            const cat = cats().find((row) => Number(row.id) === Number(id));
+            renderFlyout(cat);
+        };
+
+        const openMega = () => {
+            const mega = document.getElementById('zh-mega');
+            if (!mega) return;
+            mega.hidden = false;
+            setBodyLock(true);
+            const list = cats();
+            activateCat(activeId || list[0]?.id);
+        };
+
+        const closeMega = () => {
+            const mega = document.getElementById('zh-mega');
+            if (!mega) return;
+            mega.hidden = true;
+            if (document.getElementById('zh-mobile')?.hidden !== false) {
+                setBodyLock(false);
+            }
+        };
+
+        const openMobile = () => {
+            const mobile = document.getElementById('zh-mobile');
+            if (!mobile) return;
+            mobile.hidden = false;
+            setBodyLock(true);
+        };
+
+        const closeMobile = () => {
+            const mobile = document.getElementById('zh-mobile');
+            if (!mobile) return;
+            mobile.hidden = true;
+            if (document.getElementById('zh-mega')?.hidden !== false) {
+                setBodyLock(false);
+            }
+        };
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('#zh-catalog-open')) {
+                e.preventDefault();
+                openMega();
+                return;
+            }
+            if (e.target.closest('#zh-burger')) {
+                e.preventDefault();
+                openMobile();
+                return;
+            }
+            if (e.target.closest('#zh-mobile-catalog')) {
+                e.preventDefault();
+                closeMobile();
+                openMega();
+                return;
+            }
+            if (e.target.closest('[data-mega-close]')) {
+                closeMega();
+                return;
+            }
+            if (e.target.closest('[data-mobile-close]')) {
+                closeMobile();
+                return;
+            }
+            const navItem = e.target.closest('[data-mega-cat]');
+            if (navItem) {
+                e.preventDefault();
+                activateCat(navItem.dataset.megaCat);
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeMega();
+                closeMobile();
+            }
+        });
+
+        window.addEventListener('open-catalog-mega', openMega);
+        window.openCatalogMega = openMega;
+        window.closeCatalogMega = closeMega;
+    })();
 
     (function () {
         const modal = document.getElementById('callbackModal');

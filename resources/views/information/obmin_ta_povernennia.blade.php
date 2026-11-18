@@ -1,228 +1,71 @@
-@extends('layouts.app')
+@extends('layouts.information')
 
 @section('seo')
     <title>Обмін та повернення - ZMART</title>
-    <meta name="description" content="Умови обміну та повернення товарів в інтернет-магазині ZMART. 14 днів на повернення, якісний сервіс.">
+    <meta name="description" content="Умови обміну та повернення товарів у магазині ZMART.">
 @endsection
 
-@section('content')
-    <!-- Breadcrumbs -->
-    <section class="bg-gray-50 py-4">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav class="flex items-center space-x-2 text-sm">
-                <a href="{{ url('/') }}" class="text-gray-600 hover:text-emerald-600 transition-colors">
-                    <i class="fas fa-home"></i>
-                </a>
-                <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
-                <span class="text-gray-900 font-medium">Обмін та повернення</span>
-            </nav>
-        </div>
-    </section>
+@section('info_title', 'Обмін та повернення')
+@section('info_lead', '14 днів на повернення відповідно до законодавства України.')
 
-    <!-- Header -->
-    <section class="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Обмін та повернення</h1>
-                <p class="text-xl text-emerald-100">Зручні умови обміну та повернення товарів</p>
+@section('info_content')
+    <div class="zinfo__section">
+        <h2>Умови повернення</h2>
+        <div class="zinfo__grid">
+            <div class="zinfo__item">
+                <h3>Стан товару</h3>
+                <p>Повертається новий товар без слідів використання, зі збереженим виглядом, комплектацією та упаковкою.</p>
             </div>
-        </div>
-    </section>
-
-    <!-- Main Content -->
-    <div class="bg-gray-50 min-h-screen py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-4 gap-8">
-                <!-- Sidebar -->
-                <div class="lg:col-span-1">
-                    @include('includes.main.information_bar')
-                </div>
-                
-                <!-- Main Content -->
-                <div class="lg:col-span-3">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                        <div class="p-8">
-                            <!-- Return Conditions -->
-                            <div class="mb-12">
-                                <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-                                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center mr-4">
-                                        <i class="fas fa-undo text-white"></i>
-                                    </div>
-                                    Умови повернення
-                                </h2>
-                                
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6">
-                                        <div class="flex items-center mb-4">
-                                            <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mr-4">
-                                                <i class="fas fa-check-circle text-white text-lg"></i>
-                                            </div>
-                                            <h3 class="text-xl font-bold text-gray-900">Стан товару</h3>
-                                        </div>
-                                        <p class="text-gray-700">
-                                            Поверненню підлягає <strong>новий товар без слідів експлуатації</strong> 
-                                            зі збереженням товарного вигляду, споживчих властивостей та упаковки.
-                                        </p>
-                                    </div>
-                                    
-                                    <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6">
-                                        <div class="flex items-center mb-4">
-                                            <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-xl flex items-center justify-center mr-4">
-                                                <i class="fas fa-calendar-alt text-white text-lg"></i>
-                                            </div>
-                                            <h3 class="text-xl font-bold text-gray-900">Термін повернення</h3>
-                                        </div>
-                                        <p class="text-gray-700">
-                                            Повернення товару відбувається протягом <strong>14 днів</strong> після покупки, 
-                                            відповідно до чинного законодавства України.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Return Process -->
-                            <div class="mb-12">
-                                <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-                                    <div class="w-10 h-10 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-xl flex items-center justify-center mr-4">
-                                        <i class="fas fa-list-ol text-white"></i>
-                                    </div>
-                                    Процедура повернення
-                                </h2>
-                                
-                                <div class="space-y-6">
-                                    <div class="flex items-start">
-                                        <div class="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mr-4 mt-1">
-                                            <span class="text-white font-bold text-sm">1</span>
-                                        </div>
-                                        <div class="flex-1">
-                                            <h3 class="text-lg font-bold text-gray-900 mb-2">Зв'яжіться з нами</h3>
-                                            <p class="text-gray-700">
-                                                Зверніться до нашого менеджера за телефоном <strong>+38 073-077-75-72</strong> або <strong>+38 077-077-75-82</strong>
-                                                або напишіть на email <strong>zmartcomua@gmail.com</strong>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="flex items-start">
-                                        <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-full flex items-center justify-center mr-4 mt-1">
-                                            <span class="text-white font-bold text-sm">2</span>
-                                        </div>
-                                        <div class="flex-1">
-                                            <h3 class="text-lg font-bold text-gray-900 mb-2">Підготуйте товар</h3>
-                                            <p class="text-gray-700">
-                                                Упакуйте товар у оригінальну упаковку разом з усіма аксесуарами, 
-                                                документами та гарантійним талоном
-                                            </p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="flex items-start">
-                                        <div class="w-8 h-8 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-full flex items-center justify-center mr-4 mt-1">
-                                            <span class="text-white font-bold text-sm">3</span>
-                                        </div>
-                                        <div class="flex-1">
-                                            <h3 class="text-lg font-bold text-gray-900 mb-2">Відправте товар</h3>
-                                            <p class="text-gray-700">
-                                                Відправте товар службою доставки "Нова пошта" на наш адрес. 
-                                                Вартість доставки при поверненні оплачує покупець
-                                            </p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="flex items-start">
-                                        <div class="w-8 h-8 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center mr-4 mt-1">
-                                            <span class="text-white font-bold text-sm">4</span>
-                                        </div>
-                                        <div class="flex-1">
-                                            <h3 class="text-lg font-bold text-gray-900 mb-2">Отримайте гроші</h3>
-                                            <p class="text-gray-700">
-                                                Після перевірки товару ми повернемо кошти на вашу картку або рахунок 
-                                                протягом 3-5 робочих днів
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Exchange Conditions -->
-                            <div class="mb-12">
-                                <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-                                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center mr-4">
-                                        <i class="fas fa-exchange-alt text-white"></i>
-                                    </div>
-                                    Умови обміну
-                                </h2>
-                                
-                                <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-8">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                        <div>
-                                            <h3 class="text-xl font-bold text-gray-900 mb-4">Обмін на інший товар</h3>
-                                            <ul class="space-y-3">
-                                                <li class="flex items-center text-gray-700">
-                                                    <i class="fas fa-check text-emerald-500 mr-3"></i>
-                                                    Товар не підійшов за розміром, кольором або характеристиками
-                                                </li>
-                                                <li class="flex items-center text-gray-700">
-                                                    <i class="fas fa-check text-emerald-500 mr-3"></i>
-                                                    Виявлений заводський брак
-                                                </li>
-                                                <li class="flex items-center text-gray-700">
-                                                    <i class="fas fa-check text-emerald-500 mr-3"></i>
-                                                    Товар не відповідає опису
-                                                </li>
-                                            </ul>
-                    </div>
-                                        
-                                        <div>
-                                            <h3 class="text-xl font-bold text-gray-900 mb-4">Додаткові умови</h3>
-                                            <ul class="space-y-3">
-                                                <li class="flex items-center text-gray-700">
-                                                    <i class="fas fa-info-circle text-blue-500 mr-3"></i>
-                                                    Обмін можливий протягом 14 днів
-                                                </li>
-                                                <li class="flex items-center text-gray-700">
-                                                    <i class="fas fa-info-circle text-blue-500 mr-3"></i>
-                                                    Товар повинен бути в оригінальній упаковці
-                                                </li>
-                                                <li class="flex items-center text-gray-700">
-                                                    <i class="fas fa-info-circle text-blue-500 mr-3"></i>
-                                                    При обміні на більш дорогий товар доплата за рахунок покупця
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Contact Info -->
-                            <div class="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl p-8 text-center">
-                                <h3 class="text-2xl font-bold text-gray-900 mb-4">Потрібна допомога?</h3>
-                                <p class="text-gray-700 mb-6">
-                                    Якщо у вас виникли питання щодо обміну або повернення товару, 
-                                    звертайтеся до наших менеджерів
-                                </p>
-                                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                                    <a href="tel:0730777572" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl">
-                                        <i class="fas fa-phone mr-2"></i>
-                                        +38 073-077-75-72
-                                    </a>
-                                    <a href="tel:0770777582" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl">
-                                        <i class="fas fa-phone mr-2"></i>
-                                        +38 077-077-75-82
-                                    </a>
-                                    <a href="mailto:zmartcomua@gmail.com" class="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl">
-                                        <i class="fas fa-envelope mr-2"></i>
-                                        Написати нам
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="zinfo__item">
+                <h3>Термін</h3>
+                <p>Повернення можливе протягом 14 днів після отримання замовлення.</p>
             </div>
         </div>
     </div>
-@endsection
 
-@section('scripts')
+    <div class="zinfo__section">
+        <h2>Як повернути</h2>
+        <ol class="zinfo__steps">
+            <li>
+                <div>
+                    <h3>Зв’яжіться з нами</h3>
+                    <p>Напишіть на <a href="mailto:zmartcomua@gmail.com">zmartcomua@gmail.com</a> або зателефонуйте
+                        <a href="tel:0730777572">+38 073 077 75 72</a> /
+                        <a href="tel:0770777582">+38 077 077 75 82</a>.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <h3>Підготуйте товар</h3>
+                    <p>Упакуйте товар в оригінальну упаковку з усіма аксесуарами та документами.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <h3>Відправте Новою Поштою</h3>
+                    <p>Вартість зворотної доставки оплачує покупець, якщо інше не погоджено з менеджером.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <h3>Отримайте кошти</h3>
+                    <p>Після перевірки товару повертаємо оплату протягом 3–5 робочих днів.</p>
+                </div>
+            </li>
+        </ol>
+    </div>
+
+    <div class="zinfo__section">
+        <h2>Обмін</h2>
+        <ul>
+            <li>товар не підійшов за характеристиками;</li>
+            <li>виявлено заводський брак;</li>
+            <li>товар не відповідає опису на сайті.</li>
+        </ul>
+        <p>Обмін можливий протягом 14 днів за умови збереження товарного вигляду та упаковки. При обміні на дорожчий товар різницю доплачує покупець.</p>
+        <div class="zinfo__actions">
+            <a href="tel:0730777572" class="zinfo__btn zinfo__btn--primary">+38 073 077 75 72</a>
+            <a href="mailto:zmartcomua@gmail.com" class="zinfo__btn">Написати на email</a>
+        </div>
+    </div>
 @endsection

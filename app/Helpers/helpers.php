@@ -73,6 +73,96 @@ if (!function_exists('calculate_total_products_for_category')) {
     }
 }
 
+if (!function_exists('map_category_tree_node')) {
+    function map_category_tree_node(Category $category): array
+    {
+        $children = $category->relationLoaded('childCategories')
+            ? $category->childCategories
+            : $category->childCategories()
+                ->where('is_active', true)
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get();
+
+        return [
+            'id' => $category->id,
+            'name' => trim($category->name),
+            'url' => $category->url,
+            'count' => get_category_total_products($category),
+            'children' => $children->map(fn (Category $child) => map_category_tree_node($child))->values()->all(),
+        ];
+    }
+}
+
+if (!function_exists('get_category_descendant_ids')) {
+    function get_category_descendant_ids(Category $category): array
+    {
+        $ids = [(int) $category->id];
+        $children = $category->relationLoaded('childCategories')
+            ? $category->childCategories
+            : $category->childCategories()->where('is_active', true)->get();
+
+        foreach ($children as $child) {
+            $ids = array_merge($ids, get_category_descendant_ids($child));
+        }
+
+        return array_values(array_unique($ids));
+    }
+}
+
+if (!function_exists('build_catalog_facets')) {
+    /**
+     * @param  \Illuminate\Support\Collection<int, \App\Models\Product>  $products
+     */
+    function build_catalog_facets($products): array
+    {
+        $buckets = [];
+
+        foreach ($products as $product) {
+            foreach (['characteristics', 'modifications', 'additional_fields'] as $field) {
+                $data = $product->{$field} ?? null;
+                if (!is_array($data)) {
+                    continue;
+                }
+                foreach ($data as $key => $value) {
+                    $key = trim((string) $key);
+                    $value = is_scalar($value) ? trim((string) $value) : '';
+                    if ($key === '' || $value === '') {
+                        continue;
+                    }
+                    if (!isset($buckets[$key])) {
+                        $buckets[$key] = [];
+                    }
+                    if (!isset($buckets[$key][$value])) {
+                        $buckets[$key][$value] = 0;
+                    }
+                    $buckets[$key][$value]++;
+                }
+            }
+        }
+
+        $facets = [];
+        foreach ($buckets as $key => $values) {
+            if (count($values) < 2) {
+                continue;
+            }
+            arsort($values);
+            $facets[] = [
+                'key' => $key,
+                'label' => $key,
+                'options' => collect($values)->take(20)->map(fn ($count, $value) => [
+                    'value' => (string) $value,
+                    'count' => (int) $count,
+                ])->values()->all(),
+            ];
+        }
+
+        usort($facets, fn ($a, $b) => strcmp($a['label'], $b['label']));
+
+        return array_slice($facets, 0, 12);
+    }
+}
+
 function uploadToBunnyCDN($localFilePath, $destinationPath)
 {
     $storageName = env('BUNNY_STORAGE_NAME');

@@ -1,178 +1,81 @@
-@extends('layouts.app')
+@extends('layouts.information')
 
 @section('seo')
-    <title>Контактна інформація - ZMART</title>
-    <meta name="description" content="Контактна інформація інтернет-магазину ZMART. Телефон, адреса, email. Зв'яжіться з нами для консультації та замовлення.">
+    <title>Контакти - ZMART</title>
+    <meta name="description" content="Контактна інформація інтернет-магазину ZMART: телефони, email, адреса, графік роботи.">
 @endsection
 
-@section('content')
-    <!-- Breadcrumbs -->
-    <section class="bg-gray-50 py-4">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav class="flex items-center space-x-2 text-sm">
-                <a href="{{ url('/') }}" class="text-gray-600 hover:text-emerald-600 transition-colors">
-                    <i class="fas fa-home"></i>
-                </a>
-                <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
-                <span class="text-gray-900 font-medium">Контактна інформація</span>
-            </nav>
-        </div>
-    </section>
+@section('info_title', 'Контакти')
+@section('info_lead', 'Телефонуйте, пишіть або замовляйте зворотний дзвінок — відповімо в робочий час.')
 
-    <!-- Header -->
-    <section class="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Контактна інформація</h1>
-                <p class="text-xl text-emerald-100">Зв'яжіться з нами для консультації та замовлення</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Main Content -->
-    <div class="bg-gray-50 min-h-screen py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-4 gap-8">
-                <!-- Sidebar -->
-                <div class="lg:col-span-1">
-                    @include('includes.main.information_bar')
-                </div>
-                
-                <!-- Main Content -->
-                <div class="lg:col-span-3">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                        <div class="p-8">
-                            <!-- Contact Cards -->
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                                <!-- Phone Card -->
-                                <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 text-center group hover:shadow-lg transition-all duration-300">
-                                    <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                                        <i class="fas fa-phone text-white text-xl"></i>
-                                    </div>
-                                    <h3 class="text-xl font-bold text-gray-900 mb-4">Телефон</h3>
-                                    <a href="tel:0730777572" class="text-emerald-600 hover:text-emerald-700 transition-colors text-lg font-semibold block mb-2">
-                                        +38 073-077-75-72
-                                    </a>
-                                    <a href="tel:0770777582" class="text-emerald-600 hover:text-emerald-700 transition-colors text-lg font-semibold block mb-4">
-                                        +38 077-077-75-82
-                                    </a>
-                                    <button class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl">
-                                        Замовити дзвінок
-                                    </button>
-                                </div>
-
-                                <!-- Address Card -->
-                                <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 text-center group hover:shadow-lg transition-all duration-300">
-                                    <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                                        <i class="fas fa-map-marker-alt text-white text-xl"></i>
-                                    </div>
-                                    <h3 class="text-xl font-bold text-gray-900 mb-4">Адреса</h3>
-                                    <p class="text-gray-700 leading-relaxed">
-                                        Одеса, пром ринок "7 км",<br>
-                                        вул.Фабрична, маг. №2523
-                                    </p>
-                                </div>
-
-                                <!-- Email Card -->
-                                <div class="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-6 text-center group hover:shadow-lg transition-all duration-300">
-                                    <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                                        <i class="fas fa-envelope text-white text-xl"></i>
-                                    </div>
-                                    <h3 class="text-xl font-bold text-gray-900 mb-4">Пошта</h3>
-                                    <a href="mailto:zmartcomua@gmail.com" class="text-purple-600 hover:text-purple-700 transition-colors text-lg font-semibold">
-                                        zmartcomua@gmail.com
-                                    </a>
-                                </div>
-                            </div>
-
-                            <!-- Working Hours -->
-                            <div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-8 mb-8">
-                                <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center flex items-center justify-center">
-                                    <div class="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center mr-3">
-                                        <i class="fas fa-clock text-white"></i>
-                                    </div>
-                                    Графік роботи
-                                </h3>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <div class="text-center">
-                                        <h4 class="font-bold text-gray-900 mb-2">Пн - Чт</h4>
-                                        <p class="text-gray-700">06:00 - 14:00</p>
-                                    </div>
-                                    <div class="text-center">
-                                        <h4 class="font-bold text-gray-900 mb-2">П’ятниця</h4>
-                                        <p class="text-red-500 font-semibold">Вихідний</p>
-                                    </div>
-                                    <div class="text-center">
-                                        <h4 class="font-bold text-gray-900 mb-2">Сб - Нд</h4>
-                                        <p class="text-gray-700">06:00 - 14:00</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Contact Form -->
-                            <div class="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl p-8">
-                                <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Написати нам</h3>
-                                @if (session('contact_success'))
-                                    <div class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 px-4 py-3 text-sm text-center">
-                                        {{ session('contact_success') }}
-                                    </div>
-                                @elseif (session('contact_error'))
-                                    <div class="mb-6 rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm text-center">
-                                        {{ session('contact_error') }}
-                                    </div>
-                                @endif
-
-                                @if ($errors->any())
-                                    <div class="mb-6 rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm">
-                                        <ul class="list-disc list-inside space-y-1 text-left">
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
-
-                                <form class="space-y-6" method="POST" action="{{ route('contact_request') }}">
-                                    @csrf
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div>
-                                            <label for="contact-name" class="block text-sm font-bold text-gray-700 mb-2">Ім'я *</label>
-                                            <input id="contact-name" name="name" type="text" value="{{ old('name') }}" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="Ваше ім'я">
-                                            @error('name')
-                                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div>
-                                            <label for="contact-phone" class="block text-sm font-bold text-gray-700 mb-2">Номер телефону *</label>
-                                            <input id="contact-phone" name="phone" type="text" value="{{ old('phone') }}" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="+380...">
-                                            @error('phone')
-                                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="contact-message" class="block text-sm font-bold text-gray-700 mb-2">Повідомлення <span class="text-gray-500 font-normal">(необов'язково)</span></label>
-                                        <textarea id="contact-message" name="message" rows="4" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="Ваше повідомлення">{{ old('message') }}</textarea>
-                                        @error('message')
-                                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div class="text-center">
-                                        <button type="submit" class="inline-flex items-center justify-center bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-8 py-4 rounded-xl font-bold transition-all duration-200 shadow-lg hover:shadow-xl">
-                                            <i class="fas fa-paper-plane mr-2"></i>
-                                            Відправити повідомлення
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+@section('info_content')
+    <div class="zinfo__section">
+        <h2>Як зв’язатися</h2>
+        <div class="zinfo__meta">
+            <div class="zinfo__meta-row">
+                <span>Телефон</span>
+                <div>
+                    <a href="tel:0730777572">+38 073 077 75 72</a><br>
+                    <a href="tel:0770777582">+38 077 077 75 82</a>
                 </div>
             </div>
+            <div class="zinfo__meta-row">
+                <span>Email</span>
+                <a href="mailto:zmartcomua@gmail.com">zmartcomua@gmail.com</a>
+            </div>
+            <div class="zinfo__meta-row">
+                <span>Адреса</span>
+                <p>Одеса, промринок «7 км», вул. Фабрична, маг. №2523</p>
+            </div>
+            <div class="zinfo__meta-row">
+                <span>Графік</span>
+                <p>Пн–Чт, Сб–Нд: 06:00–14:00<br>П’ятниця — вихідний</p>
+            </div>
+        </div>
+        <div class="zinfo__actions">
+            <a href="tel:0730777572" class="zinfo__btn">Подзвонити</a>
         </div>
     </div>
-@endsection
 
-@section('scripts')
-@endsection
+    <div class="zinfo__section">
+        <h2>Написати нам</h2>
 
+        @if (session('contact_success'))
+            <div class="zinfo__alert zinfo__alert--ok">{{ session('contact_success') }}</div>
+        @elseif (session('contact_error'))
+            <div class="zinfo__alert zinfo__alert--err">{{ session('contact_error') }}</div>
+        @endif
+
+        @if ($errors->any())
+            <div class="zinfo__alert zinfo__alert--err">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form class="zinfo__form" method="POST" action="{{ route('contact_request') }}">
+            @csrf
+            <div class="zinfo__form-row">
+                <div class="zinfo__field">
+                    <label for="contact-name">Ім’я *</label>
+                    <input id="contact-name" name="name" type="text" value="{{ old('name') }}" required placeholder="Ваше ім’я">
+                    @error('name')<p class="is-error">{{ $message }}</p>@enderror
+                </div>
+                <div class="zinfo__field">
+                    <label for="contact-phone">Телефон *</label>
+                    <input id="contact-phone" name="phone" type="text" value="{{ old('phone') }}" required placeholder="+380...">
+                    @error('phone')<p class="is-error">{{ $message }}</p>@enderror
+                </div>
+            </div>
+            <div class="zinfo__field">
+                <label for="contact-message">Повідомлення <span class="zinfo__muted">(необов’язково)</span></label>
+                <textarea id="contact-message" name="message" rows="4" placeholder="Коротко опишіть питання">{{ old('message') }}</textarea>
+                @error('message')<p class="is-error">{{ $message }}</p>@enderror
+            </div>
+            <button type="submit" class="zinfo__submit">Відправити</button>
+        </form>
+    </div>
+@endsection

@@ -1,50 +1,16 @@
-@extends('layouts.app')
+@extends('layouts.information')
 
 @section('seo')
     <title>Договір оферти - ZMART</title>
     <meta name="description" content="Договір оферти інтернет-магазину ZMART. Умови замовлення, купівлі-продажу та доставки товарів.">
 @endsection
 
-@section('content')
-    <!-- Breadcrumbs -->
-    <section class="bg-gray-50 py-4">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav class="flex items-center space-x-2 text-sm">
-                <a href="{{ url('/') }}" class="text-gray-600 hover:text-emerald-600 transition-colors">
-                    <i class="fas fa-home"></i>
-                </a>
-                <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
-                <span class="text-gray-900 font-medium">Договір оферти</span>
-            </nav>
-        </div>
-    </section>
+@section('info_title', 'Договір оферти')
+@section('info_lead', 'Публічний договір на замовлення, купівлю-продаж і доставку товарів.')
 
-    <!-- Header -->
-    <section class="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Договір оферти</h1>
-                <p class="text-xl text-emerald-100">Умови замовлення, купівлі-продажу та доставки товарів</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Main Content -->
-    <div class="bg-gray-50 min-h-screen py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-4 gap-8">
-                <!-- Sidebar -->
-                <div class="lg:col-span-1">
-                    @include('includes.main.information_bar')
-                </div>
-                
-                <!-- Main Content -->
-                <div class="lg:col-span-3">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                        <div class="p-8">
-                <div class="page-content">
-                    <div class="article-text __fullWidth text">
-                        <p align="center" style="margin:0cm; text-align:center"><b><span
+@section('info_content')
+    <div class="zinfo__prose">
+<p align="center" style="margin:0cm; text-align:center"><b><span
                                     style="font-family:&quot;Arial&quot;,sans-serif">ПУБЛІЧНИЙ ДОГОВІР
                                     (ОФЕРТА)</span></b><br>
                             <b><span style="font-family:&quot;Arial&quot;,sans-serif">на замовлення, купівлю-продаж і
@@ -640,13 +606,5 @@
 
                         <p style="margin:0cm"><span style="font-family:&quot;Arial&quot;,sans-serif">Телефон:
                                 +38 073-077-75-72, +38 077-077-75-82</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-@endsection
-
-@section('scripts')
 @endsection

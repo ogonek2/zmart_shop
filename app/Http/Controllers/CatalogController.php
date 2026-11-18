@@ -12,114 +12,108 @@ class CatalogController extends Controller
 {
     public function product_page($url)
     {
-        try {
-            \Log::info('Попытка загрузки товара с URL: ' . $url);
-            
-            $getProduct = Product::where('url', $url)->firstOrFail();
-            \Log::info('Товар найден: ' . $getProduct->id . ' - ' . $getProduct->name);
-            \Log::info('Путь к изображению товара: ' . $getProduct->image_path);
-            
-            $images = productImage::where('product_id', $getProduct->id)->get();
-            \Log::info('Найдено изображений: ' . $images->count());
-            
-            // Получаем характеристики из шаблона (новая система)
-            $characteristics = $getProduct->getTemplateCharacteristics();
-            $modifications = $getProduct->getTemplateModifications();
-            $additionalFields = $getProduct->getTemplateAdditionalFields();
-            
-            \Log::info('Характеристики из шаблона: ' . count($characteristics));
-            
-            // Получаем рекомендуемые товары из тех же категорий
-            $recommendedProducts = collect();
-            try {
-                if ($getProduct->categories->count() > 0) {
-                    \Log::info('Категории товара: ' . $getProduct->categories->pluck('name')->implode(', '));
-                    $categoryIds = $getProduct->categories->pluck('id')->toArray();
-                    \Log::info('ID категорий: ' . implode(', ', $categoryIds));
-                    
-                    $recommendedProducts = Product::whereHas('categories', function($query) use ($categoryIds) {
-                        $query->whereIn('categories.id', $categoryIds);
-                    })
-                    ->where('id', '!=', $getProduct->id) // Исключаем текущий товар
-                    ->where('availability', 'in_stock') // Только товары в наличии
-                    ->select([
-                        'id', 'name', 'price', 'discount', 'image_path', 'url', 
-                        'articule', 'availability', 'is_wholesale', 'wholesale_price', 'wholesale_min_quantity'
-                    ])
-                    ->inRandomOrder() // Случайный порядок
-                    ->limit(8) // Максимум 8 товаров
-                    ->get();
-                    
-                    \Log::info('Рекомендуемые товары найдены: ' . $recommendedProducts->count());
-                } else {
-                    \Log::info('У товара нет категорий');
-                }
-            } catch (\Exception $e) {
-                \Log::error('Ошибка при получении рекомендуемых товаров: ' . $e->getMessage());
-                $recommendedProducts = collect();
-            }
-            
-            \Log::info('Готовимся к отображению страницы товара');
-            
-            return view('productPage', [
-                'product' => $getProduct,
-                'images' => $images,
-                'characteristics' => $characteristics,
-                'modifications' => $modifications,
-                'additionalFields' => $additionalFields,
-                'recommendedProducts' => $recommendedProducts,
-            ]);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            \Log::warning('Товар не найден: ' . $url);
-            abort(404, 'Товар не найден');
-        } catch (\Exception $e) {
-            \Log::error('Ошибка при загрузке страницы товара: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
-            abort(500, 'Произошла ошибка при загрузке страницы');
+        $getProduct = Product::with(['categories', 'packages', 'images'])
+            ->where('url', $url)
+            ->firstOrFail();
+
+        $images = $getProduct->images;
+        $characteristics = $getProduct->getTemplateCharacteristics();
+        $modifications = $getProduct->getTemplateModifications();
+        $additionalFields = $getProduct->getTemplateAdditionalFields();
+
+        $recommendedProducts = collect();
+        $categoryIds = $getProduct->categories->pluck('id')->all();
+        if ($categoryIds) {
+            $recommendedProducts = Product::whereHas('categories', function ($query) use ($categoryIds) {
+                $query->whereIn('categories.id', $categoryIds);
+            })
+                ->where('id', '!=', $getProduct->id)
+                ->where(function ($q) {
+                    $q->where('availability', 'in_stock')
+                        ->orWhereNull('availability')
+                        ->orWhere('availability', 1)
+                        ->orWhere('availability', '1');
+                })
+                ->with('packages')
+                ->select([
+                    'id', 'name', 'price', 'discount', 'image_path', 'url',
+                    'articule', 'availability', 'is_wholesale', 'wholesale_price', 'wholesale_min_quantity',
+                ])
+                ->inRandomOrder()
+                ->limit(8)
+                ->get();
         }
+
+        return view('productPage', [
+            'product' => $getProduct,
+            'images' => $images,
+            'characteristics' => $characteristics,
+            'modifications' => $modifications,
+            'additionalFields' => $additionalFields,
+            'recommendedProducts' => $recommendedProducts,
+        ]);
+    }
+
+    public function wishlist()
+    {
+        $categories = Category::whereNull('parent_id')
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->with(['childCategories' => function ($q) {
+                $q->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->orderBy('name')
+                    ->with(['childCategories' => function ($q2) {
+                        $q2->where('is_active', true)->orderBy('sort_order')->orderBy('name');
+                    }]);
+            }])
+            ->get()
+            ->map(fn (Category $cat) => map_category_tree_node($cat))
+            ->values();
+
+        return view('wishlist', [
+            'categories' => $categories,
+        ]);
     }
     public function category_page(Request $request, $url)
     {
         $getCategory = Category::where('url', $url)->firstOrFail();
-
-        // Получаем подкатегории текущей категории
-        $subcategories = $getCategory->childCategories()
-            ->where('is_active', true)
-            ->orderBy('sort_order')
-            ->get();
-
-        // Строим запрос для товаров
-        $query = Product::select([
-            'id', 'name', 'price', 'discount', 'image_path', 'url', 
-            'articule', 'availability', 'is_wholesale', 'wholesale_price', 'wholesale_min_quantity'
+        $getCategory->load([
+            'childCategories' => function ($q) {
+                $q->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->orderBy('name')
+                    ->with(['childCategories' => function ($q2) {
+                        $q2->where('is_active', true)->orderBy('sort_order')->orderBy('name');
+                    }]);
+            },
         ]);
 
-        // Определяем, какие категории использовать для поиска товаров
-        $categoryProducts = $getCategory->products();
-        
-        if ($categoryProducts->count() === 0 && $subcategories->count() > 0) {
-            // Собираем ID всех подкатегорий
-            $subcategoryIds = $subcategories->pluck('id')->toArray();
-            $subcategoryIds[] = $getCategory->id; // добавляем текущую категорию
-            
-            // Получаем товары из всех подкатегорий
-            $query->whereHas('categories', function($q) use ($subcategoryIds) {
-                $q->whereIn('categories.id', $subcategoryIds);
-            });
-        } else {
-            // Обычная логика - товары только из текущей категории
-            $query->whereHas('categories', function($q) use ($getCategory) {
-                $q->where('categories.id', $getCategory->id);
-            });
-        }
+        $branchIds = get_category_descendant_ids($getCategory);
+        $selectedSubcats = collect($request->input('subcats', []))
+            ->map(fn ($id) => (int) $id)
+            ->filter(fn ($id) => $id > 0 && in_array($id, $branchIds, true))
+            ->values()
+            ->all();
 
-        // Apply filters
+        $scopeIds = count($selectedSubcats) ? $selectedSubcats : $branchIds;
+
+        $query = Product::select([
+            'id', 'name', 'price', 'discount', 'image_path', 'url',
+            'articule', 'availability', 'is_wholesale', 'wholesale_price', 'wholesale_min_quantity',
+            'characteristics', 'modifications', 'additional_fields',
+        ])->with('packages')
+            ->whereHas('categories', function ($q) use ($scopeIds) {
+                $q->whereIn('categories.id', $scopeIds);
+            });
+
         if ($request->filled('price_min')) {
-            $query->whereRaw('CAST(price AS DECIMAL(10,2)) >= ?', [(float)$request->price_min]);
+            $query->whereRaw('CAST(price AS DECIMAL(10,2)) >= ?', [(float) $request->price_min]);
         }
 
         if ($request->filled('price_max')) {
-            $query->whereRaw('CAST(price AS DECIMAL(10,2)) <= ?', [(float)$request->price_max]);
+            $query->whereRaw('CAST(price AS DECIMAL(10,2)) <= ?', [(float) $request->price_max]);
         }
 
         if ($request->has('availability')) {
@@ -134,14 +128,33 @@ class CatalogController extends Controller
             $query->where('is_wholesale', 1);
         }
 
-        // Apply sorting
+        $attrs = $request->input('attrs', []);
+        if (is_array($attrs)) {
+            foreach ($attrs as $key => $values) {
+                $key = trim((string) $key);
+                $values = array_values(array_filter(array_map('strval', (array) $values), fn ($v) => $v !== ''));
+                if ($key === '' || !$values) {
+                    continue;
+                }
+                $query->where(function ($outer) use ($key, $values) {
+                    foreach ($values as $value) {
+                        $outer->orWhere(function ($inner) use ($key, $value) {
+                            $inner->where('characteristics->' . $key, $value)
+                                ->orWhere('modifications->' . $key, $value)
+                                ->orWhere('additional_fields->' . $key, $value);
+                        });
+                    }
+                });
+            }
+        }
+
         $sort = $request->get('sort', 'default');
         switch ($sort) {
             case 'price_asc':
-                $query->orderBy('price', 'asc');
+                $query->orderByRaw('CAST(price AS DECIMAL(10,2)) asc');
                 break;
             case 'price_desc':
-                $query->orderBy('price', 'desc');
+                $query->orderByRaw('CAST(price AS DECIMAL(10,2)) desc');
                 break;
             case 'name_asc':
                 $query->orderBy('name', 'asc');
@@ -157,60 +170,158 @@ class CatalogController extends Controller
                 break;
         }
 
-        $getProducts = $query->paginate(45);
-        
-        // Append query parameters to pagination links
-        $getProducts->appends($request->query());
+        $mapProduct = function ($product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'discount' => $product->discount,
+                'image_path' => $product->image_path,
+                'url' => $product->url,
+                'articule' => $product->articule,
+                'availability' => $product->availability,
+                'is_wholesale' => (bool) $product->is_wholesale,
+                'wholesale_price' => $product->wholesale_price,
+                'wholesale_min_quantity' => $product->wholesale_min_quantity,
+                'packages' => $product->relationLoaded('packages')
+                    ? $product->packages->map(fn ($p) => ['value' => $p->value])->values()
+                    : [],
+            ];
+        };
 
-        // If AJAX request, return JSON
-        if ($request->ajax()) {
+        if ($request->boolean('preview')) {
+            $previewProducts = (clone $query)->limit(10)->get();
+
             return response()->json([
                 'success' => true,
-                'products' => $getProducts->items(),
-                'pagination' => [
-                    'current_page' => $getProducts->currentPage(),
-                    'last_page' => $getProducts->lastPage(),
-                    'per_page' => $getProducts->perPage(),
-                    'total' => $getProducts->total(),
-                    'from' => $getProducts->firstItem(),
-                    'to' => $getProducts->lastItem(),
-                ]
+                'products' => $previewProducts->map(function ($product) {
+                    return [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'price' => $product->price,
+                        'discount' => $product->discount,
+                        'image_path' => $product->image_path,
+                        'url' => $product->url,
+                    ];
+                })->values(),
             ]);
         }
 
-        return view('categoryPage', [
+        $facetProducts = (clone $query)
+            ->select(['id', 'characteristics', 'modifications', 'additional_fields'])
+            ->limit(400)
+            ->get();
+        $facets = build_catalog_facets($facetProducts);
+
+        $products = $query->paginate(24)->appends($request->query());
+
+        $rootCategories = Category::whereNull('parent_id')
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->with(['childCategories' => function ($q) {
+                $q->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->orderBy('name')
+                    ->with(['childCategories' => function ($q2) {
+                        $q2->where('is_active', true)->orderBy('sort_order')->orderBy('name');
+                    }]);
+            }])
+            ->get();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'products' => collect($products->items())->map($mapProduct)->values(),
+                'pagination' => [
+                    'current_page' => $products->currentPage(),
+                    'last_page' => $products->lastPage(),
+                    'per_page' => $products->perPage(),
+                    'total' => $products->total(),
+                    'from' => $products->firstItem(),
+                    'to' => $products->lastItem(),
+                ],
+                'facets' => $facets,
+            ]);
+        }
+
+        return view('catalog', [
+            'products' => $products,
+            'categories' => $rootCategories,
+            'subTree' => map_category_tree_node($getCategory)['children'] ?? [],
+            'subcategories' => $getCategory->childCategories,
+            'facets' => $facets,
             'category' => $getCategory,
-            'subcategories' => $subcategories,
-            'products' => $getProducts,
+            'endpoint' => route('catalog_category_page', $getCategory->url),
+            'pageTitle' => $getCategory->name,
+            'pageSubtitle' => $getCategory->description ?: 'Товари категорії в наявності',
+            'pageDescription' => $getCategory->description ?? ('Купити ' . $getCategory->name . ' в інтернет-магазині ZMART'),
         ]);
     }
 
     public function search(Request $request)
     {
+        $ids = collect(explode(',', (string) $request->input('ids', '')))
+            ->map(fn ($id) => (int) trim($id))
+            ->filter(fn ($id) => $id > 0)
+            ->values()
+            ->all();
+
+        if ($ids) {
+            $products = Product::whereIn('id', $ids)
+                ->select(['id', 'name', 'price', 'image_path', 'discount', 'url', 'articule', 'availability'])
+                ->with(['categories' => function ($q) {
+                    $q->select('categories.id', 'categories.name', 'categories.url', 'categories.parent_id');
+                }])
+                ->get()
+                ->sortBy(fn ($product) => array_search($product->id, $ids, true))
+                ->values()
+                ->map(function (Product $product) {
+                    return [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'price' => $product->price,
+                        'image_path' => $product->image_path,
+                        'discount' => $product->discount,
+                        'url' => $product->url,
+                        'articule' => $product->articule,
+                        'availability' => $product->availability,
+                        'categories' => $product->categories->map(fn ($cat) => [
+                            'id' => (int) $cat->id,
+                            'name' => $cat->name,
+                            'url' => $cat->url,
+                            'parent_id' => $cat->parent_id ? (int) $cat->parent_id : null,
+                        ])->values()->all(),
+                        'category_ids' => $product->categories->pluck('id')->map(fn ($id) => (int) $id)->values()->all(),
+                    ];
+                });
+
+            return response()->json($products);
+        }
+
         $query = $request->input('q');
 
         if (empty($query) || strlen($query) < 2) {
             return response()->json([]);
         }
 
-        // Очищаем запрос от лишних символов
         $cleanQuery = trim($query);
-        
-        $products = Product::where(function($q) use ($cleanQuery) {
+
+        $products = Product::where(function ($q) use ($cleanQuery) {
             $q->where('name', 'like', '%' . $cleanQuery . '%')
               ->orWhere('articule', 'like', '%' . $cleanQuery . '%')
               ->orWhere('description', 'like', '%' . $cleanQuery . '%');
         })
         ->where('availability', 'in_stock')
         ->select([
-            'id', 
-            'name', 
-            'price', 
-            'image_path', 
-            'discount', 
+            'id',
+            'name',
+            'price',
+            'image_path',
+            'discount',
             'url',
             'articule',
-            'availability'
+            'availability',
         ])
         ->orderByRaw("CASE 
             WHEN name LIKE ? THEN 1 
@@ -218,9 +329,9 @@ class CatalogController extends Controller
             WHEN articule LIKE ? THEN 3 
             ELSE 4 
         END", [
-            $cleanQuery . '%',  // Точное совпадение в начале названия
-            '%' . $cleanQuery . '%',  // Частичное совпадение в названии
-            '%' . $cleanQuery . '%'   // Совпадение в артикуле
+            $cleanQuery . '%',
+            '%' . $cleanQuery . '%',
+            '%' . $cleanQuery . '%',
         ])
         ->limit(10)
         ->get();

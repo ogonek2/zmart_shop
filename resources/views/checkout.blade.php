@@ -5,762 +5,655 @@
     <meta name="description" content="Оформлення замовлення в інтернет-магазині ZMART. Швидка доставка по всій Україні.">
 @endsection
 
-@section('styles')
-    <style>
-        .delivery-option.active,
-        .payment-option.active {
-            border-color: #10b981 !important;
-            background-color: rgba(16, 185, 129, 0.05) !important;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .delivery-option.active .group,
-        .payment-option.active .group {
-            transform: scale(1.02);
-        }
-        
-        .search-result-item {
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            border-bottom: 1px solid #e5e7eb;
-            transition: background-color 0.2s ease;
-        }
-        
-        .search-result-item:hover {
-            background-color: #f9fafb;
-        }
-        
-        .search-result-item:last-child {
-            border-bottom: none;
-        }
-        
-        /* Анимации для появления элементов */
-        .animate-fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
-@endsection
-
 @section('content')
-    <!-- Preloader -->
-    <div id="preloader" class="fixed inset-0 bg-white z-50 flex items-center justify-center hidden">
-        <div class="flex flex-col items-center">
-            <div class="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
-            <p class="mt-4 text-gray-600 font-medium">Завантаження...</p>
-        </div>
-    </div>
-    
-    <!-- Breadcrumbs -->
-    <section class="bg-gray-50 py-4">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav class="flex items-center space-x-2 text-sm">
-                <a href="{{ url('/') }}" class="text-gray-600 hover:text-emerald-600 transition-colors">
-                    <i class="fas fa-home"></i>
-                </a>
-                <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
-                <span class="text-gray-900 font-medium">Оформлення замовлення</span>
-            </nav>
-        </div>
-    </section>
+<main class="zcheck">
+    <div class="zmart-shell">
+        <header class="zcheck__page-head">
+            <h1>Оформлення замовлення</h1>
+        </header>
 
-    <!-- Header -->
-    <section class="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Оформлення замовлення</h1>
-                <p class="text-xl text-emerald-100">Заповніть форму для завершення покупки</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Main Content -->
-    <div class="bg-gray-50 min-h-screen py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div class="grid lg:grid-cols-3 gap-8">
-                <!-- Основная форма -->
-                <div class="lg:col-span-2">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                        <div class="p-8">
-                            <form id="order-form">
-                                <!-- Спосіб доставки -->
-                                <div class="mb-8">
-                                    <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                                        <div class="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center mr-3">
-                                            <i class="fas fa-truck text-white"></i>
-                                        </div>
-                                        Спосіб доставки
-                                    </h2>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div class="delivery-option group cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-emerald-400 hover:shadow-lg transition-all duration-300 relative">
-                                            <div class="flex items-center">
-                                                <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center mr-4">
-                                                    <i class="fas fa-truck text-white text-lg"></i>
-                                                        </div>
-                                                <div class="flex-1">
-                                                    <h5 class="font-bold text-gray-900 mb-1">Нова Пошта</h5>
-                                                    <p class="text-sm text-gray-600">Доставка до відділення або поштомату</p>
-                                                </div>
-                                                <span class="absolute top-3 right-3 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded-full">Популярно</span>
-                                            </div>
-                                            <input type="radio" name="delivery_service" value="novaposhta" class="absolute top-3 right-3 w-5 h-5 opacity-0">
-                                        </div>
-                                        
-                                        <div class="delivery-option group cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-emerald-400 hover:shadow-lg transition-all duration-300 relative">
-                                            <div class="flex items-center">
-                                                <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-xl flex items-center justify-center mr-4">
-                                                    <i class="fas fa-motorcycle text-white text-lg"></i>
-                                                        </div>
-                                                <div class="flex-1">
-                                                    <h5 class="font-bold text-gray-900 mb-1">Кур'єрська доставка</h5>
-                                                    <p class="text-sm text-gray-600">Доставка додому або в офіс</p>
-                                                </div>
-                                            </div>
-                                            <input type="radio" name="delivery_service" value="courier" class="absolute top-3 right-3 w-5 h-5 opacity-0">
-                                        </div>
-                                        
-                                        <div class="delivery-option group cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-emerald-400 hover:shadow-lg transition-all duration-300 relative">
-                                            <div class="flex items-center">
-                                                <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-xl flex items-center justify-center mr-4">
-                                                    <i class="fas fa-store text-white text-lg"></i>
-                                                        </div>
-                                                <div class="flex-1">
-                                                    <h5 class="font-bold text-gray-900 mb-1">Самовивіз</h5>
-                                                    <p class="text-sm text-gray-600">Забрати замовлення самостійно</p>
-                                                </div>
-                                            </div>
-                                            <input type="radio" name="delivery_service" value="pickup" class="absolute top-3 right-3 w-5 h-5 opacity-0">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Деталі доставки -->
-                                <div id="delivery-details" class="mb-8 hidden">
-                                    <!-- Нова Пошта -->
-                                    <div id="novaposhta-details" class="hidden">
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
-                                                <label class="block text-sm font-bold text-gray-700 mb-2">
-                                                    Місто <span class="text-red-500">*</span>
-                                            </label>
-                                                <div class="relative">
-                                                    <select id="city-select" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors">
-                                                    <option value="">Оберіть місто</option>
-                                                </select>
-                                                    <div id="city-loader" class="absolute top-1/2 right-3 -translate-y-1/2 hidden">
-                                                        <div class="w-5 h-5 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
-                                                    </div>
-                                            </div>
-                                        </div>
-
-                                            <div>
-                                                <label class="block text-sm font-bold text-gray-700 mb-2">
-                                                    Відділення <span class="text-red-500">*</span>
-                                                </label>
-                                                <div class="relative">
-                                                    <select id="warehouse-select" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors">
-                                                        <option value="">Оберіть відділення</option>
-                                                    </select>
-                                                    <div id="warehouse-loader" class="absolute top-1/2 right-3 -translate-y-1/2 hidden">
-                                                        <div class="w-5 h-5 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Ручний ввод адреси -->
-                                    <div id="manual-address-details" class="hidden">
-                                        <div>
-                                            <label for="manual-address" class="block text-sm font-bold text-gray-700 mb-2">
-                                                Адреса доставки <span class="text-red-500">*</span>
-                                            </label>
-                                            <textarea id="manual-address" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" rows="3" placeholder="Введіть повну адресу доставки"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Дані отримувача -->
-                                <div class="mb-8">
-                                    <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                                        <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-xl flex items-center justify-center mr-3">
-                                            <i class="fas fa-user text-white"></i>
-                                        </div>
-                                        Дані отримувача
-                                    </h2>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div>
-                                            <label for="name" class="block text-sm font-bold text-gray-700 mb-2">
-                                                Ім'я <span class="text-red-500">*</span>
-                                            </label>
-                                            <input type="text" id="name" name="name" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="Ваше ім'я">
-                                        </div>
-                                        
-                                        <div>
-                                            <label for="lastname" class="block text-sm font-bold text-gray-700 mb-2">
-                                                Прізвище <span class="text-red-500">*</span>
-                                            </label>
-                                            <input type="text" id="lastname" name="lastname" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="Ваше прізвище">
-                                        </div>
-                                        
-                                        <div>
-                                            <label for="fathername" class="block text-sm font-bold text-gray-700 mb-2">
-                                                По батькові
-                                            </label>
-                                            <input type="text" id="fathername" name="fathername" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="По батькові (необов'язково)">
-                                        </div>
-                                        
-                                        <div>
-                                            <label for="phone" class="block text-sm font-bold text-gray-700 mb-2">
-                                                Телефон <span class="text-red-500">*</span>
-                                            </label>
-                                            <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" placeholder="+380XXXXXXXXX">
-                                        </div>
-                                        
-                                        <div class="md:col-span-2">
-                                            <label for="comment" class="block text-sm font-bold text-gray-700 mb-2">
-                                                Коментар до замовлення
-                                            </label>
-                                            <textarea id="comment" name="comment" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-400 focus:ring-0 transition-colors" rows="3" placeholder="Додаткові побажання або коментарі (необов'язково)"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Спосіб оплати -->
-                                <div class="mb-8">
-                                    <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                                        <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mr-3">
-                                            <i class="fas fa-credit-card text-white"></i>
-                                        </div>
-                                        Спосіб оплати
-                                    </h2>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div class="payment-option group cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-green-400 hover:shadow-lg transition-all duration-300 relative">
-                                            <div class="flex items-center">
-                                                <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mr-4">
-                                                    <i class="fas fa-money-bill-wave text-white text-lg"></i>
-                                                        </div>
-                                                <div class="flex-1">
-                                                    <h5 class="font-bold text-gray-900 mb-1">Накладений платіж</h5>
-                                                    <p class="text-sm text-gray-600">Оплата готівкою при отриманні</p>
-                                                </div>
-                                            </div>
-                                            <input type="radio" name="payment_method" value="cash" class="absolute top-3 right-3 w-5 h-5 opacity-0">
-                                        </div>
-                                        
-                                        <div class="payment-option group cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-green-400 hover:shadow-lg transition-all duration-300 relative">
-                                            <div class="flex items-center">
-                                                <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl flex items-center justify-center mr-4">
-                                                    <i class="fas fa-university text-white text-lg"></i>
-                                                        </div>
-                                                <div class="flex-1">
-                                                    <h5 class="font-bold text-gray-900 mb-1">Банківський переказ</h5>
-                                                    <p class="text-sm text-gray-600">Оплата на карту банку</p>
-                                                </div>
-                                            </div>
-                                            <input type="radio" name="payment_method" value="bank_transfer" class="absolute top-3 right-3 w-5 h-5 opacity-0">
-                                        </div>
-                                        
-                                        <div class="payment-option group cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-green-400 hover:shadow-lg transition-all duration-300 relative">
-                                            <div class="flex items-center">
-                                                <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-500 rounded-xl flex items-center justify-center mr-4">
-                                                    <i class="fas fa-credit-card text-white text-lg"></i>
-                                                        </div>
-                                                <div class="flex-1">
-                                                    <h5 class="font-bold text-gray-900 mb-1">Оплата картою при отриманні</h5>
-                                                    <p class="text-sm text-gray-600">Оплата картою при доставці</p>
-                                                </div>
-                                            </div>
-                                            <input type="radio" name="payment_method" value="card_payment" class="absolute top-3 right-3 w-5 h-5 opacity-0">
-                                        </div>
-                                        
-                                        <div class="payment-option group cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-green-400 hover:shadow-lg transition-all duration-300 relative">
-                                            <div class="flex items-center">
-                                                <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-red-500 rounded-xl flex items-center justify-center mr-4">
-                                                    <i class="fas fa-store text-white text-lg"></i>
-                                                        </div>
-                                                <div class="flex-1">
-                                                    <h5 class="font-bold text-gray-900 mb-1">Оплата при самовивозі</h5>
-                                                    <p class="text-sm text-gray-600">Оплата при отриманні в магазині</p>
-                                                </div>
-                                            </div>
-                                            <input type="radio" name="payment_method" value="pickup_payment" class="absolute top-3 right-3 w-5 h-5 opacity-0">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Інформація про способи оплати -->
-                                <div id="payment-info" class="mb-6 hidden">
-                                    <div id="payment-info-cash" class="bg-blue-50 border border-blue-200 rounded-xl p-4 hidden">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
-                                            <div>
-                                                <strong class="text-blue-900">Накладений платіж:</strong> 
-                                                <span class="text-blue-800">Оплата готівкою при отриманні замовлення. Кур'єр матиме з собою чек та квитанцію.</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div id="payment-info-bank_transfer" class="bg-green-50 border border-green-200 rounded-xl p-4 hidden">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-info-circle text-green-500 mt-1 mr-3"></i>
-                                            <div>
-                                                <strong class="text-green-900">Банківський переказ:</strong> 
-                                                <span class="text-green-800">Після підтвердження замовлення ми надішлемо вам реквізити для оплати на email.</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div id="payment-info-card_payment" class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 hidden">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-info-circle text-yellow-500 mt-1 mr-3"></i>
-                                            <div>
-                                                <strong class="text-yellow-900">Оплата картою при отриманні:</strong> 
-                                                <span class="text-yellow-800">Кур'єр матиме з собою термінал для оплати картою. Підтримуються всі основні платіжні системи.</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div id="payment-info-pickup_payment" class="bg-blue-50 border border-blue-200 rounded-xl p-4 hidden">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
-                                            <div>
-                                                <strong class="text-blue-900">Оплата при самовивозі:</strong> 
-                                                <span class="text-blue-800">Оплата готівкою або картою при отриманні замовлення в нашому магазині.</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Кнопка отправки -->
-                                <div class="pt-6 border-t border-gray-200">
-                                    <button type="submit" id="submit-order" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                                        <i class="fas fa-check mr-2"></i>
-                                        Оформити замовлення
-                                    </button>
-                                    <p id="checkout-minimum-message" class="mt-3 text-sm text-center hidden"></p>
-                                </div>
-
-                                <!-- CSRF -->
-                                <meta name="csrf-token" content="{{ csrf_token() }}">
-                            </form>
+        <form id="order-form" class="zcheck__layout" novalidate>
+            <div class="zcheck__main">
+                {{-- Contact instead of registration --}}
+                <section class="zcheck__card">
+                    <h2>Контактні дані</h2>
+                    <p class="zcheck__lead">Вкажіть телефон і ПІБ — ми зв’яжемося для підтвердження замовлення.</p>
+                    <div class="zcheck__alert">
+                        Мінімальна сума замовлення — <strong>1000 ₴</strong>
+                    </div>
+                    <div class="zcheck__grid">
+                        <div class="zcheck__field">
+                            <label for="phone">Телефон <em>*</em></label>
+                            <div class="zcheck__phone">
+                                <span>+380</span>
+                                <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="XX XXX XX XX">
+                            </div>
+                        </div>
+                        <div class="zcheck__field">
+                            <label for="name">Ім’я <em>*</em></label>
+                            <input type="text" id="name" name="name" autocomplete="given-name" placeholder="Ім’я">
+                        </div>
+                        <div class="zcheck__field">
+                            <label for="lastname">Прізвище <em>*</em></label>
+                            <input type="text" id="lastname" name="lastname" autocomplete="family-name" placeholder="Прізвище">
+                        </div>
+                        <div class="zcheck__field">
+                            <label for="fathername">По батькові</label>
+                            <input type="text" id="fathername" name="fathername" placeholder="Необов’язково">
                         </div>
                     </div>
-                </div>
-                
-                <!-- Боковая панель с корзиной -->
-                <div class="lg:col-span-1">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden sticky top-8">
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                                <div class="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center mr-3">
-                                    <i class="fas fa-shopping-cart text-white text-sm"></i>
-                                </div>
-                                Ваше замовлення
-                            </h3>
-                            <cart-list></cart-list>
-                        </div>
+                </section>
+
+                {{-- Order items --}}
+                <section class="zcheck__card">
+                    <div class="zcheck__card-head">
+                        <h2>Ваше замовлення</h2>
+                        <a href="/catalog" class="zcheck__link">Редагувати товари</a>
                     </div>
-                </div>
+                    <cart-list variant="items"></cart-list>
+                </section>
+
+                {{-- Delivery --}}
+                <section class="zcheck__card">
+                    <h2>Доставка</h2>
+                    <div class="zcheck__methods" role="radiogroup" aria-label="Спосіб доставки">
+                        <label class="zcheck-method">
+                            <div class="zcheck-method__row">
+                                <input type="radio" name="delivery_service" value="novaposhta">
+                                <span class="zcheck-method__title">
+                                    <strong>Нова Пошта</strong>
+                                    <small>Відділення або поштомат</small>
+                                </span>
+                                <em class="zcheck-method__price">За тарифами перевізника</em>
+                            </div>
+                            <div class="zcheck-method__body">
+                                <div class="zcheck__grid">
+                                    <div class="zcheck__field zcheck__field--full">
+                                        <label for="np-city-input">Місто <em>*</em></label>
+                                        <div class="zcheck__suggest" data-suggest="city">
+                                            <input type="text" id="np-city-input" autocomplete="off" placeholder="Почніть вводити назву міста">
+                                            <input type="hidden" id="city-ref" value="">
+                                            <input type="hidden" id="city-name" value="">
+                                            <div id="np-city-list" class="zcheck__suggest-list" hidden></div>
+                                        </div>
+                                    </div>
+                                    <div class="zcheck__field zcheck__field--full">
+                                        <label for="warehouse-select">Відділення / поштомат <em>*</em></label>
+                                        <select id="warehouse-select" disabled>
+                                            <option value="">Спочатку оберіть місто</option>
+                                        </select>
+                                        <input type="hidden" id="warehouse-name" value="">
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+
+                        <label class="zcheck-method">
+                            <div class="zcheck-method__row">
+                                <input type="radio" name="delivery_service" value="courier">
+                                <span class="zcheck-method__title">
+                                    <strong>Кур’єрська доставка</strong>
+                                    <small>Доставка за адресою</small>
+                                </span>
+                                <em class="zcheck-method__price">За тарифами перевізника</em>
+                            </div>
+                            <div class="zcheck-method__body">
+                                <div class="zcheck__grid">
+                                    <div class="zcheck__field">
+                                        <label for="courier-city">Місто <em>*</em></label>
+                                        <input type="text" id="courier-city" placeholder="Наприклад, Одеса">
+                                    </div>
+                                    <div class="zcheck__field">
+                                        <label for="courier-street">Вулиця <em>*</em></label>
+                                        <input type="text" id="courier-street" placeholder="Назва вулиці">
+                                    </div>
+                                    <div class="zcheck__field">
+                                        <label for="courier-building">Будинок <em>*</em></label>
+                                        <input type="text" id="courier-building" placeholder="№">
+                                    </div>
+                                    <div class="zcheck__field">
+                                        <label for="courier-apt">Квартира / офіс</label>
+                                        <input type="text" id="courier-apt" placeholder="Необов’язково">
+                                    </div>
+                                    <div class="zcheck__field zcheck__field--full">
+                                        <label for="manual-address">Уточнення адреси</label>
+                                        <textarea id="manual-address" rows="2" placeholder="Орієнтири, під’їзд, поверх"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+
+                        <label class="zcheck-method">
+                            <div class="zcheck-method__row">
+                                <input type="radio" name="delivery_service" value="pickup">
+                                <span class="zcheck-method__title">
+                                    <strong>Самовивіз</strong>
+                                    <small>Одеса, 7 км, маг. №2523</small>
+                                </span>
+                                <em class="zcheck-method__price">Безкоштовно</em>
+                            </div>
+                            <div class="zcheck-method__body">
+                                <div class="zcheck__note">
+                                    Одеса, промринок «7 км», вул. Фабрична, маг. №2523.
+                                    Після підтвердження повідомимо, коли можна забрати замовлення.
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </section>
+
+                {{-- Payment --}}
+                <section class="zcheck__card">
+                    <h2>Оплата</h2>
+                    <div class="zcheck__methods" role="radiogroup" aria-label="Спосіб оплати">
+                        <label class="zcheck-method zcheck-method--simple">
+                            <div class="zcheck-method__row">
+                                <input type="radio" name="payment_method" value="cash">
+                                <span class="zcheck-method__title">
+                                    <strong>Накладений платіж</strong>
+                                    <small>Оплата готівкою при отриманні</small>
+                                </span>
+                            </div>
+                        </label>
+                        <label class="zcheck-method zcheck-method--simple">
+                            <div class="zcheck-method__row">
+                                <input type="radio" name="payment_method" value="bank_transfer">
+                                <span class="zcheck-method__title">
+                                    <strong>Оплата на картку</strong>
+                                    <small>Реквізити надішлемо після підтвердження</small>
+                                </span>
+                            </div>
+                        </label>
+                        <label class="zcheck-method zcheck-method--simple">
+                            <div class="zcheck-method__row">
+                                <input type="radio" name="payment_method" value="card_payment">
+                                <span class="zcheck-method__title">
+                                    <strong>Картка при отриманні</strong>
+                                    <small>Оплата терміналом у кур’єра / на відділенні</small>
+                                </span>
+                            </div>
+                        </label>
+                        <label class="zcheck-method zcheck-method--simple">
+                            <div class="zcheck-method__row">
+                                <input type="radio" name="payment_method" value="pickup_payment">
+                                <span class="zcheck-method__title">
+                                    <strong>Оплата при самовивозі</strong>
+                                    <small>Готівка або картка в магазині</small>
+                                </span>
+                            </div>
+                        </label>
+                    </div>
+                </section>
+
+                {{-- Comment --}}
+                <section class="zcheck__card">
+                    <h2>Коментар до замовлення</h2>
+                    <div class="zcheck__field">
+                        <textarea id="comment" name="comment" rows="3" placeholder="Побажання до замовлення (необов’язково)"></textarea>
+                    </div>
+                </section>
+
+                <p id="checkout-form-error" class="zcheck__error" hidden></p>
             </div>
+
+            <aside class="zcheck__aside">
+                <div class="zcheck__summary">
+                    <h2>Разом</h2>
+                    <cart-list variant="aside"></cart-list>
+                    <button type="submit" id="submit-order" class="zcheck__btn">Замовлення підтверджую</button>
+                    <p id="checkout-minimum-message" class="zcheck__hint" hidden></p>
+                    <p class="zcheck__legal">
+                        Натискаючи кнопку, ви погоджуєтесь з
+                        <a href="{{ route('uhoda_korystuvacha') }}">умовами використання</a>
+                        та
+                        <a href="{{ route('privacy_policy') }}">політикою конфіденційності</a>.
+                    </p>
+                </div>
+            </aside>
+        </form>
+    </div>
+
+    <div id="preloader" class="zcheck__loader" hidden>
+        <div class="zcheck__loader-box">
+            <span class="zcheck__spinner"></span>
+            <p>Надсилаємо замовлення...</p>
         </div>
     </div>
+</main>
 @endsection
 
 @section('scripts')
-    <!-- Select2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
-    
-    <!-- Select2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    
-    <script>
-        const MIN_ORDER_TOTAL = 1000;
+<script>
+(function () {
+    if (window.__ZCHECK_BOUND__) return;
+    window.__ZCHECK_BOUND__ = true;
 
-        $(document).ready(function() {
-            let cities = [];
-            let warehouses = [];
-            let selectedCityRef = '';
-            const submitButton = document.getElementById('submit-order');
-            const minOrderMessage = document.getElementById('checkout-minimum-message');
+    const MIN_ORDER_TOTAL = 1000;
+    let cityTimer = null;
+    let cityRequestId = 0;
 
-            const updateSubmitState = () => {
-                if (!submitButton) {
-                    return;
-                }
+    function csrf() {
+        return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    }
+    function el(id) { return document.getElementById(id); }
+    function form() { return document.getElementById('order-form'); }
 
-                const totalInput = document.getElementById('total_price_stream');
-                const rawValue = totalInput ? parseFloat(totalInput.value) : 0;
-                const total = isNaN(rawValue) ? 0 : rawValue;
+    function showError(message) {
+        const node = el('checkout-form-error');
+        if (!node) return;
+        node.textContent = message;
+        node.hidden = false;
+        node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 
-                if (minOrderMessage) {
-                    minOrderMessage.classList.remove('text-red-600', 'text-emerald-600');
-                }
+    function clearError() {
+        const node = el('checkout-form-error');
+        if (node) node.hidden = true;
+        form()?.querySelectorAll('.is-invalid').forEach((n) => n.classList.remove('is-invalid'));
+    }
 
-                if (total < MIN_ORDER_TOTAL) {
-                    submitButton.disabled = true;
-                    submitButton.classList.add('cursor-not-allowed', 'opacity-60', 'pointer-events-none');
-                    if (minOrderMessage) {
-                        const difference = Math.ceil(MIN_ORDER_TOTAL - total);
-                        minOrderMessage.textContent = `Мінімальна сума замовлення — 1000 ₴. Додайте товарів ще на ${difference.toLocaleString('uk-UA')} ₴.`;
-                        minOrderMessage.classList.add('text-red-600');
-                        minOrderMessage.classList.remove('hidden');
-                    }
-                } else {
-                    submitButton.disabled = false;
-                    submitButton.classList.remove('cursor-not-allowed', 'opacity-60', 'pointer-events-none');
-                    if (minOrderMessage) {
-                        minOrderMessage.textContent = 'Мінімальна сума замовлення виконана. Можна оформлювати!';
-                        minOrderMessage.classList.add('text-emerald-600');
-                        minOrderMessage.classList.remove('hidden');
-                    }
-                }
-            };
+    function markInvalid(node) {
+        if (node) node.classList.add('is-invalid');
+    }
 
-            updateSubmitState();
-            setTimeout(updateSubmitState, 400);
-            window.addEventListener('cart-updated', updateSubmitState);
+    function setHidden(node, isHidden) {
+        if (!node) return;
+        node.hidden = !!isHidden;
+        if (isHidden) node.setAttribute('hidden', '');
+        else node.removeAttribute('hidden');
+    }
 
-            // Обработчики для опций доставки
-            $('input[name="delivery_service"]').on('change', function() {
-                const service = $(this).val();
-                
-                // Убираем активный класс со всех опций
-                $('.delivery-option').removeClass('active');
-                
-                // Добавляем активный класс к выбранной опции
-                $(this).closest('.delivery-option').addClass('active');
-                
-                // Показываем соответствующие детали доставки
-                showDeliveryDetails(service);
-            });
+    function normalizePhone(value) {
+        const digits = String(value || '').replace(/\D/g, '');
+        if (digits.startsWith('380') && digits.length >= 12) return '+' + digits;
+        if (digits.length === 9) return '+380' + digits;
+        if (digits.length === 10 && digits.startsWith('0')) return '+38' + digits;
+        return value.trim();
+    }
 
-            // Клик по карточкам доставки
-            $('.delivery-option').on('click', function() {
-                const radio = $(this).find('input[type="radio"]');
-                radio.prop('checked', true).trigger('change');
-            });
+    function updateSubmitState() {
+        const submitButton = el('submit-order');
+        const minOrderMessage = el('checkout-minimum-message');
+        if (!submitButton) return;
+        const total = parseFloat(el('total_price_stream')?.value || '0') || 0;
 
-            // Обработчики для опций оплаты
-            $('input[name="payment_method"]').on('change', function() {
-                const method = $(this).val();
-                
-                // Убираем активный класс со всех опций
-                $('.payment-option').removeClass('active');
-                
-                // Добавляем активный класс к выбранной опции
-                $(this).closest('.payment-option').addClass('active');
-                
-                // Показываем информацию о способе оплаты
-                showPaymentInfo(method);
-            });
-
-            // Клик по карточкам оплаты
-            $('.payment-option').on('click', function() {
-                const radio = $(this).find('input[type="radio"]');
-                radio.prop('checked', true).trigger('change');
-            });
-
-            // Инициализация Select2 для городов
-            $('#city-select').select2({
-                theme: 'bootstrap-5',
-                placeholder: 'Оберіть місто',
-                allowClear: true,
-                language: {
-                    noResults: function() {
-                        return "Міста не знайдено";
-                    },
-                    searching: function() {
-                        return "Пошук...";
-                    },
-                    inputTooShort: function() {
-                        return "";
-                    }
-                },
-                minimumInputLength: 0
-            });
-
-            // Инициализация Select2 для отделений
-            $('#warehouse-select').select2({
-                theme: 'bootstrap-5',
-                placeholder: 'Оберіть відділення',
-                allowClear: true,
-                language: {
-                    noResults: function() {
-                        return "Відділення не знайдено";
-                    },
-                    searching: function() {
-                        return "Пошук...";
-                    },
-                    inputTooShort: function() {
-                        return "";
-                    }
-                },
-                minimumInputLength: 0
-            });
-
-            // Функция показа деталей доставки
-            function showDeliveryDetails(service) {
-                $('#delivery-details').removeClass('hidden');
-                $('#novaposhta-details').addClass('hidden');
-                $('#manual-address-details').addClass('hidden');
-                
-                if (service === 'novaposhta') {
-                    $('#novaposhta-details').removeClass('hidden');
-                    loadCities();
-                } else if (service === 'pickup') {
-                    // Для самовывоза не показываем детали
-                    $('#delivery-details').addClass('hidden');
-                } else {
-                    $('#manual-address-details').removeClass('hidden');
-                }
+        if (total < MIN_ORDER_TOTAL) {
+            submitButton.disabled = true;
+            if (minOrderMessage) {
+                const difference = Math.ceil(MIN_ORDER_TOTAL - total);
+                minOrderMessage.textContent = total > 0
+                    ? `Мінімальна сума — 1000 ₴. Додайте ще на ${difference.toLocaleString('uk-UA')} ₴.`
+                    : 'Додайте товари до кошика, щоб оформити замовлення.';
+                minOrderMessage.hidden = false;
+                minOrderMessage.classList.remove('is-ok');
             }
-
-            // Функция показа информации о способе оплаты
-            function showPaymentInfo(method) {
-                $('#payment-info').removeClass('hidden');
-                $('#payment-info > div').addClass('hidden');
-                $(`#payment-info-${method}`).removeClass('hidden');
+        } else {
+            submitButton.disabled = false;
+            if (minOrderMessage) {
+                minOrderMessage.textContent = '';
+                minOrderMessage.hidden = true;
+                minOrderMessage.classList.add('is-ok');
             }
+        }
+    }
 
-            // Загрузка городов
-            function loadCities() {
-                $('#city-loader').removeClass('hidden');
-                
-                $.get('/cities')
-                    .done(function(data) {
-                        cities = data;
-                        populateCitySelect(data);
-                    })
-                    .fail(function() {
-                        console.error('Ошибка загрузки городов');
-                    })
-                    .always(function() {
-                        $('#city-loader').addClass('hidden');
-                    });
-            }
+    function resetNovaFields() {
+        const cityInput = el('np-city-input');
+        const cityRefInput = el('city-ref');
+        const cityNameInput = el('city-name');
+        const cityList = el('np-city-list');
+        const warehouseSelect = el('warehouse-select');
+        const warehouseNameInput = el('warehouse-name');
+        if (cityInput) cityInput.value = '';
+        if (cityRefInput) cityRefInput.value = '';
+        if (cityNameInput) cityNameInput.value = '';
+        if (cityList) {
+            cityList.innerHTML = '';
+            setHidden(cityList, true);
+        }
+        if (warehouseSelect) {
+            warehouseSelect.innerHTML = '<option value="">Спочатку оберіть місто</option>';
+            warehouseSelect.disabled = true;
+        }
+        if (warehouseNameInput) warehouseNameInput.value = '';
+    }
 
-            // Заполнение селекта городов
-            function populateCitySelect(citiesData) {
-                const $select = $('#city-select');
-                $select.empty().append('<option value="">Оберіть місто</option>');
-                
-                citiesData.forEach(city => {
-                    $select.append(`<option value="${city.Ref}">${city.Description}</option>`);
-                });
-                
-                // Переинициализируем Select2
-                $select.trigger('change.select2');
-            }
-
-            // Обработчик изменения селекта городов
-            $('#city-select').on('change', function() {
-                const cityRef = $(this).val();
-                
-                if (cityRef) {
-                    selectedCityRef = cityRef;
-                    loadWarehouses(cityRef);
-                }
-            });
-
-
-            // Загрузка отделений
-            function loadWarehouses(cityRef) {
-                $('#warehouse-loader').removeClass('hidden');
-                
-                $.ajax({
-                    method: 'POST',
-                    url: '/warehouses',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    contentType: 'application/json',
-                    data: JSON.stringify({ cityRef }),
-                    success: function(data) {
-                        warehouses = data;
-                        populateWarehouseSelect(data);
-                    },
-                    error: function() {
-                        console.error('Ошибка загрузки отделений');
-                    },
-                    complete: function() {
-                        $('#warehouse-loader').addClass('hidden');
-                    }
-                });
-            }
-
-            // Заполнение селекта отделений
-            function populateWarehouseSelect(warehousesData) {
-                const $select = $('#warehouse-select');
-                $select.empty().append('<option value="">Оберіть відділення</option>');
-                
-                warehousesData.forEach(warehouse => {
-                    $select.append(`<option value="${warehouse.Ref}">${warehouse.Description}</option>`);
-                });
-                
-                // Переинициализируем Select2
-                $select.trigger('change.select2');
-            }
-
-
-            // Валидация формы
-            function validateForm() {
-                let isValid = true;
-                
-                // Очистка предыдущих ошибок
-                $('input, textarea, select').removeClass('is-invalid');
-                $('.invalid-feedback').remove();
-                
-                // Проверка способа доставки
-                const deliveryService = $('input[name="delivery_service"]:checked').val();
-                if (!deliveryService) {
-                    showError('Оберіть спосіб доставки');
-                    isValid = false;
-                }
-                
-                // Проверка деталей доставки
-                if (deliveryService === 'novaposhta') {
-                    const city = $('#city-select').val();
-                    const warehouse = $('#warehouse-select').val();
-                    
-                    if (!city) {
-                        showFieldError('#city-select', 'Оберіть місто');
-                        isValid = false;
-                    }
-                    
-                    if (!warehouse) {
-                        showFieldError('#warehouse-select', 'Оберіть відділення');
-                        isValid = false;
-                    }
-                } else if (deliveryService && deliveryService !== 'pickup') {
-                    const manualAddress = $('#manual-address').val().trim();
-                    if (!manualAddress || manualAddress.length < 2) {
-                        showFieldError('#manual-address', 'Введіть адресу доставки');
-                        isValid = false;
-                    }
-                }
-                
-                // Проверка данных получателя
-                const name = $('#name').val().trim();
-                const lastname = $('#lastname').val().trim();
-                const phone = $('#phone').val().trim();
-                
-                if (!name || name.length < 2) {
-                    showFieldError('#name', 'Введіть коректне ім\'я');
-                    isValid = false;
-                }
-                
-                if (!lastname || lastname.length < 2) {
-                    showFieldError('#lastname', 'Введіть коректне прізвище');
-                    isValid = false;
-                }
-                
-                if (!phone || phone.length < 10) {
-                    showFieldError('#phone', 'Введіть коректний номер телефону');
-                    isValid = false;
-                }
-                
-                // Проверка способа оплаты
-                const paymentMethod = $('input[name="payment_method"]:checked').val();
-                if (!paymentMethod) {
-                    showError('Оберіть спосіб оплати');
-                    isValid = false;
-                }
-                
-                return isValid;
-            }
-
-            // Показать ошибку поля
-            function showFieldError(selector, message) {
-                $(selector).addClass('is-invalid');
-                $(selector).after(`<div class="invalid-feedback">${message}</div>`);
-            }
-
-            // Показать общую ошибку
-            function showError(message) {
-                alert(message);
-            }
-
-            // Отправка формы
-            $('#order-form').on('submit', function(e) {
-                e.preventDefault();
-                
-                if (!validateForm()) {
-                    return;
-                }
-                
-                // Проверка корзины
-                const cart = localStorage.getItem('cart');
-                if (!cart || cart === '[]' || cart === '{}' || cart === 'null') {
-                    alert('Кошик порожній. Будь ласка, додайте товари до кошика.');
-                    return;
-                }
-                
-                // Показать прелоадер
-                $('#preloader').removeClass('hidden');
-                
-                // Получаем общую сумму из скрытого поля
-                const totalPrice = $('#total_price_stream').val();
-                
-                // Подготовка данных
-                const formData = {
-                    delivery_service: $('input[name="delivery_service"]:checked').val(),
-                    city: $('#city-select option:selected').text(),
-                    warehouse: $('#warehouse-select option:selected').text(),
-                    manual_address: $('#manual-address').val().trim(),
-                    name: $('#name').val().trim(),
-                    lastname: $('#lastname').val().trim(),
-                    fathername: $('#fathername').val().trim(),
-                    phone: $('#phone').val().trim(),
-                    comment: $('#comment').val().trim(),
-                    payment: $('input[name="payment_method"]:checked').val(),
-                    cart: cart,
-                    total_price: totalPrice,
-                    _token: $('meta[name="csrf-token"]').attr('content')
-                };
-                
-                // Отправка заказа
-                $.ajax({
-                    type: 'POST',
-                    url: '/order-submit',
-                    data: formData,
-                    success: function(response) {
-                        $('#preloader').addClass('hidden');
-                        localStorage.removeItem('cart');
-                        window.location.href = '/thank-you';
-                    },
-                    error: function(xhr) {
-                        $('#preloader').addClass('hidden');
-                        let errorMessage = 'Помилка під час надсилання замовлення. Спробуйте ще раз.';
-                        
-                        try {
-                            const response = JSON.parse(xhr.responseText);
-                            if (response.error) {
-                                errorMessage = response.error;
-                            }
-                        } catch (e) {
-                            console.error('Could not parse error response:', e);
-                        }
-                        
-                        alert(errorMessage);
-                    }
-                });
-            });
+    function renderCityResults(items) {
+        const cityList = el('np-city-list');
+        if (!cityList) return;
+        cityList.innerHTML = '';
+        if (!items.length) {
+            cityList.innerHTML = '<div class="zcheck__suggest-empty">Міст не знайдено</div>';
+            setHidden(cityList, false);
+            return;
+        }
+        items.forEach((city) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'zcheck__suggest-item';
+            btn.textContent = city.Description;
+            btn.dataset.ref = city.Ref || '';
+            btn.dataset.name = city.CityName || city.Description || '';
+            btn.dataset.label = city.Description || '';
+            cityList.appendChild(btn);
         });
-    </script>
+        setHidden(cityList, false);
+    }
+
+    function selectCity(city) {
+        const cityInput = el('np-city-input');
+        const cityRefInput = el('city-ref');
+        const cityNameInput = el('city-name');
+        const cityList = el('np-city-list');
+        if (cityInput) cityInput.value = city.Description || city.label || '';
+        if (cityRefInput) cityRefInput.value = city.Ref || city.ref || '';
+        if (cityNameInput) cityNameInput.value = city.CityName || city.name || city.Description || '';
+        if (cityList) {
+            cityList.innerHTML = '';
+            setHidden(cityList, true);
+        }
+        if (cityRefInput?.value) loadWarehouses(cityRefInput.value);
+    }
+
+    async function searchCities(query) {
+        const cityList = el('np-city-list');
+        if (!cityList) return;
+        const requestId = ++cityRequestId;
+        cityList.innerHTML = '<div class="zcheck__suggest-empty">Пошук...</div>';
+        setHidden(cityList, false);
+        try {
+            const response = await fetch(`/cities?q=${encodeURIComponent(query)}`, {
+                headers: { Accept: 'application/json' },
+            });
+            const data = await response.json();
+            if (requestId !== cityRequestId) return;
+            if (!response.ok) throw new Error(data.error || 'Помилка пошуку міст');
+            renderCityResults(Array.isArray(data) ? data : []);
+        } catch (e) {
+            if (requestId !== cityRequestId) return;
+            cityList.innerHTML = `<div class="zcheck__suggest-empty">${e.message || 'Помилка завантаження міст'}</div>`;
+            setHidden(cityList, false);
+        }
+    }
+
+    async function loadWarehouses(cityRef) {
+        const warehouseSelect = el('warehouse-select');
+        const warehouseNameInput = el('warehouse-name');
+        if (!warehouseSelect) return;
+        warehouseSelect.disabled = true;
+        warehouseSelect.innerHTML = '<option value="">Завантаження відділень...</option>';
+        if (warehouseNameInput) warehouseNameInput.value = '';
+        try {
+            const response = await fetch('/warehouses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrf(),
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify({ cityRef }),
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Помилка завантаження відділень');
+            const list = Array.isArray(data) ? data : [];
+            warehouseSelect.innerHTML = '<option value="">Оберіть відділення</option>';
+            list.forEach((warehouse) => {
+                const option = document.createElement('option');
+                option.value = warehouse.Ref;
+                option.textContent = warehouse.Description;
+                warehouseSelect.appendChild(option);
+            });
+            warehouseSelect.disabled = list.length === 0;
+            if (!list.length) warehouseSelect.innerHTML = '<option value="">Відділень не знайдено</option>';
+        } catch (e) {
+            warehouseSelect.innerHTML = '<option value="">Помилка завантаження</option>';
+            showError(e.message || 'Не вдалося завантажити відділення.');
+        }
+    }
+
+    function buildCourierAddress() {
+        const parts = [];
+        const city = el('courier-city')?.value.trim();
+        const street = el('courier-street')?.value.trim();
+        const building = el('courier-building')?.value.trim();
+        const apt = el('courier-apt')?.value.trim();
+        const extra = el('manual-address')?.value.trim();
+        if (city) parts.push(city);
+        if (street) parts.push(`вул. ${street}`);
+        if (building) parts.push(`буд. ${building}`);
+        if (apt) parts.push(`кв./оф. ${apt}`);
+        if (extra) parts.push(extra);
+        return parts.join(', ');
+    }
+
+    function validateForm() {
+        clearError();
+        const f = form();
+        if (!f) return false;
+        let isValid = true;
+
+        const phone = el('phone');
+        const name = el('name');
+        const lastname = el('lastname');
+        const phoneValue = normalizePhone(phone?.value || '');
+
+        if (!phoneValue || phoneValue.replace(/\D/g, '').length < 12) {
+            markInvalid(phone);
+            isValid = false;
+        }
+        if (!name?.value.trim() || name.value.trim().length < 2) {
+            markInvalid(name);
+            isValid = false;
+        }
+        if (!lastname?.value.trim() || lastname.value.trim().length < 2) {
+            markInvalid(lastname);
+            isValid = false;
+        }
+
+        const deliveryService = f.querySelector('input[name="delivery_service"]:checked')?.value;
+        if (!deliveryService) {
+            showError('Оберіть спосіб доставки');
+            return false;
+        }
+
+        if (deliveryService === 'novaposhta') {
+            if (!el('city-ref')?.value) {
+                markInvalid(el('np-city-input'));
+                isValid = false;
+            }
+            if (!el('warehouse-select')?.value) {
+                markInvalid(el('warehouse-select'));
+                isValid = false;
+            }
+        } else if (deliveryService === 'courier') {
+            ['courier-city', 'courier-street', 'courier-building'].forEach((id) => {
+                const node = el(id);
+                if (!node?.value.trim()) {
+                    markInvalid(node);
+                    isValid = false;
+                }
+            });
+        }
+
+        const paymentMethod = f.querySelector('input[name="payment_method"]:checked')?.value;
+        if (!paymentMethod) {
+            showError('Оберіть спосіб оплати');
+            return false;
+        }
+
+        if (!isValid) showError('Перевірте обов’язкові поля');
+        return isValid;
+    }
+
+    document.addEventListener('change', (e) => {
+        const target = e.target;
+        if (!(target instanceof HTMLElement)) return;
+
+        if (target.matches('input[name="delivery_service"]') && target.value !== 'novaposhta') {
+            resetNovaFields();
+        }
+
+        if (target.id === 'warehouse-select') {
+            const select = target;
+            const opt = select.options[select.selectedIndex];
+            const warehouseNameInput = el('warehouse-name');
+            if (warehouseNameInput) warehouseNameInput.value = opt && select.value ? opt.textContent : '';
+        }
+    });
+
+    document.addEventListener('input', (e) => {
+        const target = e.target;
+        if (!(target instanceof HTMLElement) || target.id !== 'np-city-input') return;
+
+        el('city-ref') && (el('city-ref').value = '');
+        el('city-name') && (el('city-name').value = '');
+        const warehouseSelect = el('warehouse-select');
+        const warehouseNameInput = el('warehouse-name');
+        if (warehouseSelect) {
+            warehouseSelect.innerHTML = '<option value="">Спочатку оберіть місто</option>';
+            warehouseSelect.disabled = true;
+        }
+        if (warehouseNameInput) warehouseNameInput.value = '';
+
+        clearTimeout(cityTimer);
+        const q = target.value.trim();
+        const cityList = el('np-city-list');
+        if (q.length < 2) {
+            if (cityList) {
+                cityList.innerHTML = '<div class="zcheck__suggest-empty">Введіть щонайменше 2 літери</div>';
+                setHidden(cityList, false);
+            }
+            return;
+        }
+        cityTimer = setTimeout(() => searchCities(q), 280);
+    });
+
+    document.addEventListener('focusin', (e) => {
+        const target = e.target;
+        if (!(target instanceof HTMLElement) || target.id !== 'np-city-input') return;
+        if (el('city-ref')?.value) return;
+        const q = target.value.trim();
+        const cityList = el('np-city-list');
+        if (q.length >= 2) searchCities(q);
+        else if (cityList) {
+            cityList.innerHTML = '<div class="zcheck__suggest-empty">Введіть щонайменше 2 літери</div>';
+            setHidden(cityList, false);
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        const target = e.target;
+        if (!(target instanceof Element)) return;
+        const suggestItem = target.closest('.zcheck__suggest-item');
+        if (suggestItem) {
+            e.preventDefault();
+            selectCity({
+                Ref: suggestItem.dataset.ref,
+                CityName: suggestItem.dataset.name,
+                Description: suggestItem.dataset.label || suggestItem.textContent,
+            });
+            return;
+        }
+        if (!target.closest('[data-suggest="city"]')) {
+            const cityList = el('np-city-list');
+            if (cityList) setHidden(cityList, true);
+        }
+    });
+
+    document.addEventListener('submit', async (e) => {
+        const f = e.target;
+        if (!(f instanceof HTMLFormElement) || f.id !== 'order-form') return;
+        e.preventDefault();
+        if (!validateForm()) return;
+
+        const cart = localStorage.getItem('cart');
+        if (!cart || cart === '[]' || cart === '{}' || cart === 'null') {
+            showError('Кошик порожній. Додайте товари перед оформленням.');
+            return;
+        }
+
+        const totalPrice = el('total_price_stream')?.value || '0';
+        if ((parseFloat(totalPrice) || 0) < MIN_ORDER_TOTAL) {
+            showError('Мінімальна сума замовлення — 1000 ₴.');
+            return;
+        }
+
+        const deliveryService = f.querySelector('input[name="delivery_service"]:checked')?.value;
+        let city = '';
+        let warehouse = '';
+        let manualAddress = '';
+
+        if (deliveryService === 'novaposhta') {
+            city = el('city-name')?.value || el('np-city-input')?.value || '';
+            const warehouseSelect = el('warehouse-select');
+            warehouse = el('warehouse-name')?.value
+                || (warehouseSelect?.options[warehouseSelect.selectedIndex]?.textContent || '');
+        } else if (deliveryService === 'courier') {
+            city = el('courier-city')?.value.trim() || '';
+            manualAddress = buildCourierAddress();
+        } else if (deliveryService === 'pickup') {
+            city = 'Одеса';
+            manualAddress = 'Самовивіз: промринок «7 км», вул. Фабрична, маг. №2523';
+        }
+
+        const preloader = el('preloader');
+        if (preloader) setHidden(preloader, false);
+
+        const payload = {
+            delivery_service: deliveryService,
+            city,
+            warehouse,
+            manual_address: manualAddress,
+            name: el('name')?.value.trim() || '',
+            lastname: el('lastname')?.value.trim() || '',
+            fathername: el('fathername')?.value.trim() || '',
+            phone: normalizePhone(el('phone')?.value || ''),
+            comment: el('comment')?.value.trim() || '',
+            payment: f.querySelector('input[name="payment_method"]:checked')?.value,
+            cart,
+            total_price: totalPrice,
+            _token: csrf(),
+        };
+
+        try {
+            const response = await fetch('/order-submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrf(),
+                    Accept: 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify(payload),
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(data.error || data.message || 'Помилка під час надсилання замовлення.');
+            localStorage.removeItem('cart');
+            window.dispatchEvent(new Event('cart-updated'));
+            window.location.href = '/thank-you';
+        } catch (err) {
+            showError(err.message || 'Помилка під час надсилання замовлення.');
+        } finally {
+            if (preloader) setHidden(preloader, true);
+        }
+    });
+
+    function boot() {
+        updateSubmitState();
+        let ticks = 0;
+        const timer = setInterval(() => {
+            updateSubmitState();
+            if (++ticks >= 12) clearInterval(timer);
+        }, 200);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => setTimeout(boot, 50));
+    } else {
+        setTimeout(boot, 50);
+    }
+    window.addEventListener('load', () => setTimeout(boot, 100));
+    window.addEventListener('cart-updated', updateSubmitState);
+})();
+</script>
 @endsection

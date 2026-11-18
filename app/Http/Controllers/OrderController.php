@@ -21,8 +21,13 @@ class OrderController extends Controller
             'payment' => 'required',
         ]);
 
-        // Получаем корзину из запроса
-        $cart = json_decode($request->cart, true) ?? [];
+        // Корзина может прийти строкой (form) или массивом (JSON body)
+        $cart = $request->input('cart');
+        if (is_string($cart)) {
+            $cart = json_decode($cart, true) ?? [];
+        } elseif (! is_array($cart)) {
+            $cart = [];
+        }
         
         // Логируем входящие данные для отладки
         \Log::info('Order submit request:', [

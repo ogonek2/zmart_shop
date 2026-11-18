@@ -1,0 +1,28 @@
+---
+description: Never change .zmart-shell / .zh-wrap container styles
+globs: **/*.{css,scss,blade.php,vue,js}
+alwaysApply: true
+---
+
+# Locked container styles
+
+**NEVER modify** `.zmart-shell` or `.zh-wrap` in `resources/css/app.css`, `public/css/app.css`, or anywhere else.
+
+These rules are locked by the project owner and must stay exactly:
+
+```css
+.zmart-shell,
+.zh-wrap {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+```
+
+Do not:
+- Change width / max-width / margin / padding
+- Override them in media queries (e.g. `padding-inline: 0` on products section)
+- Replace with `min(100% - 40px, …)` or similar
+
+If a layout needs edge-to-edge content, adjust the inner component (e.g. `.pcard-grid`), not the shell.

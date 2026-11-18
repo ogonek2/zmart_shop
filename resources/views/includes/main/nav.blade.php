@@ -1,243 +1,136 @@
-<header class="bg-white shadow-sm sticky top-0 z-50">
-    <!-- Top Bar -->
-    <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-2 hidden md:block">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center text-sm">
-                <!-- Left side -->
-                <div class="flex items-center space-x-6">
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-map-marker-alt text-yellow-300"></i>
-                        <span>Одеса</span>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="flex items-center space-x-2">
-                            <i class="fas fa-phone text-yellow-300"></i>
-                            <a href="tel:0730777572" class="hover:text-yellow-300 transition-colors">+38 073-077-75-72</a>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <i class="fas fa-phone text-yellow-300"></i>
-                            <a href="tel:0770777582" class="hover:text-yellow-300 transition-colors">+38 077-077-75-82</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Right side -->
-                <div class="flex items-center space-x-6">
-                    <a href="{{ route('oplata_i_dostavka') }}" class="hover:text-yellow-300 transition-colors">
-                        <i class="fas fa-truck mr-1"></i>Доставка
-                    </a>
-                    <a href="{{ route('obmin_ta_povernennia') }}" class="hover:text-yellow-300 transition-colors">
-                        <i class="fas fa-shield-alt mr-1"></i>Гарантія
-                    </a>
-                    <a href="{{ route('kontaktna_informatsiia') }}" class="hover:text-yellow-300 transition-colors">
-                        <i class="fas fa-headset mr-1"></i>Підтримка
-                    </a>
-                </div>
+@php
+    $navCategories = \App\Models\Category::whereNull('parent_id')
+        ->where('is_active', true)
+        ->orderBy('sort_order')
+        ->orderBy('name')
+        ->with(['childCategories' => function ($q) {
+            $q->where('is_active', true)
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->with(['childCategories' => function ($q2) {
+                    $q2->where('is_active', true)->orderBy('sort_order')->orderBy('name');
+                }]);
+        }])
+        ->get();
+
+    $megaCategories = $navCategories->map(fn ($cat) => map_category_tree_node($cat))->values();
+@endphp
+
+<header class="zh">
+    <div class="zh-bar">
+        <div class="zh-wrap zh-bar__row">
+            <button type="button" class="zh-icon-btn zh-burger" id="zh-burger" aria-label="Меню">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <a href="{{ url('/') }}" class="zh-logo" aria-label="Zmart">
+                <span>Z</span>mart
+            </a>
+
+            <button type="button" class="zh-catalog-btn" id="zh-catalog-open" aria-haspopup="dialog">
+                <i class="fas fa-th-large"></i>
+                <span>Каталог</span>
+            </button>
+
+            <div class="zh-search">
+                <search></search>
+            </div>
+
+            <div class="zh-actions">
+                <a href="tel:0730777572" class="zh-phone" aria-label="Зателефонувати">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>+38 073 077 75 72</span>
+                </a>
+                <wishlist-button></wishlist-button>
+                <open-cart-button></open-cart-button>
             </div>
         </div>
     </div>
-
-    <!-- Main Navigation -->
-    <nav class="bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
-                <a href="{{ url('/') }}" class="flex items-center space-x-3 group">
-                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg">
-                        <i class="fas fa-bolt text-white text-xl"></i>
-                    </div>
-                    <span class="text-2xl font-bold text-gray-900">ZMART</span>
-                </a>
-
-                <!-- Desktop Search -->
-                <div class="hidden lg:block flex-1 max-w-2xl mx-8">
-                    <div class="relative navbar-search">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <i class="fas fa-search text-gray-400"></i>
-                        </div>
-                        <search></search>
-                    </div>
-                </div>
-
-                <!-- Right side navigation -->
-                <div class="flex items-center space-x-4">
-                    <!-- Wishlist -->
-                    <div class="relative">
-                        <wishlist-button></wishlist-button>
-                    </div>
-
-                    <!-- Cart -->
-                    <div class="relative">
-                        <open-cart-button></open-cart-button>
-                    </div>
-
-                    <!-- Mobile menu button -->
-                    <button class="lg:hidden p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors" 
-                            onclick="toggleMobileMenu()">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Categories Navigation -->
-    <nav class="bg-gradient-to-r from-gray-900 to-gray-800 text-white hidden lg:block">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center">
-                <!-- Catalog Button -->
-                <button onclick="toggleCatalogMenu()" 
-                        class="flex items-center space-x-2 px-6 py-4 hover:bg-gray-700 transition-colors group">
-                    <i class="fas fa-th-large"></i>
-                    <span class="font-medium">Каталог</span>
-                    <i class="fas fa-chevron-down group-hover:rotate-180 transition-transform"></i>
-                </button>
-
-                <!-- Navigation Links -->
-                <div class="flex items-center space-x-8 ml-8">
-                    <a href="{{ route('pro_kompaniiu') }}" 
-                       class="flex items-center space-x-2 py-4 hover:bg-gray-700 transition-colors">
-                        <i class="fas fa-info-circle"></i>
-                        <span class="font-medium">Про нас</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
 </header>
 
-<!-- Mobile Menu Overlay -->
-<div id="mobileMenuOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden lg:hidden" onclick="closeMobileMenu()">
-</div>
-
-<!-- Mobile Menu -->
-<div id="mobileMenu" class="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 transform translate-x-full transition-transform lg:hidden overflow-y-auto">
-    <!-- Mobile Menu Header -->
-    <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-4 flex items-center justify-between">
-        <h3 class="text-lg font-bold">Меню</h3>
-        <button onclick="closeMobileMenu()" class="text-white hover:text-yellow-300">
-            <i class="fas fa-times text-xl"></i>
-        </button>
-    </div>
-
-    <!-- Mobile Search -->
-    <div class="p-4 border-b border-gray-200">
-        <div class="relative navbar-search mobile-search">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i class="fas fa-search text-gray-400"></i>
-            </div>
-            <search></search>
-        </div>
-    </div>
-
-    <!-- Mobile Navigation -->
-    <div class="p-4 space-y-2">
-        <!-- Catalog -->
-        <div class="border-b border-gray-200 pb-4">
-            <button onclick="toggleMobileCatalog()" 
-                    class="flex items-center justify-between w-full p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-th-large text-emerald-600"></i>
-                    <span class="font-medium text-gray-900">Каталог</span>
-                </div>
-                <i class="fas fa-chevron-down transition-transform" id="mobileCatalogIcon"></i>
+{{-- Global mega menu --}}
+<div id="zh-mega" class="cshop-mega" hidden>
+    <div class="cshop-mega__backdrop" data-mega-close></div>
+    <div class="cshop-mega__panel" role="dialog" aria-modal="true" aria-label="Каталог">
+        <div class="cshop-mega__head">
+            <h2>Каталог</h2>
+            <a href="{{ route('catalog') }}" class="cshop-mega__all" data-mega-close>Усі товари</a>
+            <button type="button" class="cshop__icon-btn" data-mega-close aria-label="Закрити">
+                <i class="fas fa-times"></i>
             </button>
-            
-            <!-- Mobile Catalog Items -->
-            <div id="mobileCatalogItems" class="hidden mt-2 space-y-1 max-h-80 overflow-y-auto pr-1">
-                @foreach (get_all_category()->whereNull('parent_id') as $category)
-                <a href="{{ route('catalog_category_page', $category->url) }}" 
-                   class="flex items-center justify-between p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
-                    <div class="flex items-center space-x-3">
-                        <i class="fas fa-folder text-gray-400"></i>
-                        <span>{{ $category->name }}</span>
-                    </div>
-                    <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">{{ get_category_total_products($category) }}</span>
-                </a>
+        </div>
+        <div class="cshop-mega__shell">
+            <nav class="cshop-mega__nav" aria-label="Основні категорії">
+                @foreach ($megaCategories as $index => $cat)
+                    <button
+                        type="button"
+                        class="cshop-mega__nav-item {{ $index === 0 ? 'is-active' : '' }}"
+                        data-mega-cat="{{ $cat['id'] }}"
+                        data-mega-url="{{ $cat['url'] }}"
+                    >
+                        <span class="cshop-mega__nav-name">{{ $cat['name'] }}</span>
+                        @if (isset($cat['count']))
+                            <em class="cshop-mega__nav-count">{{ $cat['count'] }}</em>
+                        @endif
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </button>
                 @endforeach
+            </nav>
+            <div class="cshop-mega__flyout" id="zh-mega-flyout">
+                {{-- filled by JS --}}
             </div>
         </div>
-
-        <!-- Other Links -->
-        <a href="{{ route('pro_kompaniiu') }}" 
-           class="flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
-            <i class="fas fa-info-circle text-emerald-600"></i>
-            <span class="font-medium">Про нас</span>
-        </a>
-
-        <button type="button"
-           data-callback-open
-           class="w-full flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
-            <i class="fas fa-phone text-emerald-600"></i>
-            <span class="font-medium">Замовити дзвінок</span>
-        </button>
     </div>
+</div>
 
-    <!-- Mobile Footer Links -->
-    <div class="p-4 border-t border-gray-200">
-        <div class="grid grid-cols-2 gap-3">
-            <a href="{{ route('oplata_i_dostavka') }}" 
-               class="flex flex-col items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                <i class="fas fa-truck text-emerald-600 mb-2"></i>
-                <span class="text-sm font-medium text-gray-700">Доставка</span>
+{{-- Mobile menu bottom sheet --}}
+<div id="zh-mobile" class="zsheet" hidden>
+    <div class="zsheet__backdrop" data-mobile-close></div>
+    <div class="zsheet__panel zsheet__panel--menu" role="dialog" aria-modal="true" aria-label="Меню">
+        <div class="zsheet__grab"></div>
+        <div class="zsheet__head">
+            <strong>Меню</strong>
+            <button type="button" class="zh-icon-btn" data-mobile-close aria-label="Закрити">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="zsheet__body">
+            <button type="button" class="zsheet__link" id="zh-mobile-catalog">
+                <i class="fas fa-th-large"></i>
+                <span>Каталог товарів</span>
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <a href="{{ route('catalog') }}" class="zsheet__link" data-mobile-close>
+                <i class="fas fa-store"></i>
+                <span>Усі товари</span>
             </a>
-            <a href="{{ route('obmin_ta_povernennia') }}" 
-               class="flex flex-col items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                <i class="fas fa-shield-alt text-emerald-600 mb-2"></i>
-                <span class="text-sm font-medium text-gray-700">Гарантія</span>
+            <a href="{{ route('wishlist') }}" class="zsheet__link" data-mobile-close>
+                <i class="far fa-heart"></i>
+                <span>Обране</span>
             </a>
+            <a href="{{ route('pro_kompaniiu') }}" class="zsheet__link" data-mobile-close>
+                <i class="fas fa-info-circle"></i>
+                <span>Про нас</span>
+            </a>
+            <a href="{{ route('oplata_i_dostavka') }}" class="zsheet__link" data-mobile-close>
+                <i class="fas fa-truck"></i>
+                <span>Доставка</span>
+            </a>
+            <a href="{{ route('obmin_ta_povernennia') }}" class="zsheet__link" data-mobile-close>
+                <i class="fas fa-undo"></i>
+                <span>Гарантія</span>
+            </a>
+            <a href="{{ route('kontaktna_informatsiia') }}" class="zsheet__link" data-mobile-close>
+                <i class="fas fa-headset"></i>
+                <span>Підтримка</span>
+            </a>
+            <a href="tel:0730777572" class="zsheet__phone">+38 073 077 75 72</a>
         </div>
     </div>
 </div>
 
-<!-- Desktop Catalog Menu -->
-<div id="catalogMenu" class="fixed top-0 left-0 h-full w-96 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform hidden lg:block">
-    <!-- Catalog Menu Header -->
-    <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white p-4 flex items-center justify-between">
-        <h3 class="text-lg font-bold">Каталог товарів</h3>
-        <button onclick="closeCatalogMenu()" class="text-white hover:text-yellow-300">
-            <i class="fas fa-times text-xl"></i>
-        </button>
-    </div>
-    <!-- Catalog Items -->
-    <div class="flex-1 overflow-y-auto max-h-96">
-        <div id="catalogList" class="p-2">
-            @foreach (get_all_category()->whereNull('parent_id') as $category)
-            <a href="{{ route('catalog_category_page', $category->url) }}" 
-               class="flex items-center justify-between p-3 text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-all duration-200 hover:translate-x-1">
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-folder text-emerald-600"></i>
-                    <span class="font-medium">{{ $category->name }}</span>
-                </div>
-                <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full text-xs">{{ get_category_total_products($category) }}</span>
-            </a>
-            @endforeach
-        </div>
-    </div>
+<script>
+window.__MEGA_CATS__ = @json($megaCategories);
+</script>
 
-    <!-- Catalog Menu Footer -->
-    <div class="p-4 border-t border-gray-200">
-        <div class="grid grid-cols-2 gap-3">
-            <a href="/catalog?promo=1" 
-               class="flex flex-col items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                <i class="fas fa-tag text-emerald-600 mb-2"></i>
-                <span class="text-sm font-medium text-gray-700">Акції</span>
-            </a>
-            <a href="/catalog?new=1" 
-               class="flex flex-col items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                <i class="fas fa-star text-emerald-600 mb-2"></i>
-                <span class="text-sm font-medium text-gray-700">Новинки</span>
-            </a>
-        </div>
-    </div>
-</div>
-
-<!-- Catalog Menu Overlay -->
-<div id="catalogMenuOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="closeCatalogMenu()">
-</div>
-
-<!-- Mini Cart -->
 <mini-cart></mini-cart>
-
-<!-- Wishlist Panel -->
-<wishlist-panel></wishlist-panel>

@@ -1,0 +1,28 @@
+---
+description: Never undo or re-fix user's manual CSS/layout tweaks
+globs: **/*.{css,scss,blade.php,vue,js,php}
+alwaysApply: true
+---
+
+# Do not overwrite the owner's manual fixes
+
+The project owner frequently hand-tunes UI in the editor (colors, widths, paddings, fonts, borders, radii, gaps). Treat those edits as final.
+
+## Hard rules
+
+1. **Never revert or "normalize" the owner's changes** — if they changed a color, width, padding, margin, gap, font, border, radius, or similar, leave it alone unless they explicitly ask to change that exact thing again.
+2. **Before editing CSS/layout**, compare `resources/css/app.css` and `public/css/app.css` (and open editor buffers). Prefer the owner's current values over older conversation values or "design system defaults".
+3. **Do not sync/overwrite owner tweaks during Mix rebuilds** — when rebuilding, do not copy old agent styles back over values the owner already fixed in `public/css/app.css`. If source and public diverge because of owner edits, **preserve the owner's public values** and update `resources` to match them when needed.
+4. **Scope edits tightly** — change only selectors/properties required for the current request. Do not drive-by restyle neighboring rules.
+5. **Locked shell** — still never touch `.zmart-shell` / `.zh-wrap` (see `zmart-shell-lock`).
+
+## Examples of forbidden behavior
+
+- Replacing the owner's `padding: 0 16px` / `max-width` / brand colors with earlier agent versions
+- "Cleaning up" widths, container sizes, or yellow/navy tokens the owner just set
+- Re-applying mockup spacing that undoes their fine-tuning
+
+## Allowed
+
+- New features/components that don't alter already-tuned owner properties
+- Changing a property **only when the owner explicitly asks** to change it in that message

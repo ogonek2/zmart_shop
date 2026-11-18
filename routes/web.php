@@ -63,6 +63,7 @@ Route::post('/order-submit', [OrderController::class, 'submit'])->name('order_su
 Route::post('/save-abandoned-cart', [OrderController::class, 'saveAbandoned']);
 
 Route::match(['get', 'post'], '/catalog', [indexController::class, 'catalog'])->name('catalog');
+Route::get('/wishlist', [CatalogController::class, 'wishlist'])->name('wishlist');
 Route::get('/checkout', [indexController::class, 'checkout'])->name('checkout');
 Route::get('/cities', [indexController::class, 'getCities']);
 Route::post('/warehouses', [indexController::class, 'getWarehouses']);

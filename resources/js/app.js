@@ -1,5 +1,5 @@
 // Импортируем Vue
-import { createApp } from 'vue';
+import { createApp, h } from 'vue';
 
 // Импортируем компоненты
 import YourComponent from './components/YourComponent.vue';
@@ -8,9 +8,10 @@ import CartButton from './components/CartButton.vue';
 import OpenCartButton from './components/OpenCartButton.vue';
 import MiniCart from './components/MiniCart.vue';
 import WishlistButton from './components/WishlistButton.vue';
-import WishlistPanel from './components/WishlistPanel.vue';
+import WishlistPage from './components/WishlistPage.vue';
 import ToastNotification from './components/ToastNotification.vue';
 import CatalogProductList from './components/CatalogProductList.vue';
+import CatalogShop from './components/CatalogShop.vue';
 import CartList from './components/CartList.vue';
 import Search from './components/Search.vue';
 import ProductCard from './components/ProductCard.vue';
@@ -32,9 +33,26 @@ document.addEventListener('DOMContentLoaded', function() {
             app.component('open-cart-button', OpenCartButton);
             app.component('mini-cart', MiniCart);
             app.component('wishlist-button', WishlistButton);
-            app.component('wishlist-panel', WishlistPanel);
+            app.component('wishlist-page', WishlistPage);
             app.component('toast-notification', ToastNotification);
             app.component('catalog-product-list', CatalogProductList);
+            app.component('catalog-shop', {
+                name: 'CatalogShopHost',
+                setup() {
+                    const boot = window.__CATALOG_BOOT__ || {};
+                    return () => h(CatalogShop, {
+                        endpoint: boot.endpoint || '/catalog',
+                        categories: boot.categories || [],
+                        subTree: boot.subTree || boot.subcategories || [],
+                        subcategories: boot.subcategories || [],
+                        facets: boot.facets || [],
+                        category: boot.category || null,
+                        initialProducts: boot.initialProducts || [],
+                        initialPagination: boot.initialPagination || {},
+                        initialFilters: boot.initialFilters || {},
+                    });
+                },
+            });
             app.component('cart-list', CartList);
             app.component('search', Search);
             app.component('product-card', ProductCard);

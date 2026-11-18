@@ -172,9 +172,18 @@ export default {
                 this.inCart = true;
                 this.cartItemQuantity = 1;
                 
-                if (this.$toast) {
-                    this.$toast.success('Додано в кошик');
-                }
+                window.dispatchEvent(new CustomEvent('show-toast', {
+                    detail: {
+                        title: 'Додано в кошик',
+                        message: this.finalName,
+                        type: 'success',
+                        product: {
+                            name: this.finalName,
+                            price: this.finalPrice,
+                            image: this.finalImage || '',
+                        },
+                    },
+                }));
             }
             
             localStorage.setItem('cart', JSON.stringify(cart));
@@ -191,11 +200,11 @@ export default {
 }
 
 .cart-btn-default {
-    @apply bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-lg hover:shadow-xl;
+    @apply bg-brand-yellow hover:bg-brand-yellow-hover text-brand-navy shadow-soft;
 }
 
 .cart-btn-active {
-    @apply bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg;
+    @apply bg-brand-navy text-white shadow-soft;
 }
 
 .cart-btn-disabled {
